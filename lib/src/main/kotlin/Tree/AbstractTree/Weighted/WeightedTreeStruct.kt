@@ -18,11 +18,15 @@ abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack,
 
     override fun insert(item: Pack) {
         insertItem(item)
-        if (root != null) balancer.balance(root!!)
+        if (root != null) {
+            root = balancer.balance(root!!)
+        }
     }
 
     override fun delete(item: Pack) {
         deleteItem(item)
-        if (root != null) balancer.balance(root!!)
+        if (root != null) {
+            root = balancer.balance(root!!)
+        }
     }
 }
