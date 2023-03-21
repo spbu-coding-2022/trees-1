@@ -7,5 +7,5 @@ interface Balancer<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>> {
 
     fun leftRotate(currentNode: NodeType): NodeType
 
-    fun balance(node: NodeType)
+    fun balance(node: NodeType): NodeType
 }
