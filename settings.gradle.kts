@@ -7,5 +7,5 @@
  * in the user manual at https://docs.gradle.org/8.0/userguide/multi_project_builds.html
  */
 
-rootProject.name = "Tree"
+rootProject.name = "TreeLib"
 include("lib")

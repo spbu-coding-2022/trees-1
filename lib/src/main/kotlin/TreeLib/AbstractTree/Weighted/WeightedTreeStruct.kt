@@ -1,7 +1,7 @@
-package AbstractTree.Weighted
+package TreeLib.AbstractTree.Weighted
 
-import AbstractTree.Node
-import AbstractTree.TreeStruct
+import TreeLib.AbstractTree.Node
+import TreeLib.AbstractTree.TreeStruct
 
 abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, BalancerType: Balancer<Pack, NodeType>>:
     TreeStruct<Pack, NodeType>() {

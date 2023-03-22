@@ -1,8 +1,8 @@
-package AbstractTree.Weighted
+package TreeLib.AbstractTree.Weighted
 
-import AbstractTree.Node
+import TreeLib.AbstractTree.Node
 
-abstract class BalancerNoParent<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>>: Balancer<Pack, NodeType> {
+abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>>: Balancer<Pack, NodeType> {
     override fun rightRotate(currentNode: NodeType): NodeType {
         TODO("Not yet implemented")
     }

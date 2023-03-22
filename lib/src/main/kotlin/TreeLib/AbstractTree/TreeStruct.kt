@@ -1,4 +1,4 @@
-package AbstractTree
+package TreeLib.AbstractTree
 
 abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>> {
     protected abstract var root: NodeType?  //TODO root - not a null

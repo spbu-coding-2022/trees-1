@@ -1,6 +1,6 @@
-package AVLtree
+package TreeLib.AVLtree
 
-import AbstractTree.Weighted.BalancerNoParent
+import TreeLib.AbstractTree.Weighted.BalancerNoParent
 
 class AVLBalancer<Pack: Comparable<Pack>>: BalancerNoParent<Pack, AVLNode<Pack>>() {
     override fun balance(node: AVLNode<Pack>): AVLNode<Pack> {
