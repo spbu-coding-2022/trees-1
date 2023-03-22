@@ -1,6 +1,6 @@
-package BINtree
+package TreeLib.BINtree
 
-import AbstractTree.Node
+import TreeLib.AbstractTree.Node
 
 class BINNode<Pack : Comparable<Pack>>(
     override var value: Pack?,

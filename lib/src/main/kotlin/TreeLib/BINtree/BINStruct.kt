@@ -1,6 +1,6 @@
-package BINtree
+package TreeLib.BINtree
 
-import AbstractTree.TreeStruct
+import TreeLib.AbstractTree.TreeStruct
 
 class BINStruct<Pack : Comparable<Pack>> : TreeStruct<Pack, BINNode<Pack>>() {
     override var root: BINNode<Pack>? = null

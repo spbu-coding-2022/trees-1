@@ -1,6 +1,6 @@
-package AbstractTree
+package TreeLib.AbstractTree
 
-import Single_Objects.Container
+import TreeLib.Single_Objects.Container
 
 abstract class Tree<Key : Comparable<Key>, Value, NodeType: Node<Container<Key, Value>, NodeType>> {
     protected abstract val treeStruct: TreeStruct<Container<Key, Value>, NodeType>
