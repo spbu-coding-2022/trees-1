@@ -4,10 +4,17 @@ import TreeLib.AbstractTree.Node
 
 abstract class BalancerNoParent<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>>: Balancer<Pack, NodeType> {
     override fun rightRotate(currentNode: NodeType): NodeType {
-        TODO("Not yet implemented")
+        // вероятно можем полагаться на то, что сын не будет null
+        val leftSon = currentNode.left!!
+        currentNode.left = leftSon.right
+        leftSon.right = currentNode
+        return leftSon
     }
 
     override fun leftRotate(currentNode: NodeType): NodeType {
-        TODO("Not yet implemented")
+        val rightSon = currentNode.right!!
+        currentNode.right = rightSon.left
+        rightSon.left = currentNode
+        return rightSon
     }
 }

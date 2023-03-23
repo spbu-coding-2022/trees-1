@@ -23,10 +23,12 @@ abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack,
         }
     }
 
+
     override fun delete(item: Pack) {
         deleteItem(item)
         if (root != null) {
             root = balancer.balance(root!!)
         }
     }
+
 }
