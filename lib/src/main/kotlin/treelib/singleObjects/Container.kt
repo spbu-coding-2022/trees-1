@@ -1,4 +1,4 @@
-package TreeLib.Single_Objects
+package treelib.singleObjects
 
 class Container<K : Comparable<K>, V>(private val pair: Pair<K, V?>) : Comparable<Container<K, V>> {
 

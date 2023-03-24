@@ -1,6 +1,6 @@
-package TreeLib.AbstractTree.Weighted
+package treelib.abstractTree.balanced
 
-import TreeLib.AbstractTree.Node
+import treelib.abstractTree.Node
 
 interface Balancer<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>> {
     fun rightRotate(currentNode: NodeType): NodeType

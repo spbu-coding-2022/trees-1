@@ -16,12 +16,13 @@ plugins {
 }
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 repositories {
     // Use Maven Central for resolving dependencies.
+    mavenLocal()
     mavenCentral()
 }
 
@@ -39,11 +40,6 @@ dependencies {
     implementation("com.google.guava:guava:31.1-jre")
 }
 
-tasks.named<Test>("test") {
-    // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
-}
-
 publishing {
     publications {
         create<MavenPublication>("maven") {
@@ -53,4 +49,9 @@ publishing {
             from(components["java"])
         }
     }
+}
+
+tasks.named<Test>("test") {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
 }

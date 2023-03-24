@@ -1,8 +1,8 @@
-package TreeLib.RBtree
+package treelib.rbTree
 
-import TreeLib.AbstractTree.Tree
+import treelib.abstractTree.Tree
 
-import TreeLib.Single_Objects.Container
+import treelib.singleObjects.Container
 
 class RBTree<Key : Comparable<Key>, Value> : Tree<Key, Value, RBNode<Container<Key, Value>>>() {
     override val treeStruct: RBStruct<Container<Key, Value>> = RBStruct()
