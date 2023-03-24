@@ -1,8 +1,8 @@
-package TreeLib.AVLtree
+package treeLib.AVLtree
 
-import TreeLib.AbstractTree.Tree
+import treeLib.AbstractTree.Tree
 
-import TreeLib.Single_Objects.Container
+import treeLib.Single_Objects.Container
 
 class AVLTree<K : Comparable<K>, V> :
     Tree<K, V, AVLNode<Container<K, V>>>() {

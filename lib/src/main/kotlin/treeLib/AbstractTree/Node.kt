@@ -1,4 +1,4 @@
-package TreeLib.AbstractTree
+package treeLib.AbstractTree
 
 interface Node<Pack : Comparable<Pack>, SubNode : Node<Pack, SubNode>>{
     var value: Pack

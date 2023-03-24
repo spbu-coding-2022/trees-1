@@ -1,6 +1,6 @@
-package TreeLib.AVLtree
+package treeLib.AVLtree
 
-import TreeLib.AbstractTree.Weighted.WeightedTreeStruct
+import treeLib.AbstractTree.Weighted.WeightedTreeStruct
 
 class AVLStruct<Pack : Comparable<Pack>> : WeightedTreeStruct<Pack, AVLNode<Pack>, AVLBalancer<Pack>>() {
     override var root: AVLNode<Pack>? = null

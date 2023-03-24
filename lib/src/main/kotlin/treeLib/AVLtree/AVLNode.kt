@@ -1,6 +1,6 @@
-package TreeLib.AVLtree
+package treeLib.AVLtree
 
-import TreeLib.AbstractTree.Node
+import treeLib.AbstractTree.Node
 
 class AVLNode<Pack : Comparable<Pack>>(
     override var value: Pack,

@@ -1,6 +1,4 @@
-package TreeLib.AbstractTree
-
-import sun.security.ec.point.ProjectivePoint.Mutable
+package treeLib.AbstractTree
 
 abstract class TreeStruct<T : Comparable<T>, NodeType : Node<T, NodeType>> {
     protected abstract var root: NodeType?  //TODO root - not a null

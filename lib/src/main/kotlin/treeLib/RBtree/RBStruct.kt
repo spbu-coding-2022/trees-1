@@ -1,6 +1,6 @@
-package TreeLib.RBtree
+package treeLib.RBtree
 
-import TreeLib.AbstractTree.Weighted.WeightedTreeStruct
+import treeLib.AbstractTree.Weighted.WeightedTreeStruct
 
 class RBStruct <Pack : Comparable<Pack>> : WeightedTreeStruct<Pack, RBNode<Pack>, RBBalancer<Pack>>(){
     override var root: RBNode<Pack>? = null

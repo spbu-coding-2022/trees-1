@@ -1,6 +1,6 @@
-package TreeLib.AVLtree
+package treeLib.AVLtree
 
-import TreeLib.AbstractTree.Weighted.BalancerNoParent
+import treeLib.AbstractTree.Weighted.BalancerNoParent
 // gradle init
 class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): BalancerNoParent<Pack, AVLNode<Pack>>() {
     private fun updateBalance(node: AVLNode<Pack>?): Int {
