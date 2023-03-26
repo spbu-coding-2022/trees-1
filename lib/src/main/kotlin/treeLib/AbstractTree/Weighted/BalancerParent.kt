@@ -6,10 +6,11 @@ abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pac
     override fun rightRotate(currentNode: NodeType): NodeType {
         // пока верим в то, что currentNode не равно null
         val leftChild = currentNode.left ?: throw NullPointerException()
+
         val parent = currentNode.parent
         leftChild.right?.parent = currentNode
-        leftChild.right = currentNode
         currentNode.left = leftChild.right
+        leftChild.right = currentNode
 
         when {
             parent?.left == currentNode -> parent.left = leftChild
@@ -25,9 +26,8 @@ abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pac
         val parent = currentNode.parent
 
         rightChild.left?.parent = currentNode
-        rightChild.left = currentNode
         currentNode.right = rightChild.left
-
+        rightChild.left = currentNode
         when {
             parent?.left == currentNode -> parent.left = rightChild
             parent?.right == currentNode -> parent.right = rightChild

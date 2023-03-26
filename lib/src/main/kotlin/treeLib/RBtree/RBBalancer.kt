@@ -35,7 +35,6 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
     }
 
     override fun balance(node: RBNode<Pack>): RBNode<Pack> {
-        // Нужно жестко проверить случаи с root = null
         val uncle = getUncle(node)
         val brother = getBrother(node.parent, node)
         when {
@@ -134,7 +133,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
 
             }
         }
-        TODO("Not yet implemented")
+        throw NullPointerException()
     }
     private fun afterInsert(node: RBNode<Pack>): RBNode<Pack> {
         var currentNode = node
