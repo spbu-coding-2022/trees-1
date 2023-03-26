@@ -17,7 +17,7 @@ class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): Bal
     }
 
     override fun balance(node: AVLNode<Pack>): AVLNode<Pack> = balance(root, node.value)
-
+    // В баланс передаем родителя ноды, которую будем удалять
     private fun balance(currentNode: AVLNode<Pack>?, value: Pack): AVLNode<Pack> {
         if (currentNode == null) {
             throw NullPointerException()
