@@ -117,7 +117,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                             (node.left == null && node.right?.color == Markers.RED && nodeIsLeaf(node.right)) ||
                             (node.right == null && node.left?.color == Markers.RED && nodeIsLeaf(node.left)) ->
                     {
-                        return root ?: throw NullPointerException()
+                        return root ?: throw NullPointerException() // return getRoot(node)
                     }
                     // удалили черный лист
                     node.left == null -> {
@@ -241,7 +241,8 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
 
                 if (rightBrotherSon.right?.color != Markers.RED && rightBrotherSon.left?.color != Markers.RED) {
                     rightBrotherSon.color = Markers.RED
-                    brother.color = Markers.RED
+                    //brother.color = Markers.RED
+                    brother.color = Markers.BLACK
                     rightRotate(parent)
                     return
                 }
