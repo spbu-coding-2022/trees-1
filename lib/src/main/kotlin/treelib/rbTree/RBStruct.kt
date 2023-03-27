@@ -4,7 +4,16 @@ import treelib.abstractTree.balanced.BalancedTreeStruct
 
 class RBStruct<Pack : Comparable<Pack>> : BalancedTreeStruct<Pack, RBNode<Pack>, RBBalancer<Pack>>() {
     override var root: RBNode<Pack>? = null
+
     override val balancer = RBBalancer(root)
+
+    override fun rebaseNode(node: RBNode<Pack>, parent: RBNode<Pack>?, replaceNode: RBNode<Pack>?): RBNode<Pack>? {
+        TODO("Not yet implemented")
+    }
+
+    override fun unLink(node: RBNode<Pack>, parent: RBNode<Pack>?): RBNode<Pack> {
+        TODO("Not yet implemented")
+    }
 
     override fun deleteItem(item: Pack): RBNode<Pack>? {
         if (find(item) == null) {

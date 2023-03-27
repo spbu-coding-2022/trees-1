@@ -46,23 +46,23 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         }
     }
 
-    protected infix fun Pack.inRightOf(node: NodeType): Boolean {
+    protected infix fun Pack.inRightOf(node: NodeType?): Boolean {
         //TODO - test inInRightOf
-        if (node.right != null){
+        if ((node != null) && (node.right != null)) {
             if (node.right!!.value == this) return true
         }
         return false
     }
 
-    protected infix fun Pack.inLeftOf(node: NodeType): Boolean {
+    protected infix fun Pack.inLeftOf(node: NodeType?): Boolean {
         //TODO - test inInLeftOf
-        if (node.left != null){
+        if ((node != null) && (node.left != null)) {
             if (node.left!!.value == this) return true
         }
         return false
     }
 
-    protected fun getLeafRightMin(localRoot: NodeType): NodeType? {
+    private fun getRightMinNode(localRoot: NodeType): NodeType? {
         //TODO test - getLeafForDelete [проверить, что нет проблем с (->1)]
         /*
         null - means NodeType.right doesn't exist, another variant impossible
@@ -73,16 +73,13 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
         while (true) {
             if (currentNode != null) {
-                if ((currentNode.left == null) && (currentNode.right == null)) return currentNode
-                when {
-                    currentNode.left != null -> currentNode = currentNode.left
-                    currentNode.right != null -> currentNode = currentNode.right
-                }
+                if (currentNode.left == null) return currentNode
+                else currentNode = currentNode.left
             } else return null //(->1)
         }
     }
 
-    protected fun getLeafLeftMax(localRoot: NodeType): NodeType? {
+    private fun getLeftMaxNode(localRoot: NodeType): NodeType? {
         //TODO test - getLeafLeftMax [проверить, что нет проблем с (->1)]
         /*
         null - means NodeType.left doesn't exist, another variant impossible
@@ -93,13 +90,19 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
         while (true) {
             if (currentNode != null) {
-                if ((currentNode.left == null) && (currentNode.right == null)) return currentNode
-                when {
-                    currentNode.right != null -> currentNode = currentNode.right
-                    currentNode.left != null -> currentNode = currentNode.left
-                }
+                if (currentNode.right == null) return currentNode
+                else currentNode = currentNode.right
             } else return null //(->1)
         }
+    }
+
+    protected fun getNodeForReplace(localRoot: NodeType?): NodeType? {
+        /* Behaviour: null - localRoot doesn't have children */
+        if (localRoot != null) {
+            val replaceNode = getRightMinNode(localRoot)
+            if (replaceNode != null) return replaceNode
+            else return getLeftMaxNode(localRoot)
+        } else return null
     }
 
     protected fun findItem(obj: Pack): NodeType? {
@@ -122,13 +125,17 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
     protected abstract fun deleteItem(item: Pack): NodeType?
 
-    protected abstract fun linkLeafAsNode(
+    protected abstract fun unLink(
+        node: NodeType,
+        parent: NodeType?
+    ): NodeType
+
+    protected abstract fun rebaseNode(
         //TODO linkLeafAsNode - [написал какой-то кринж, надо хорошо подумать, как это делать]
-        leaf: NodeType,
+        node: NodeType,
         parent: NodeType?,
-        right: NodeType?,
-        left: NodeType?
-    ): NodeType?
+        replaceNode: NodeType?,
+    ): NodeType? // return linked on the node place (null - if the replaceNode == null...)
 
     fun find(obj: Pack): Pack? {
         /* Behavior: if find(item) == true => replace value with item, otherwise create a new node */
@@ -139,6 +146,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
     abstract fun insert(item: Pack): Pack?
 
+    /*Behaviour: null - means value not in tree; Pack - value was successfully deleted*/
     abstract fun delete(item: Pack): Pack?
 
     fun inOrder() {
