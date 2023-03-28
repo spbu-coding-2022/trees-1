@@ -8,7 +8,7 @@
 
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.0"
 
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
@@ -22,15 +22,17 @@ java {
 
 repositories {
     // Use Maven Central for resolving dependencies.
+    mavenLocal()
     mavenCentral()
 }
 
 dependencies {
+    testImplementation("io.mockk:mockk:1.13.4")
     // Use the Kotlin JUnit 5 integration. (TESTS support tools)
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
 
     // Use the JUnit 5 integration. (TESTS support tools)
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api("org.apache.commons:commons-math3:3.6.1")

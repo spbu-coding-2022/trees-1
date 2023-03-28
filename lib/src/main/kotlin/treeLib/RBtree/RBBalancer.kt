@@ -5,6 +5,10 @@ import treeLib.Single_Objects.Markers
 
 class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): BalancerParent<Pack, RBNode<Pack>>() {
 
+    init {
+        root?.color = Markers.BLACK
+    }
+
     private fun getUncle(node: RBNode<Pack>): RBNode<Pack>? {
         val parent = node.parent
         return when (parent?.parent?.left) {
@@ -43,12 +47,13 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
             {
                 var currentNode = node
 
-                if (uncle?.color != Markers.BLACK) {
+                if (currentNode.parent?.color == Markers.RED && uncle?.color == Markers.RED) {
                     currentNode = afterInsert(node)
                 }
                 if (currentNode.parent?.color != Markers.RED) {
                     return getRoot(currentNode)
                 }
+
                 var parent = currentNode.parent ?: throw NullPointerException()
                 when (parent) {
                     parent.parent?.left -> {
@@ -56,7 +61,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                             leftRotate(parent)
                             currentNode = parent
                         }
-                        parent = currentNode.parent ?: throw NullPointerException()
+                        parent = currentNode.parent?.parent ?: throw NullPointerException()
                         currentNode = rightRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
@@ -67,7 +72,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                             rightRotate(parent)
                             currentNode = parent
                         }
-                        parent = currentNode.parent ?: throw NullPointerException()
+                        parent = currentNode.parent?.parent ?: throw NullPointerException()
                         currentNode = leftRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
