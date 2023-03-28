@@ -164,18 +164,18 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
         when (node) {
             parent.left ->
             {
-                if (brother.left?.color == Markers.RED) {
+                if (brother.right?.color == Markers.RED) {
+                    leftRotate(parent)
+                    brother.left?.color = Markers.RED
+                    brother.right?.color = Markers.RED
+                    brother.color = Markers.BLACK
+                }
+                else if (brother.left?.color == Markers.RED) {
                     brother = rightRotate(brother)
                     leftRotate(parent)
                     brother.left?.color = Markers.BLACK
                     brother.left?.color = Markers.BLACK
                     brother.color = Markers.RED
-                }
-                else if (brother.right?.color == Markers.RED) {
-                    leftRotate(parent)
-                    brother.left?.color = Markers.RED
-                    brother.right?.color = Markers.RED
-                    brother.color = Markers.BLACK
                 }
                 else {
                     throw NullPointerException()
@@ -183,19 +183,18 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
             }
             parent.right ->
             {
-                if (brother.right?.color == Markers.RED) {
+                if (brother.left?.color == Markers.RED) {
+                    rightRotate(parent)
+                    brother.color = Markers.BLACK
+                    brother.left?.color = Markers.RED
+                    brother.right?.color = Markers.RED
+                }
+                else if (brother.right?.color == Markers.RED) {
                     brother = leftRotate(brother)
                     rightRotate(parent)
                     brother.color = Markers.RED
                     brother.left?.color = Markers.BLACK
                     brother.right?.color = Markers.BLACK
-                }
-                else if (brother.left?.color == Markers.RED) {
-                    rightRotate(parent)
-                    brother.color = Markers.BLACK
-                    brother.left?.color = Markers.RED
-                    brother.right?.color = Markers.RED
-
                 }
                 else {
                     throw NullPointerException()
