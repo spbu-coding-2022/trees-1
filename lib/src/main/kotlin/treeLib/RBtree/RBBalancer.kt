@@ -28,6 +28,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
         root?.color = Markers.BLACK
         return currentNode
     }
+
     private fun nodeIsLeaf(node: RBNode<Pack>?): Boolean {
         if (node == null)
             throw NullPointerException()
@@ -36,11 +37,9 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
 
     override fun balance(node: RBNode<Pack>): RBNode<Pack> {
         val uncle = getUncle(node)
-        val brother = getBrother(node.parent, node)
         when {
-            // возможно только при вставке листа или если у рута был один красный сын и мы удалили рут
-            node.color == Markers.RED  && node.right == null && node.left == null &&
-            brother?.color != Markers.BLACK && brother?.right?.color != Markers.BLACK->
+            /** node insertion case **/
+            node.color == Markers.RED  && node.right == null && node.left == null->
             {
                 var currentNode = node
 
@@ -80,26 +79,11 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                     root = currentNode
                 return root ?: throw NullPointerException()
             }
-            // учитывая прошлый случай,возможно только если удаляли черную вершину с одним красным сыном листом,заменили
-            // ее на сына и передали сына в качестве родителя
+            /** node removal cases **/
             node.color == Markers.RED && (node.right != null || node.left != null) ->
             {
                 when {
-                    // удалили черную вершину, у которой один красный сын (черного сына быть не может)
-                    // или же удалили черную вершину, у которой два сына - красные листы и на ее место
-                    // место поставили  лист, его же пеоедали в качестве родитедя
-                    node.left?.color == Markers.RED -> {
-                        when (node.right) {
-                            null -> node.color = Markers.BLACK
-                            else -> node.left?.color = Markers.BLACK
-                        }
-                        return getRoot(node)
-                    }
-                    node.right?.color == Markers.RED -> {
-                        node.right?.color = Markers.RED // кинуть в случае чего экс
-                        return getRoot(node)
-                    }
-                    // удалили черный лист
+                    /** black leaf removal case **/
                     node.right?.color == Markers.BLACK -> {
                         return firstCase(node, node.left)
                     }
@@ -111,28 +95,26 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
             }
             node.color == Markers.BLACK ->
             {
-                when {
-                    // удалили красный лист
+                return when {
+                    /** red leaf removal case **/
                     (node.left == null && node.right == null) ||
                             (node.left == null && node.right?.color == Markers.RED && nodeIsLeaf(node.right)) ||
-                            (node.right == null && node.left?.color == Markers.RED && nodeIsLeaf(node.left)) ->
-                    {
-                        return getRoot(node)
+                            (node.right == null && node.left?.color == Markers.RED && nodeIsLeaf(node.left)) -> {
+                        getRoot(node)
                     }
-                    // удалили черный лист
-                    node.left == null -> {
-                        return firstCase(node, null)
+                    /** black leaf removal case **/
+                    node.left == null || node.right == null-> {
+                        firstCase(node, null)
 
                     }
-                    node.right == null -> {
-                        return firstCase(node, null)
 
-                    }
+                    else -> throw NullPointerException()
                 }
             }
         }
         throw NullPointerException()
     }
+
     private fun afterInsert(node: RBNode<Pack>): RBNode<Pack> {
         var currentNode = node
         while (currentNode.parent?.color == Markers.RED) {
@@ -151,27 +133,28 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
         return currentNode
     }
 
+    /** black node removal case **/
     private fun firstCase(parent: RBNode<Pack>?, node: RBNode<Pack>?): RBNode<Pack> {
-        when {
+        return when {
             parent == null && node == null -> throw NullPointerException()
             parent != null -> {
                 when (parent.color) {
                     Markers.RED -> secondCase(parent, node)
                     Markers.BLACK -> thirdCase(parent, node)
                 }
-                return getRoot(parent)
+                getRoot(parent)
             }
-            else -> return getRoot(node ?: throw NullPointerException())
+
+            else -> getRoot(node ?: throw NullPointerException())
         }
     }
 
-    // родитель вершины - красный, son - корень дерева с удаленной черной вершиной (поддерева node)
+    /** parent is red **/
     private fun secondCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
         var brother = getBrother(parent, node) ?: throw NullPointerException()
-        //  у красной вершины могут быть только черные дети
         if (brother.color == Markers.RED)
             throw NullPointerException()
-        // не зависит от того с какой стороны расположены сын и брат
+
         if (brother.right?.color != Markers.RED && brother.left?.color != Markers.RED) {
             brother.color = Markers.RED
             parent.color = Markers.BLACK
@@ -222,7 +205,8 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
             else -> throw NullPointerException()
         }
     }
-    // родитель вершины - черный
+
+    /** parent is black **/
     private fun thirdCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
         val brother = getBrother(parent, node) ?: throw NullPointerException()
         when (brother.color) {
@@ -230,7 +214,8 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
             Markers.BLACK -> thirdCaseSubSecond(brother, parent)
         }
     }
-    // родитель - черный, брат - красный
+
+    /** black parent and red brother **/
     private fun thirdCaseSubFirst(brother: RBNode<Pack>, parent: RBNode<Pack>) {
         when (brother) {
             brother.parent?.left ->
@@ -243,8 +228,10 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                     rightRotate(parent)
                     return
                 }
-                // если правый сын правого сына брата - красный, то делаем его правым сыном брата, а правого сына брата
-                // левым сыном нового правого сына брата и перекрашиваем его в красный, чтоб сработало след условие
+                /** if the right son of the right son of the brother is red, then we make it the right son
+                 * of the brother, and the right son of the brother is the left son of the new right son
+                 * of the brother and repaint it red so that the following condition works **/
+
                 if (rightBrotherSon.right?.color == Markers.RED) {
                     rightBrotherSon.color = Markers.RED
                     leftRotate(rightBrotherSon)
@@ -286,9 +273,11 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
         }
     }
 
-    // родитель - черный, брат - черный
+    /** black parent and black brother **/
     private fun thirdCaseSubSecond(brother: RBNode<Pack>, parent: RBNode<Pack>) {
-        // если у брата нет красных детей, запускаем алгоритм заново от родителя, тк высота в поддереве уменьшилась на 1
+        /** if the brother hasn't read children, restart
+         * from the parent (the height in the subtree has decreased by 1) **/
+
         if (brother.left?.color != Markers.RED && brother.right?.color != Markers.RED) {
             brother.color = Markers.RED
             firstCase(parent.parent, parent)
