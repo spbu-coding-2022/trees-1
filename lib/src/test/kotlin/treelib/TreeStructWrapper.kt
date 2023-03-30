@@ -1,9 +1,10 @@
 package treelib
 
 import treelib.abstractTree.Node
+import treelib.abstractTree.StateContainer
 import treelib.abstractTree.TreeStruct
 
-class TreeStructWrapper<V : Comparable<V>, NodeType : Node<V, NodeType>, TStruct : TreeStruct<V, NodeType>> {
+class TreeStructWrapper<V : Comparable<V>, NodeType : Node<V, NodeType>, State: StateContainer<V, NodeType>, TStruct : TreeStruct<V, NodeType, State>> {
 
     fun getPrivateNode(tree: TStruct, name: String = "root"): NodeType? {
         val field = tree.javaClass.getDeclaredField(name)

@@ -3,8 +3,28 @@ package treelib.binTree
 
 import treelib.abstractTree.TreeStruct
 
-class BINStruct<Pack : Comparable<Pack>> : TreeStruct<Pack, BINNode<Pack>>() {
+class BINStruct<Pack : Comparable<Pack>> :
+    TreeStruct<Pack, BINNode<Pack>, BINStateContainer<Pack>>() {
+
     override var root: BINNode<Pack>? = null
+
+    override fun generateStateDelete(
+        deletedNodeType: BINNode<Pack>,
+        itsParent: BINNode<Pack>?
+    ): BINStateContainer<Pack> {
+        TODO("Not yet implemented")
+    }
+
+    override fun generateStateInsert(
+        insertedNodeType: BINNode<Pack>,
+        itsParent: BINNode<Pack>?
+    ): BINStateContainer<Pack> {
+        TODO("Not yet implemented")
+    }
+
+    override fun generateStateFind(foundNode: BINNode<Pack>): BINStateContainer<Pack> {
+        TODO("Not yet implemented")
+    }
 
     override fun rebaseNode(
         node: BINNode<Pack>,
@@ -29,7 +49,6 @@ class BINStruct<Pack : Comparable<Pack>> : TreeStruct<Pack, BINNode<Pack>>() {
         /*TODO: unLink - test*/
         val unLinkedNode: BINNode<Pack> = node
         val childForLink: BINNode<Pack>?
-
         when {
             (node.right != null) && (node.left != null) -> return node //means-error (in correct node input)
             node.right != null -> childForLink = node.right
@@ -61,7 +80,7 @@ class BINStruct<Pack : Comparable<Pack>> : TreeStruct<Pack, BINNode<Pack>>() {
 
     override fun createNode(item: Pack) = BINNode(item)
 
-    override fun delete(item: Pack): Pack? = deleteItem(item)?.value
+    override fun delete(item: Pack): Pack? = deleteItem(item)?.contentNode?.value
 
-    override fun insert(item: Pack): Pack = insertItem(item).value
+    override fun insert(item: Pack): Pack? = insertItem(item)?.contentNode?.value
 }

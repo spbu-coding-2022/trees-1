@@ -1,12 +1,14 @@
 package treelib.abstractTree
 
-import treelib.binTree.BINNode
-
-abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>> {
+abstract class TreeStruct<
+        Pack : Comparable<Pack>,
+        NodeType : Node<Pack, NodeType>,
+        State : StateContainer<Pack, NodeType>
+        > {
 
     protected abstract var root: NodeType?
 
-    protected fun getLeafForInsert(item: Pack): NodeType? {
+    private fun getLeafForInsert(item: Pack): NodeType? {
         //TODO test - getParentByValue; [не нравится, что currentNode = it.right не требует проверки на null]
         var currentNode: NodeType? = root ?: return null
 
@@ -23,7 +25,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         }
     }
 
-    protected fun getParentByValue(item: Pack): NodeType? {
+    private fun getParentByValue(item: Pack): NodeType? {
         //TODO test - getParentByValue [что вообще корректно отрабатывает]
         /*
         (1) - shouldn't be used with 'root == null' otherwise - incorrect behavior
@@ -41,12 +43,12 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                 when {
                     it.right != null -> {
                         if (it.right?.value == item) return currentNode
-                        else throw Exception("impossible case, or multithreading threads problem")
+                        else throw Exception("Impossible case, or multithreading threads problem")
                     }
 
                     it.left != null -> {
                         if (it.left?.value == item) return currentNode
-                        else throw Exception("impossible case, or multithreading threads problem")
+                        else throw Exception("Impossible case, or multithreading threads problem")
                     }
                 }
                 if (item > it.value) currentNode = it.right
@@ -56,7 +58,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         }
     }
 
-    protected infix fun Pack.inRightOf(node: NodeType?): Boolean {
+    private infix fun Pack.inRightOf(node: NodeType?): Boolean {
         //TODO - test inInRightOf
         if ((node == null) || (node.right == null)) return false
         node.right?.let {
@@ -65,7 +67,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         return false
     }
 
-    protected infix fun Pack.inLeftOf(node: NodeType?): Boolean {
+    private infix fun Pack.inLeftOf(node: NodeType?): Boolean {
         //TODO - test inInLeftOf
         if ((node == null) || (node.left == null)) return false
         node.left?.let {
@@ -87,7 +89,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             currentNode?.let { curNode ->
                 if (curNode.left == null) return currentNode
                 else currentNode = curNode.left
-            } ?: throw Exception("impossible case, or multithreading threads problem") //(->1)
+            } ?: throw Exception("Impossible case, or multithreading threads problem") //(->1)
         }
     }
 
@@ -104,11 +106,11 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             currentNode?.let { curNode ->
                 if (curNode.right == null) return currentNode
                 else currentNode = curNode.right
-            } ?: throw Exception("impossible case, or multithreading threads problem") //(->1)
+            } ?: throw Exception("Impossible case, or multithreading threads problem") //(->1)
         }
     }
 
-    protected fun getNodeForReplace(localRoot: NodeType?): NodeType? {
+    private fun getNodeForReplace(localRoot: NodeType?): NodeType? {
         /* Behaviour: null - localRoot doesn't have children */
         localRoot?.let {
             val replaceNode = getRightMinNode(it)
@@ -117,12 +119,12 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         } ?: return null
     }
 
-    protected fun findItem(obj: Pack): NodeType? {
+    protected fun findItem(obj: Pack): State? {
         var currentNode = root
         if (root == null) return null
 
         while (true) {
-            if (obj == currentNode?.value) return currentNode
+            if (obj == currentNode?.value) return generateStateFind(currentNode)
             else {
                 currentNode?.let {
                     if (obj > it.value) currentNode = it.right
@@ -132,10 +134,10 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         }
     }
 
-    protected fun insertItem(item: Pack): NodeType {
+    protected fun insertItem(item: Pack): State? {
         val parentNode: NodeType?
         val currentNode: NodeType
-        val updateNode: NodeType? = findItem(item)
+        val updateNode: NodeType? = findItem(item)?.contentNode
 
         if (updateNode == null) {
             parentNode = getLeafForInsert(item)
@@ -143,13 +145,14 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
             linkNewNode(currentNode, parentNode)
 
-            return currentNode
+            return generateStateInsert(currentNode, parentNode)
         }
+
         updateNode.value = item
-        return updateNode
+        return null
     }
 
-    protected fun deleteItem(item: Pack): NodeType? {
+    protected fun deleteItem(item: Pack): State? {
         /*TODO: test - deleteItem [невозможные ветки: - проверить, что они реально невозможны
            (->1 & 2) => что невозможно достичь deleteNode = parentNode?. со значением null (потому что inRightOf/inLeftOf)
            (->3) => странный кейс, когда удаляемое значение - null; такого вообще быть не должно
@@ -157,6 +160,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         val parentNode: NodeType? // parent node of the node for deleting
         val deleteNode: NodeType?  // node for deleting
         var replaceNode: NodeType?   // node for relink on the place deleted node
+        val state: State
 
         if (findItem(item) != null) return null
 
@@ -175,15 +179,29 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             replaceNode = unLink(it, getParentByValue(it.value))
         } // if deleteNode doesn't have children => replaceNode = null
 
+        state = generateStateDelete(deleteNode, parentNode)
+
         if (parentNode != null) rebaseNode(deleteNode, parentNode, replaceNode)
         else root = rebaseNode(deleteNode, null, replaceNode)
 
-        return deleteNode
+        return state
     }
+
+    protected abstract fun generateStateFind(foundNode: NodeType): State
+
+    protected abstract fun generateStateInsert(
+        insertedNodeType: NodeType,
+        itsParent: NodeType?,
+    ): State
+
+    protected abstract fun generateStateDelete(
+        deletedNodeType: NodeType,
+        itsParent: NodeType?,
+    ): State
 
     protected abstract fun unLink(
         node: NodeType,
-        parent: NodeType?
+        parent: NodeType?,
     ): NodeType
 
     protected abstract fun rebaseNode(
