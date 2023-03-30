@@ -1,9 +1,10 @@
 package treeLib.AbstractTree.Weighted
 
 import treeLib.AbstractTree.Node
+import treeLib.AbstractTree.StateContainer
 import treeLib.AbstractTree.TreeStruct
 
-abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, BalancerType: Balancer<Pack, NodeType>>:
+abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, StateContainerType: StateContainer<Pack, NodeType>, BalancerType: Balancer<Pack, NodeType, StateContainerType>>:
     TreeStruct<Pack, NodeType>() {
 
     protected abstract val balancer: BalancerType
@@ -19,7 +20,8 @@ abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack,
     override fun insert(item: Pack) {
         insertItem(item)
         if (root != null) {
-            root = balancer.balance(root!!)
+            //root = balancer.balance(StateContainer(root!!))
+            TODO()
         }
     }
 
@@ -27,7 +29,8 @@ abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack,
     override fun delete(item: Pack) {
         deleteItem(item)
         if (root != null) {
-            root = balancer.balance(root!!)
+            //root = balancer.balance(root!!)
+            TODO()
         }
     }
 

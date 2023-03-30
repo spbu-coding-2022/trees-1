@@ -1,11 +1,10 @@
 package treeLib.AVLtree
 
 import treeLib.AbstractTree.Weighted.BalancerNoParent
-// gradle init
-class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): BalancerNoParent<Pack, AVLNode<Pack>>() {
+
+class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): BalancerNoParent<Pack, AVLNode<Pack>, AVLStateContainer<Pack>>() {
     private fun updateBalance(node: AVLNode<Pack>?): Int {
         return (getHeight(node?.left) - getHeight(node?.right)).toInt()
-
     }
 
     private fun getHeight(currentNode: AVLNode<Pack>?): UInt {
@@ -16,7 +15,16 @@ class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): Bal
         return if (currentNode == null) 0u else ( maxOf(getHeight(currentNode.left), getHeight(currentNode.right)) + 1u)
     }
 
-    override fun balance(node: AVLNode<Pack>): AVLNode<Pack> = balance(root, node.value)
+    override fun balance(stateContainer: AVLStateContainer<Pack>): AVLNode<Pack> {
+        val node = stateContainer.contentNode
+        root = stateContainer.root
+        when (node.value) {
+            root?.value -> {
+
+            }
+        }
+        return balance(root, node.value)
+    }
     // В баланс передаем родителя ноды, которую будем удалять
     private fun balance(currentNode: AVLNode<Pack>?, value: Pack): AVLNode<Pack> {
         if (currentNode == null) {

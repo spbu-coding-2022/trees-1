@@ -1,8 +1,9 @@
 package treeLib.AbstractTree.Weighted
 
 import treeLib.AbstractTree.NodeParent
+import treeLib.AbstractTree.StateContainer
 
-abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pack, NodeType>>: Balancer<Pack, NodeType> {
+abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pack, NodeType>, StateContainerType: StateContainer<Pack, NodeType>>: Balancer<Pack, NodeType, StateContainerType> {
     override fun rightRotate(currentNode: NodeType): NodeType {
         // пока верим в то, что currentNode не равно null
         val leftChild = currentNode.left ?: throw NullPointerException()

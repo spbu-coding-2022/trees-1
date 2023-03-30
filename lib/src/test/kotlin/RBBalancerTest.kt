@@ -1,10 +1,11 @@
+
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import treeLib.RBtree.RBBalancer
 import treeLib.RBtree.RBNode
+import treeLib.RBtree.RBStateContainer
 import treeLib.Single_Objects.Markers
-
 class RBBalancerTest {
 
     /*** Tests to check the operation of the balancer after removal ***/
@@ -12,9 +13,9 @@ class RBBalancerTest {
     @Test
     fun `init test`() {
         val firstBalancer = RBBalancer<Int>(null)
-        assertEquals(15, firstBalancer.balance(RBNode(15, null, null, null, Markers.BLACK)).value)
+        assertEquals(15, firstBalancer.balance(RBStateContainer(RBNode(15, null, null, null, Markers.BLACK))).value)
         val secondBalancer = RBBalancer<String>(null)
-        assertEquals("Test", secondBalancer.balance(RBNode("Test", null, null, null, Markers.BLACK)).value)
+        assertEquals("Test", secondBalancer.balance(RBStateContainer(RBNode("Test", null, null, null, Markers.BLACK))).value)
     }
 
     @Test
@@ -23,7 +24,7 @@ class RBBalancerTest {
         val root = nodes[30]
         val balancer = RBBalancer(root)
         nodes[18]!!.right = null
-        assertEquals(root, balancer.balance(nodes[18]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[18]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[4]!!)) },
@@ -48,7 +49,7 @@ class RBBalancerTest {
         val root = nodes[30]
         val balancer = RBBalancer(root)
         nodes[27]?.right = null
-        assertEquals(root, balancer.balance(nodes[27]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[27]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[12]!!)) },
@@ -76,7 +77,7 @@ class RBBalancerTest {
         val root = nodes[30]
         val balancer = RBBalancer(root)
         nodes[17]?.left = null
-        assertEquals(root, balancer.balance(nodes[17]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[17]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[0]!!)) },
@@ -104,7 +105,7 @@ class RBBalancerTest {
         val balancer = RBBalancer(root)
         root = deleteNode(nodes[30]!!, nodes[8]!!)
 
-        root = balancer.balance(nodes[20]!!)
+        root = balancer.balance(RBStateContainer(nodes[20]!!))
         assertAll(
             "Assertions of root",
             { assertEquals(nodes[8]?.value, root.value) },
@@ -141,7 +142,7 @@ class RBBalancerTest {
         val balance = RBBalancer(root)
         root = deleteNode(root, root.left!!)
 
-        root = balance.balance(root)
+        root = balance.balance(RBStateContainer(root))
 
         assertAll(
             "Assertions of root",
@@ -165,7 +166,7 @@ class RBBalancerTest {
         val balancer = RBBalancer(nodes[30])
         nodes[22]?.left = null
 
-        assertEquals(root, balancer.balance(nodes[22]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[22]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(rightBrotherSon), "1") },
@@ -199,7 +200,7 @@ class RBBalancerTest {
         /** first delete **/
         deleteNode(nodes[24]!!, nodes[2]!!)
 
-        assertEquals(root!!.value, balancer.balance(nodes[17]!!).value)
+        assertEquals(root!!.value, balancer.balance(RBStateContainer(nodes[17]!!)).value)
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[3]!!)) },
@@ -217,7 +218,7 @@ class RBBalancerTest {
         /** second delete **/
         deleteNode(nodes[16]!!, nodes[1]!!)
 
-        assertEquals(root, balancer.balance(nodes[1]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[1]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[0]!!)) },
@@ -240,7 +241,7 @@ class RBBalancerTest {
 
         /** third delete **/
         nodes[17]?.right = null
-        assertEquals(root, balancer.balance(nodes[17]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[17]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[0]!!), "1") },
@@ -263,7 +264,7 @@ class RBBalancerTest {
         /** fourth delete **/
         nodes[2]?.right = null
 
-        assertEquals(root, balancer.balance(nodes[2]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[2]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[0]!!)) },
@@ -288,7 +289,7 @@ class RBBalancerTest {
         /** fourth delete **/
         nodes[2]?.right = null
 
-        assertEquals(root, balancer.balance(nodes[2]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[2]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[0]!!)) },
@@ -313,7 +314,7 @@ class RBBalancerTest {
         /** fifth delete **/
         nodes[1]?.right = null
 
-        assertEquals(root, balancer.balance(nodes[1]!!))
+        assertEquals(root, balancer.balance(RBStateContainer(nodes[1]!!)))
         assertAll(
             "Grouped Assertions of black height",
             { assertEquals(3, countBlackNodes(nodes[0]!!)) },
@@ -352,7 +353,7 @@ class RBBalancerTest {
         var root = RBNode(18, null, null, null, Markers.BLACK)
         val balancer = RBBalancer(root)
         root.right = RBNode(39, null, null, root, Markers.RED)
-        root = balancer.balance(root.right!!)
+        root = balancer.balance(RBStateContainer(root.right!!))
         assertAll(
             { assertEquals(18, root.value) },
             { assertEquals(Markers.BLACK, root.color) },
@@ -368,7 +369,7 @@ class RBBalancerTest {
         val nodes = getSecondTree()
         var root = nodes[30]
         val balancer = RBBalancer(root)
-        root = balancer.balance(nodes[0]!!)
+        root = balancer.balance(RBStateContainer(nodes[0]!!))
         assertAll(
             "Assertions of root",
             { assertEquals(25, root.value) },
@@ -400,7 +401,7 @@ class RBBalancerTest {
         var root = nodes[30]
         val balancer = RBBalancer(root)
         nodes[22]?.right = RBNode(65, null, null, nodes[22], Markers.RED)
-        root = balancer.balance(nodes[22]!!.right!!)
+        root = balancer.balance(RBStateContainer(nodes[22]!!.right!!))
         assertAll(
             "Assertions of root",
             { assertEquals(50, root.value) },
@@ -437,7 +438,7 @@ class RBBalancerTest {
         var root = nodes[30]
         val balancer = RBBalancer(root)
         nodes[19]!!.left = RBNode(21, null, null, nodes[19], Markers.RED)
-        root = balancer.balance(nodes[19]!!.left!!)
+        root = balancer.balance(RBStateContainer(nodes[19]!!.left!!))
 
         assertAll(
             "Assertions of root",

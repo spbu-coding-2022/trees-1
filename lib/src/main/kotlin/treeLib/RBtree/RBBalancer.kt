@@ -3,7 +3,7 @@ package treeLib.RBtree
 import treeLib.AbstractTree.Weighted.BalancerParent
 import treeLib.Single_Objects.Markers
 
-class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): BalancerParent<Pack, RBNode<Pack>>() {
+class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): BalancerParent<Pack, RBNode<Pack>, RBStateContainer<Pack>>() {
 
     init {
         root?.color = Markers.BLACK
@@ -39,7 +39,8 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
         return node.right == null && node.left == null
     }
 
-    override fun balance(node: RBNode<Pack>): RBNode<Pack> {
+    override fun balance(stateContainer:  RBStateContainer<Pack>): RBNode<Pack> {
+        val node = stateContainer.contentNode
         val uncle = getUncle(node)
         when {
             /** node insertion case **/
