@@ -30,6 +30,8 @@ dependencies {
     // Use the Kotlin JUnit 5 integration. (TESTS support tools)
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
+
     // Use the JUnit 5 integration. (TESTS support tools)
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.1")
 
@@ -53,5 +55,8 @@ publishing {
 
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
-    useJUnitPlatform()
+    useJUnitPlatform{
+//        includeTags("fast")
+//        excludeTags("slow")
+    }
 }
