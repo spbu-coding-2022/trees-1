@@ -14,9 +14,9 @@ abstract class BalancedTreeStruct<
     protected abstract val balancer: BalancerType
 
     override fun insert(item: Pack): Pack? {
-        val currenNode = insertItem(item)
-        if (currenNode != null) {
-            root = balancer.balance(currenNode)
+        val currentState = insertItem(item)
+        if (currentState.contentNode != null) {
+            root = balancer.balance(currentState)
         }
         return item
     }
@@ -25,9 +25,9 @@ abstract class BalancedTreeStruct<
     override fun delete(item: Pack): Pack? {
         // TODO передаю родителя + что делать если: root null, root заменил я (а не Артем внутри)
         // TODO если вернулся рут, то нифига не запускать
-        val currenNode = deleteItem(item)
-        if (currenNode != null) {
-            root = balancer.balance(currenNode)
+        val currentState = deleteItem(item)
+        if (currentState.contentNode != null) {
+            root = balancer.balance(currentState)
             return item
         } else return null
     }

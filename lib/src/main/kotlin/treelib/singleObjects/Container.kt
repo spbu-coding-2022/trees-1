@@ -7,11 +7,7 @@ class Container<K : Comparable<K>, V>(private val pair: Pair<K, V?>) : Comparabl
             return true
 
         other as Container<*, *>
-        if (this.pair.first == other.pair.first) {
-            return true
-        }
-
-        return false
+        return this.pair.first == other.pair.first
     }
 
     override fun hashCode(): Int {

@@ -1,11 +1,11 @@
 package treelib.abstractTree.balanced
 
-import treelib.abstractTree.Node
+import treelib.abstractTree.NodeParent
 import treelib.abstractTree.StateContainer
 
 abstract class BalancerParent<
         Pack : Comparable<Pack>,
-        NodeType : Node<Pack, NodeType>,
+        NodeType : NodeParent<Pack, NodeType>,
         State : StateContainer<Pack, NodeType>
         >(val root: NodeType?) : Balancer<Pack, NodeType, State> {
 

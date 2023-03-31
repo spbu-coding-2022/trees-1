@@ -8,20 +8,20 @@ class RBStruct<Pack : Comparable<Pack>> :
     override var root: RBNode<Pack>? = null
 
     override fun generateStateDelete(
-        deletedNodeType: RBNode<Pack>,
+        deletedNode: RBNode<Pack>?,
         itsParent: RBNode<Pack>?
     ): RBStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
     override fun generateStateInsert(
-        insertedNodeType: RBNode<Pack>,
+        insertedNode: RBNode<Pack>?,
         itsParent: RBNode<Pack>?
     ): RBStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
-    override fun generateStateFind(foundNode: RBNode<Pack>): RBStateContainer<Pack> {
+    override fun generateStateFind(foundNode: RBNode<Pack>?): RBStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 

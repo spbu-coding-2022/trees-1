@@ -8,20 +8,20 @@ class AVLStruct<Pack : Comparable<Pack>> :
     override var root: AVLNode<Pack>? = null
 
     override fun generateStateDelete(
-        deletedNodeType: AVLNode<Pack>,
+        deletedNode: AVLNode<Pack>?,
         itsParent: AVLNode<Pack>?
     ): AVLStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
     override fun generateStateInsert(
-        insertedNodeType: AVLNode<Pack>,
+        insertedNode: AVLNode<Pack>?,
         itsParent: AVLNode<Pack>?
     ): AVLStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
-    override fun generateStateFind(foundNode: AVLNode<Pack>): AVLStateContainer<Pack> {
+    override fun generateStateFind(foundNode: AVLNode<Pack>?): AVLStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 

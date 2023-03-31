@@ -1,14 +1,10 @@
 package treelib.abstractTree
 
-abstract class TreeStruct<
-        Pack : Comparable<Pack>,
-        NodeType : Node<Pack, NodeType>,
-        State : StateContainer<Pack, NodeType>
-        > {
+abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, State : StateContainer<Pack, NodeType>> {
 
     protected abstract var root: NodeType?
 
-    private fun getLeafForInsert(item: Pack): NodeType? {
+    protected fun getLeafForInsert(item: Pack): NodeType? {
         //TODO test - getParentByValue; [не нравится, что currentNode = it.right не требует проверки на null]
         var currentNode: NodeType? = root ?: return null
 
@@ -25,7 +21,7 @@ abstract class TreeStruct<
         }
     }
 
-    private fun getParentByValue(item: Pack): NodeType? {
+    protected fun getParentByValue(item: Pack): NodeType? {
         //TODO test - getParentByValue [что вообще корректно отрабатывает]
         /*
         (1) - shouldn't be used with 'root == null' otherwise - incorrect behavior
@@ -34,7 +30,7 @@ abstract class TreeStruct<
         */
 
         var currentNode = root
-        if (findItem(item) == null) throw Exception("getParentByValue shouldn't be used with a value doesn't exist in the tree")// (2)
+        if (findItem(item).contentNode == null) throw Exception("getParentByValue shouldn't be used with a value doesn't exist in the tree")// (2)
 
         if ((currentNode != null) && (currentNode.value == item)) return null
 
@@ -58,7 +54,7 @@ abstract class TreeStruct<
         }
     }
 
-    private infix fun Pack.inRightOf(node: NodeType?): Boolean {
+    protected infix fun Pack.inRightOf(node: NodeType?): Boolean {
         //TODO - test inInRightOf
         if ((node == null) || (node.right == null)) return false
         node.right?.let {
@@ -67,7 +63,7 @@ abstract class TreeStruct<
         return false
     }
 
-    private infix fun Pack.inLeftOf(node: NodeType?): Boolean {
+    protected infix fun Pack.inLeftOf(node: NodeType?): Boolean {
         //TODO - test inInLeftOf
         if ((node == null) || (node.left == null)) return false
         node.left?.let {
@@ -76,8 +72,7 @@ abstract class TreeStruct<
         return false
     }
 
-    private fun getRightMinNode(localRoot: NodeType): NodeType? {
-        /* null - means NodeType.right doesn't exist, another variant impossible */
+    protected fun getRightMinNode(localRoot: NodeType): NodeType? {/* null - means NodeType.right doesn't exist, another variant impossible */
         //TODO test - getLeafForDelete [проверить, что нет проблем с (->1)]
         var currentNode: NodeType? = null
 
@@ -93,7 +88,7 @@ abstract class TreeStruct<
         }
     }
 
-    private fun getLeftMaxNode(localRoot: NodeType): NodeType? {
+    protected fun getLeftMaxNode(localRoot: NodeType): NodeType? {
         /* null - means NodeType.left doesn't exist, another variant impossible */
         //TODO test - getLeafLeftMax [проверить, что нет проблем с (->1)]
         var currentNode: NodeType? = null
@@ -110,8 +105,7 @@ abstract class TreeStruct<
         }
     }
 
-    private fun getNodeForReplace(localRoot: NodeType?): NodeType? {
-        /* Behaviour: null - localRoot doesn't have children */
+    protected fun getNodeForReplace(localRoot: NodeType?): NodeType? {/* Behaviour: null - localRoot doesn't have children */
         localRoot?.let {
             val replaceNode = getRightMinNode(it)
             if (replaceNode != null) return replaceNode
@@ -119,9 +113,9 @@ abstract class TreeStruct<
         } ?: return null
     }
 
-    protected fun findItem(obj: Pack): State? {
+    protected fun findItem(obj: Pack): State {
         var currentNode = root
-        if (root == null) return null
+        if (root == null) return generateStateFind(null)
 
         while (true) {
             if (obj == currentNode?.value) return generateStateFind(currentNode)
@@ -129,15 +123,15 @@ abstract class TreeStruct<
                 currentNode?.let {
                     if (obj > it.value) currentNode = it.right
                     else currentNode = it.left
-                } ?: return null
+                } ?: return generateStateFind(null)
             }
         }
     }
 
-    protected fun insertItem(item: Pack): State? {
+    protected fun insertItem(item: Pack): State {/* Behaviour: if updateNode != null => return null */
         val parentNode: NodeType?
         val currentNode: NodeType
-        val updateNode: NodeType? = findItem(item)?.contentNode
+        val updateNode: NodeType? = findItem(item).contentNode
 
         if (updateNode == null) {
             parentNode = getLeafForInsert(item)
@@ -149,10 +143,10 @@ abstract class TreeStruct<
         }
 
         updateNode.value = item
-        return null
+        return generateStateInsert(null, null)
     }
 
-    protected fun deleteItem(item: Pack): State? {
+    protected fun deleteItem(item: Pack): State {
         /*TODO: test - deleteItem [невозможные ветки: - проверить, что они реально невозможны
            (->1 & 2) => что невозможно достичь deleteNode = parentNode?. со значением null (потому что inRightOf/inLeftOf)
            (->3) => странный кейс, когда удаляемое значение - null; такого вообще быть не должно
@@ -162,7 +156,7 @@ abstract class TreeStruct<
         var replaceNode: NodeType?   // node for relink on the place deleted node
         val state: State
 
-        if (findItem(item) != null) return null
+        if (findItem(item).contentNode != null) return generateStateDelete(null, null)
 
         parentNode = getParentByValue(item)
         if (parentNode != null) {
@@ -187,15 +181,15 @@ abstract class TreeStruct<
         return state
     }
 
-    protected abstract fun generateStateFind(foundNode: NodeType): State
+    protected abstract fun generateStateFind(foundNode: NodeType?): State
 
     protected abstract fun generateStateInsert(
-        insertedNodeType: NodeType,
+        insertedNode: NodeType?,
         itsParent: NodeType?,
     ): State
 
     protected abstract fun generateStateDelete(
-        deletedNodeType: NodeType,
+        deletedNode: NodeType?,
         itsParent: NodeType?,
     ): State
 
@@ -219,7 +213,7 @@ abstract class TreeStruct<
 
     fun find(obj: Pack): Pack? {
         //TODO test - find
-        if (findItem(obj) == null) return null
+        if (findItem(obj).contentNode == null) return null
         else return obj
     }
 

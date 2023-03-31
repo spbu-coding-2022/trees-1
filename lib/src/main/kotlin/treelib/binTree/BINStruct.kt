@@ -1,4 +1,3 @@
-//TODO нужны ли let? везде
 package treelib.binTree
 
 import treelib.abstractTree.TreeStruct
@@ -9,22 +8,16 @@ class BINStruct<Pack : Comparable<Pack>> :
     override var root: BINNode<Pack>? = null
 
     override fun generateStateDelete(
-        deletedNodeType: BINNode<Pack>,
+        deletedNode: BINNode<Pack>?,
         itsParent: BINNode<Pack>?
-    ): BINStateContainer<Pack> {
-        TODO("Not yet implemented")
-    }
+    ): BINStateContainer<Pack> = BINStateContainer(deletedNode)
 
     override fun generateStateInsert(
-        insertedNodeType: BINNode<Pack>,
+        insertedNode: BINNode<Pack>?,
         itsParent: BINNode<Pack>?
-    ): BINStateContainer<Pack> {
-        TODO("Not yet implemented")
-    }
+    ): BINStateContainer<Pack> = BINStateContainer(insertedNode)
 
-    override fun generateStateFind(foundNode: BINNode<Pack>): BINStateContainer<Pack> {
-        TODO("Not yet implemented")
-    }
+    override fun generateStateFind(foundNode: BINNode<Pack>?): BINStateContainer<Pack> = BINStateContainer(foundNode)
 
     override fun rebaseNode(
         node: BINNode<Pack>,
@@ -66,7 +59,6 @@ class BINStruct<Pack : Comparable<Pack>> :
     }
 
     override fun linkNewNode(
-        //TODO make an abstract?
         node: BINNode<Pack>,
         parent: BINNode<Pack>?,
     ): BINNode<Pack> {
@@ -80,7 +72,7 @@ class BINStruct<Pack : Comparable<Pack>> :
 
     override fun createNode(item: Pack) = BINNode(item)
 
-    override fun delete(item: Pack): Pack? = deleteItem(item)?.contentNode?.value
+    override fun delete(item: Pack): Pack? = deleteItem(item).contentNode?.value
 
-    override fun insert(item: Pack): Pack? = insertItem(item)?.contentNode?.value
+    override fun insert(item: Pack): Pack? = insertItem(item).contentNode?.value
 }
