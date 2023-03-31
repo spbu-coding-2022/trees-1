@@ -36,14 +36,12 @@ class BINStruct<Pack : Comparable<Pack>> :
         node: BINNode<Pack>,
         parent: BINNode<Pack>?
     ): BINNode<Pack> {
-        /*Behaviour:
-        * 1) must be used with [one or two] children == null
-        * 2) return - Node without children */
+        /*Behaviour: return - Node without children */
         /*TODO: unLink - test*/
         val unLinkedNode: BINNode<Pack> = node
         val childForLink: BINNode<Pack>?
         when {
-            (node.right != null) && (node.left != null) -> return node //means-error (in correct node input)
+            (node.right != null) && (node.left != null) -> throw Exception("unLink - method Shouldn't be used with node with both children")
             node.right != null -> childForLink = node.right
             node.left != null -> childForLink = node.left
             else -> childForLink = null

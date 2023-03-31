@@ -163,10 +163,10 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             deleteNode = when {
                 item inRightOf parentNode -> parentNode.right //(->1)
                 item inLeftOf parentNode -> parentNode.left   //(->2)
-                else -> null
+                else -> throw Exception("Impossible case in deleteItem (is turned out to be possible)")
             }
         } else deleteNode = root
-        if (deleteNode == null) throw NullPointerException("impossible case") // (->3)
+        if (deleteNode == null) throw Exception("Impossible case in deleteItem (is turned out to be possible)") // (->3)
 
         replaceNode = getNodeForReplace(deleteNode)
         replaceNode?.let {
