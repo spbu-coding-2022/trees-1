@@ -75,7 +75,6 @@ class RBBalancerTest {
                 { assertEquals(null, nodes[27]?.right) },
             )
         }
-        // 3
 
         @Test
         fun `remove black leaf(red parent)`() {
@@ -479,5 +478,5 @@ class RBBalancerTest {
             )
         }
     }
-    
+
 }

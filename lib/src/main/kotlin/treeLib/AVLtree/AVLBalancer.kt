@@ -11,18 +11,14 @@ class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): Bal
         return currentNode?.height ?: 0u
     }
 
-    private fun updateHeight(currentNode: AVLNode<Pack>?): UInt {
-        return if (currentNode == null) 0u else ( maxOf(getHeight(currentNode.left), getHeight(currentNode.right)) + 1u)
+    private fun updateHeight(currentNode: AVLNode<Pack>?) {
+        if (currentNode != null)
+            currentNode.height = maxOf(getHeight(currentNode.left), getHeight(currentNode.right))+1u
     }
 
     override fun balance(stateContainer: AVLStateContainer<Pack>): AVLNode<Pack> {
         val node = stateContainer.contentNode
         root = stateContainer.root
-        when (node.value) {
-            root?.value -> {
-
-            }
-        }
         return balance(root, node.value)
     }
     // В баланс передаем родителя ноды, которую будем удалять
@@ -33,9 +29,8 @@ class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): Bal
         when {
             currentNode.value < value -> currentNode.right = balance(currentNode.right, value)
             currentNode.value > value -> currentNode.left = balance(currentNode.left, value)
-            currentNode.value == value -> return currentNode
         }
-        currentNode.height = updateHeight(currentNode)
+        updateHeight(currentNode)
         val balance = updateBalance(currentNode)
         if (balance == -2) {
             if (updateBalance(currentNode.right) == 1) {
@@ -53,8 +48,8 @@ class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): Bal
                 updateHeight(currentNode.left?.left)
             }
             val balanceNode = rightRotate(currentNode)
-            updateHeight(currentNode.right)
-            updateHeight(currentNode)
+            updateHeight(balanceNode.right)
+            updateHeight(balanceNode)
             return balanceNode
         }
         return currentNode
