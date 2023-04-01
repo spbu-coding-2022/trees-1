@@ -7,35 +7,36 @@ class RBStruct<Pack : Comparable<Pack>> :
 
     override var root: RBNode<Pack>? = null
 
+    override val balancer = RBBalancer(root)
+
     override fun generateStateDelete(
         deletedNode: RBNode<Pack>?,
-        itsParent: RBNode<Pack>?
-    ): RBStateContainer<Pack> {
+        contentNode: RBNode<Pack>?,
+        ): RBStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
     override fun generateStateInsert(
-        insertedNode: RBNode<Pack>?,
-        itsParent: RBNode<Pack>?
-    ): RBStateContainer<Pack> {
+        insertNode: RBNode<Pack>?,
+        contentNode: RBNode<Pack>?,
+        ): RBStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
-    override fun generateStateFind(foundNode: RBNode<Pack>?): RBStateContainer<Pack> {
+    override fun generateStateFind(
+        findNode: RBNode<Pack>?,
+        contentNode: RBNode<Pack>?,
+        ): RBStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
-    override val balancer = RBBalancer(root)
-
-    override fun createNode(item: Pack): RBNode<Pack> {
-        TODO("Not yet implemented")
-    }
+    override fun createNode(item: Pack): RBNode<Pack> = RBNode(item)
 
     override fun linkNewNode(node: RBNode<Pack>, parent: RBNode<Pack>?): RBNode<Pack> {
         TODO("Not yet implemented")
     }
 
-    override fun rebaseNode(node: RBNode<Pack>, parent: RBNode<Pack>?, replaceNode: RBNode<Pack>?): RBNode<Pack>? {
+    override fun rebaseNode(node: RBNode<Pack>, parent: RBNode<Pack>?, replaceNode: RBNode<Pack>?): RBNode<Pack> {
         TODO("Not yet implemented")
     }
 

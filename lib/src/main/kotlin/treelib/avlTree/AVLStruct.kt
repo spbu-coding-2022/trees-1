@@ -7,26 +7,28 @@ class AVLStruct<Pack : Comparable<Pack>> :
 
     override var root: AVLNode<Pack>? = null
 
+    override val balancer = AVLBalancer(root)
+
     override fun generateStateDelete(
         deletedNode: AVLNode<Pack>?,
-        itsParent: AVLNode<Pack>?
+        contentNode: AVLNode<Pack>?,
     ): AVLStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
     override fun generateStateInsert(
-        insertedNode: AVLNode<Pack>?,
-        itsParent: AVLNode<Pack>?
+        insertNode: AVLNode<Pack>?,
+        contentNode: AVLNode<Pack>?
     ): AVLStateContainer<Pack> {
         TODO("Not yet implemented")
     }
 
-    override fun generateStateFind(foundNode: AVLNode<Pack>?): AVLStateContainer<Pack> {
+    override fun generateStateFind(
+        findNode: AVLNode<Pack>?,
+        contentNode: AVLNode<Pack>?,
+        ): AVLStateContainer<Pack> {
         TODO("Not yet implemented")
     }
-
-    override val balancer = AVLBalancer(root)
-
 
     override fun createNode(item: Pack): AVLNode<Pack> {
         TODO("Not yet implemented")
@@ -36,7 +38,7 @@ class AVLStruct<Pack : Comparable<Pack>> :
         TODO("Not yet implemented")
     }
 
-    override fun rebaseNode(node: AVLNode<Pack>, parent: AVLNode<Pack>?, replaceNode: AVLNode<Pack>?): AVLNode<Pack>? {
+    override fun rebaseNode(node: AVLNode<Pack>, parent: AVLNode<Pack>?, replaceNode: AVLNode<Pack>?): AVLNode<Pack> {
         TODO("Not yet implemented rebaseNode")
     }
 

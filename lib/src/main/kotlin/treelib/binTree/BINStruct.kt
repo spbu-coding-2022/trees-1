@@ -9,27 +9,39 @@ class BINStruct<Pack : Comparable<Pack>> :
 
     override fun generateStateDelete(
         deletedNode: BINNode<Pack>?,
-        itsParent: BINNode<Pack>?
+        contentNode: BINNode<Pack>?
     ): BINStateContainer<Pack> = BINStateContainer(deletedNode)
 
     override fun generateStateInsert(
-        insertedNode: BINNode<Pack>?,
-        itsParent: BINNode<Pack>?
-    ): BINStateContainer<Pack> = BINStateContainer(insertedNode)
+        insertNode: BINNode<Pack>?,
+        contentNode: BINNode<Pack>?,
+    ): BINStateContainer<Pack> = BINStateContainer(insertNode)
 
-    override fun generateStateFind(foundNode: BINNode<Pack>?): BINStateContainer<Pack> = BINStateContainer(foundNode)
+    override fun generateStateFind(
+        findNode: BINNode<Pack>?,
+        contentNode: BINNode<Pack>?,
+    ): BINStateContainer<Pack> = BINStateContainer(findNode)
 
     override fun rebaseNode(
         node: BINNode<Pack>,
         parent: BINNode<Pack>?,
         replaceNode: BINNode<Pack>?,
-    ): BINNode<Pack>? {
+    ): BINNode<Pack> {
         /*Behaviour: return - linked replaceNode*/
         //TODO: rebaseNode - test
-        if (replaceNode != null) {
-            node.value = replaceNode.value
-            return node
-        } else return null
+        val deletedNode: BINNode<Pack> = createNode(node.value)
+        when {
+            (parent == null) && (replaceNode == null) -> root = null
+            (parent != null) && (replaceNode == null) -> {
+                when {
+                    node.value inLeftOf parent.left -> parent.left = null
+                    node.value inRightOf parent.right -> parent.right = null
+                }
+            }
+
+            replaceNode != null -> node.value = replaceNode.value
+        }
+        return deletedNode
     }
 
     override fun unLink(
@@ -70,7 +82,11 @@ class BINStruct<Pack : Comparable<Pack>> :
 
     override fun createNode(item: Pack) = BINNode(item)
 
-    override fun delete(item: Pack): Pack? = deleteItem(item).contentNode?.value
+    override fun delete(item: Pack) {
+        deleteItem(item).contentNode
+    }
 
-    override fun insert(item: Pack): Pack? = insertItem(item).contentNode?.value
+    override fun insert(item: Pack) {
+        insertItem(item).contentNode
+    }
 }
