@@ -16,6 +16,18 @@ class RBStruct<Pack : Comparable<Pack>> :
         TODO("Not yet implemented")
     }
 
+    override fun getNodeKernel(node: RBNode<Pack>): RBNode<Pack> {
+        TODO("Not yet implemented")
+    }
+
+    override fun connectUnlinkedSubTreeWithParent(
+        node: RBNode<Pack>,
+        parent: RBNode<Pack>?,
+        childForLink: RBNode<Pack>?
+    ) {
+        TODO("Not yet implemented")
+    }
+
     override fun generateStateInsert(
         insertNode: RBNode<Pack>?,
         contentNode: RBNode<Pack>?,
@@ -33,14 +45,6 @@ class RBStruct<Pack : Comparable<Pack>> :
     override fun createNode(item: Pack): RBNode<Pack> = RBNode(item)
 
     override fun linkNewNode(node: RBNode<Pack>, parent: RBNode<Pack>?): RBNode<Pack> {
-        TODO("Not yet implemented")
-    }
-
-    override fun rebaseNode(node: RBNode<Pack>, parent: RBNode<Pack>?, replaceNode: RBNode<Pack>?): RBNode<Pack> {
-        TODO("Not yet implemented")
-    }
-
-    override fun unLink(node: RBNode<Pack>, parent: RBNode<Pack>?): RBNode<Pack> {
         TODO("Not yet implemented")
     }
 }

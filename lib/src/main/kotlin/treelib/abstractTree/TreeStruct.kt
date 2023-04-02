@@ -78,45 +78,20 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         return false
     }
 
-    protected fun getRightMinNode(localRoot: NodeType): NodeType? {/* null - means NodeType.right doesn't exist, another variant impossible */
+    protected fun getRightMinNode(localRoot: NodeType): NodeType {/* null - means NodeType.right doesn't exist, another variant impossible */
         //TODO test - getLeafForDelete [проверить, что нет проблем с (->1)]
         var currentNode: NodeType? = null
 
-        localRoot.right?.let {
-            currentNode = localRoot.right
-        } ?: return null
+        localRoot.right ?: throw Exception("Incorrect usage of the getRightMinNode") //(->1)
+
+        currentNode = localRoot.right
 
         while (true) {
             currentNode?.let { curNode ->
-                if (curNode.left == null) return currentNode
+                if (curNode.left == null) return curNode
                 else currentNode = curNode.left
-            } ?: throw Exception("Impossible case, or multithreading threads problem") //(->1)
+            } ?: throw Exception("Impossible case or multithreading threads problem") //(->1)
         }
-    }
-
-    protected fun getLeftMaxNode(localRoot: NodeType): NodeType? {
-        /* null - means NodeType.left doesn't exist, another variant impossible */
-        //TODO test - getLeafLeftMax [проверить, что нет проблем с (->1)]
-        var currentNode: NodeType? = null
-
-        localRoot.left?.let {
-            currentNode = localRoot.left
-        } ?: return null
-
-        while (true) {
-            currentNode?.let { curNode ->
-                if (curNode.right == null) return currentNode
-                else currentNode = curNode.right
-            } ?: throw Exception("Impossible case, or multithreading threads problem") //(->1)
-        }
-    }
-
-    protected fun getNodeForReplace(localRoot: NodeType?): NodeType? {/* Behaviour: null - localRoot doesn't have children */
-        localRoot?.let {
-            val replaceNode = getRightMinNode(it)
-            if (replaceNode != null) return replaceNode
-            else return getLeftMaxNode(it)
-        } ?: return null
     }
 
     protected abstract fun generateStateFind(
@@ -168,47 +143,105 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
     ): State
 
     protected fun deleteItem(item: Pack): State {
-        val parentNode: NodeType? // parent node of the node for deleting
-        val deleteNode: NodeType?  // node for deleting
-        val state: State
-        var replaceNodeParent: NodeType? = null
-        var replaceNode: NodeType?   // node for relink on the place deleted node
+        val parentDeleteNode: NodeType?
+        val deleteNode: NodeType?
 
         if (findItem(item).contentNode == null) throw Exception("Deleted value doesn't exist in tree")
 
-        parentNode = getParentByValue(item)
-        if (parentNode != null) {
+        parentDeleteNode = getParentByValue(item)
+        if (parentDeleteNode != null) {
             deleteNode = when {
-                item inRightOf parentNode -> parentNode.right //(->1)
-                item inLeftOf parentNode -> parentNode.left   //(->2)
+                item inRightOf parentDeleteNode -> parentDeleteNode.right
+                item inLeftOf parentDeleteNode -> parentDeleteNode.left
                 else -> throw Exception("Impossible case in deleteItem (is turned out to be possible)")
             }
         } else deleteNode = root
-        if (deleteNode == null) throw Exception("Impossible case in deleteItem (is turned out to be possible)") // (->3)
 
-        replaceNode = getNodeForReplace(deleteNode)
-        replaceNode?.let {
-            replaceNodeParent = getParentByValue(it.value)
-            replaceNode = unLink(it, replaceNodeParent)
-        }// if deleteNode doesn't have children => replaceNode = null
+        if (deleteNode == null) throw Exception("Impossible case in deleteItem (is turned out to be possible)")
 
-        state = generateStateDelete(
-            rebaseNode(deleteNode, parentNode, replaceNode),
-            replaceNodeParent
-        )
-        return state
+        val nodeForReplace: NodeType?
+        val parentNodeForReplace: NodeType?
+        val deletedNodeWithoutLinks = getNodeKernel(deleteNode)
+
+        when {
+            (deleteNode.left != null) && (deleteNode.right != null) -> {
+                val rightMinNode = getRightMinNode(deleteNode)
+
+                parentNodeForReplace = getParentByValue(rightMinNode.value)
+                nodeForReplace = unLink(rightMinNode, parentNodeForReplace)
+
+                rebaseNode(deleteNode, parentDeleteNode, nodeForReplace)
+
+                return generateStateDelete(deletedNodeWithoutLinks, parentNodeForReplace)
+            }
+
+            (deleteNode.left == null) && (deleteNode.right == null) -> {
+                if (parentDeleteNode == null) return generateStateDelete(deletedNodeWithoutLinks, null)
+                else {
+                    parentDeleteNode.left = null
+                    parentDeleteNode.right = null
+                    return generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                }
+            }
+
+            else -> {
+                for (child in listOf(deleteNode.right, deleteNode.left)) child?.let {
+                    connectUnlinkedSubTreeWithParent(deleteNode, parentDeleteNode, it)
+                    return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                }
+            }
+        }
+        throw Exception("Impossible case")
     }
 
-    protected abstract fun unLink(
+    protected fun unLink(
         node: NodeType,
         parent: NodeType?,
-    ): NodeType
+    ): NodeType {
+        val unLinkedNode: NodeType = node
+        val childForLink: NodeType?
 
-    protected abstract fun rebaseNode(
+        when {
+            (node.right != null) && (node.left != null) -> throw Exception("unLink - method Shouldn't be used with node with both children")
+            node.right != null -> childForLink = node.right
+            node.left != null -> childForLink = node.left
+            else -> childForLink = null
+        }
+        unLinkedNode.left = null
+        unLinkedNode.right = null
+
+        if (parent == null) return unLinkedNode
+        connectUnlinkedSubTreeWithParent(node, parent, childForLink)
+
+        return unLinkedNode
+    }
+
+    protected abstract fun connectUnlinkedSubTreeWithParent(
+        node: NodeType,
+        parent: NodeType?,
+        childForLink: NodeType?
+    ) /*Behaviour: link rebased node */
+
+    protected fun rebaseNode(
         node: NodeType,
         parent: NodeType?,
         replaceNode: NodeType?,
-    ): NodeType // return linked on the node place (null - if the replaceNode == null...)
+    ) {
+        when {
+            (parent == null) && (replaceNode == null) -> root = null
+            (parent != null) && (replaceNode == null) -> {
+                when {
+                    node.value inLeftOf parent.left -> parent.left = null
+                    node.value inRightOf parent.right -> parent.right = null
+                }
+            }
+
+            replaceNode != null -> node.value = replaceNode.value
+        }
+    }
+
+    /* Return node with fields: right == left == {parent} == null */
+    protected abstract fun getNodeKernel(node: NodeType): NodeType
 
     protected abstract fun linkNewNode(
         node: NodeType,

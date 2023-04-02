@@ -22,50 +22,23 @@ class BINStruct<Pack : Comparable<Pack>> :
         contentNode: BINNode<Pack>?,
     ): BINStateContainer<Pack> = BINStateContainer(findNode)
 
-    override fun rebaseNode(
+    override fun getNodeKernel(node: BINNode<Pack>) = BINNode(node.value)
+
+    override fun connectUnlinkedSubTreeWithParent(
         node: BINNode<Pack>,
         parent: BINNode<Pack>?,
-        replaceNode: BINNode<Pack>?,
-    ): BINNode<Pack> {
-        /*Behaviour: return - linked replaceNode*/
-        //TODO: rebaseNode - test
-        val deletedNode: BINNode<Pack> = createNode(node.value)
-        when {
-            (parent == null) && (replaceNode == null) -> root = null
-            (parent != null) && (replaceNode == null) -> {
-                when {
-                    node.value inLeftOf parent.left -> parent.left = null
-                    node.value inRightOf parent.right -> parent.right = null
-                }
+        childForLink: BINNode<Pack>?,
+    ) {
+        if (root == null) return
+
+        if (parent != null) {
+            when {
+                (node.value < parent.value) -> parent.right = childForLink
+                (node.value > parent.value) -> parent.left = childForLink
             }
-
-            replaceNode != null -> node.value = replaceNode.value
+        } else root?.let {
+            root = childForLink
         }
-        return deletedNode
-    }
-
-    override fun unLink(
-        node: BINNode<Pack>,
-        parent: BINNode<Pack>?
-    ): BINNode<Pack> {
-        /*Behaviour: return - Node without children */
-        /*TODO: unLink - test*/
-        val unLinkedNode: BINNode<Pack> = node
-        val childForLink: BINNode<Pack>?
-        when {
-            (node.right != null) && (node.left != null) -> throw Exception("unLink - method Shouldn't be used with node with both children")
-            node.right != null -> childForLink = node.right
-            node.left != null -> childForLink = node.left
-            else -> childForLink = null
-        }
-        unLinkedNode.left = null
-        unLinkedNode.right = null
-        if (parent == null) return unLinkedNode
-        when {
-            (node.value < parent.value) -> parent.right = childForLink
-            (node.value > parent.value) -> parent.left = childForLink
-        }
-        return unLinkedNode
     }
 
     override fun linkNewNode(
