@@ -5,8 +5,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
     protected abstract var root: NodeType?
 
-    protected fun getLeafForInsert(item: Pack): NodeType? {
-        //TODO test - getParentByValue; [не нравится, что currentNode = it.right не требует проверки на null]
+    private fun getLeafForInsert(item: Pack): NodeType? {
         var currentNode: NodeType? = root ?: return null
 
         while (true) {
@@ -21,13 +20,14 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                         if (it.left == null) return@getLeafForInsert currentNode
                         currentNode = it.left
                     }
+
                     else -> throw Exception("getLeafForInsert shouldn't be used with a value exists in Struct")
                 }
             } ?: throw Exception("Impossible case or multithreading problem")
         }
     }
 
-    protected fun getParentByValue(item: Pack): NodeType? {
+    private fun getParentByValue(item: Pack): NodeType? {
         //TODO test - getParentByValue [что вообще корректно отрабатывает]
         /*
         (1) - shouldn't be used with 'root == null' otherwise - incorrect behavior
@@ -36,7 +36,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         */
 
         var currentNode = root
-        if (findItem(item).contentNode == null) throw Exception("getParentByValue shouldn't be used with a value doesn't exist in the tree")// (2)
+//        if (findItem(item).contentNode == null) throw Exception("getParentByValue shouldn't be used with a value doesn't exist in the tree")// (2)
 
         if ((currentNode != null) && (currentNode.value == item)) return null
 
@@ -54,25 +54,25 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         }
     }
 
-    protected infix fun Pack.inRightOf(node: NodeType?): Boolean {
+    private infix fun Pack.inRightOf(node: NodeType?): Boolean {
         //TODO - test inInRightOf
-        if ((node == null) || (node.right == null)) return false
+        if (node == null) return false
         node.right?.let {
-            if (it.value == node.value) return@inRightOf true
+            if (this == it.value) return@inRightOf true
         }
         return false
     }
 
-    protected infix fun Pack.inLeftOf(node: NodeType?): Boolean {
+    private infix fun Pack.inLeftOf(node: NodeType?): Boolean {
         //TODO - test inInLeftOf
-        if ((node == null) || (node.left == null)) return false
+        if (node == null) return false
         node.left?.let {
             if (it.value == this) return@inLeftOf true
         }
         return false
     }
 
-    protected fun getRightMinNode(localRoot: NodeType): NodeType {/* null - means NodeType.right doesn't exist, another variant impossible */
+    private fun getRightMinNode(localRoot: NodeType): NodeType {/* null - means NodeType.right doesn't exist, another variant impossible */
         //TODO test - getLeafForDelete [проверить, что нет проблем с (->1)]
         var currentNode: NodeType?
 
@@ -85,6 +85,46 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                 if (curNode.left == null) return@getRightMinNode curNode
                 else currentNode = curNode.left
             } ?: throw Exception("Impossible case or multithreading threads problem") //(->1)
+        }
+    }
+
+    private fun unLink(
+        node: NodeType,
+        parent: NodeType?,
+    ): NodeType {
+        val unLinkedNode: NodeType = node
+        val childForLink: NodeType?
+
+        when {
+            (node.right != null) && (node.left != null) -> throw Exception("unLink - method Shouldn't be used with node with both children")
+            node.right != null -> childForLink = node.right
+            node.left != null -> childForLink = node.left
+            else -> childForLink = null
+        }
+        unLinkedNode.left = null
+        unLinkedNode.right = null
+
+        if (parent == null) return unLinkedNode
+        connectUnlinkedSubTreeWithParent(node, parent, childForLink)
+
+        return unLinkedNode
+    }
+
+    private fun rebaseNode(
+        node: NodeType,
+        parent: NodeType?,
+        replaceNode: NodeType?,
+    ) {
+        when {
+            (parent == null) && (replaceNode == null) -> root = null
+            (parent != null) && (replaceNode == null) -> {
+                when {
+                    node.value inLeftOf parent.left -> parent.left = null
+                    node.value inRightOf parent.right -> parent.right = null
+                }
+            }
+
+            replaceNode != null -> node.value = replaceNode.value
         }
     }
 
@@ -170,10 +210,14 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             }
 
             (deleteNode.left == null) && (deleteNode.right == null) -> {
-                if (parentDeleteNode == null) return generateStateDelete(deletedNodeWithoutLinks, null)
-                else {
-                    parentDeleteNode.left = null
-                    parentDeleteNode.right = null
+                if (parentDeleteNode == null) {
+                    root = null
+                    return generateStateDelete(deletedNodeWithoutLinks, null)
+                } else {
+                    when {
+                        item inRightOf parentDeleteNode -> parentDeleteNode.right = null
+                        item inLeftOf parentDeleteNode -> parentDeleteNode.left = null
+                    }
                     return generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
                 }
             }
@@ -189,51 +233,11 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         throw Exception("Impossible case")
     }
 
-    protected fun unLink(
-        node: NodeType,
-        parent: NodeType?,
-    ): NodeType {
-        val unLinkedNode: NodeType = node
-        val childForLink: NodeType?
-
-        when {
-            (node.right != null) && (node.left != null) -> throw Exception("unLink - method Shouldn't be used with node with both children")
-            node.right != null -> childForLink = node.right
-            node.left != null -> childForLink = node.left
-            else -> childForLink = null
-        }
-        unLinkedNode.left = null
-        unLinkedNode.right = null
-
-        if (parent == null) return unLinkedNode
-        connectUnlinkedSubTreeWithParent(node, parent, childForLink)
-
-        return unLinkedNode
-    }
-
     protected abstract fun connectUnlinkedSubTreeWithParent(
         node: NodeType,
         parent: NodeType?,
         childForLink: NodeType?
     ) /* Behaviour: link rebased node */
-
-    protected fun rebaseNode(
-        node: NodeType,
-        parent: NodeType?,
-        replaceNode: NodeType?,
-    ) {
-        when {
-            (parent == null) && (replaceNode == null) -> root = null
-            (parent != null) && (replaceNode == null) -> {
-                when {
-                    node.value inLeftOf parent.left -> parent.left = null
-                    node.value inRightOf parent.right -> parent.right = null
-                }
-            }
-
-            replaceNode != null -> node.value = replaceNode.value
-        }
-    }
 
     /* Return node with fields: right == left == {parent} == null */
     protected abstract fun getNodeKernel(node: NodeType): NodeType
@@ -245,22 +249,104 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
     protected abstract fun createNode(item: Pack): NodeType
 
-    fun find(obj: Pack): Pack? = findItem(obj).contentNode?.value
-
     abstract fun insert(item: Pack)
 
     /*Behaviour: null - means value not in tree; Pack - value was successfully deleted*/
     abstract fun delete(item: Pack)
 
+    fun find(obj: Pack): Pack? = findItem(obj).contentNode?.value
+
     fun inOrder(): List<Pack> {
-        TODO()
+        val arrayNodes = mutableListOf<Pack>()
+        var flagVisited = 0
+        var current = root
+        val parents = ArrayDeque<NodeType>()
+
+        while (current != null) {
+            if (flagVisited == 0) {
+                while (true) {
+                    current?.let {
+                        if (it.left == null) return@let null
+                        parents.add(it)
+                        current = it.left
+                        return@let current
+                    } ?: break
+                }
+            }
+            current?.let {
+                arrayNodes.add(it.value)
+                if (it.right != null) {
+                    flagVisited = 0
+                    current = it.right
+                } else {
+                    if (parents.isEmpty())
+                        return@inOrder arrayNodes
+                    flagVisited = 1
+                    current = parents.removeLast()
+                }
+            }
+        }
+        return arrayNodes
     }
 
     fun postOrder(): List<Pack> {
-        TODO()
+        val parents = ArrayDeque<NodeType>()
+        val arrayNodes = mutableListOf<Pack>()
+        var flagVisited = 0
+        var current = root
+
+        while (current != null) {
+            if (flagVisited == 0) {
+                while (true) {
+                    current?.let {
+                        if (it.left == null) return@let null
+                        parents.add(it)
+                        current = it.left
+                        return@let current
+                    } ?: break
+                }
+            }
+            current?.let {
+                if (it.right != null && flagVisited != 2) {
+                    parents.add(it)
+                    current = it.right
+                    flagVisited = 0
+                } else {
+                    arrayNodes.add(it.value)
+                    if (parents.isEmpty())
+                        return@postOrder arrayNodes
+                    val parent = parents.removeLast()
+                    if (parent.right == it) {
+                        flagVisited = 2
+                    }
+                    current = parent
+                }
+            } ?: throw Exception("Impossible case or multithreading problem")
+        }
+        return arrayNodes
     }
 
     fun preOrder(): List<Pack> {
-        TODO()
+        val arrayNodes = mutableListOf<Pack>()
+        var current: NodeType
+        val queue = ArrayDeque<NodeType>()
+
+        root?.let { root ->
+            queue.add(root)
+            while (queue.isNotEmpty()) {
+                current = queue.removeLast()
+                arrayNodes.add(current.value)
+                if (current.right != null)
+                    current.right?.let {
+                        queue.add(it)
+                    } ?: throw Exception("Impossible case or multithreading threads problem")
+
+                if (current.left != null)
+                    current.left?.let {
+                        queue.add(it)
+                    } ?: throw Exception("Impossible case or multithreading threads problem")
+            }
+        }
+        return arrayNodes
     }
 }

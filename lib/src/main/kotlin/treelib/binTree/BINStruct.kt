@@ -33,8 +33,8 @@ class BINStruct<Pack : Comparable<Pack>> :
 
         if (parent != null) {
             when {
-                (node.value < parent.value) -> parent.right = childForLink
-                (node.value > parent.value) -> parent.left = childForLink
+                (node.value < parent.value) -> parent.left = childForLink
+                (node.value > parent.value) -> parent.right = childForLink
             }
         } else root?.let {
             root = childForLink
