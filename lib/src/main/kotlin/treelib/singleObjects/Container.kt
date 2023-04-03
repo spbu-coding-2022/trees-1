@@ -1,6 +1,9 @@
 package treelib.singleObjects
 
-class Container<K : Comparable<K>, V>(private val pair: Pair<K, V?>) : Comparable<Container<K, V>> {
+class Container<K : Comparable<K>, V>(val pair: Pair<K, V?>) : Comparable<Container<K, V>> {
+
+    val key = pair.first
+    val value = pair.second
 
     override fun equals(other: Any?): Boolean {
         if (this === other)
