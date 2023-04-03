@@ -1,5 +1,6 @@
 package treelib.abstractTree
 
+
 abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, State : StateContainer<Pack, NodeType>> {
 
     protected abstract var root: NodeType?
@@ -12,15 +13,14 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             currentNode?.let {
                 when {
                     item > it.value -> {
-                        if (it.right == null) return currentNode
+                        if (it.right == null) return@getLeafForInsert currentNode
                         currentNode = it.right
                     }
 
                     item < it.value -> {
-                        if (it.left == null) return currentNode
+                        if (it.left == null) return@getLeafForInsert currentNode
                         currentNode = it.left
                     }
-
                     else -> throw Exception("getLeafForInsert shouldn't be used with a value exists in Struct")
                 }
             } ?: throw Exception("Impossible case or multithreading problem")
@@ -43,20 +43,14 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         while (true) {
             currentNode?.let {
                 when {
-                    it.right != null -> {
-                        if (it.right?.value == item) return currentNode
-                        else throw Exception("Impossible case, or multithreading threads problem")
-                    }
-
-                    it.left != null -> {
-                        if (it.left?.value == item) return currentNode
-                        else throw Exception("Impossible case, or multithreading threads problem")
+                    item inRightOf it -> return@getParentByValue currentNode
+                    item inLeftOf it -> return@getParentByValue currentNode
+                    else -> {
+                        if (item > it.value) currentNode = it.right
+                        else currentNode = it.left
                     }
                 }
-                if (item > it.value) currentNode = it.right
-                else currentNode = it.left
-
-            } ?: throw Exception("getParentByValue shouldn't be used with 'root == null'")// (1)l ->
+            } ?: throw Exception("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
         }
     }
 
@@ -64,7 +58,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         //TODO - test inInRightOf
         if ((node == null) || (node.right == null)) return false
         node.right?.let {
-            if (it.value == node.value) return true
+            if (it.value == node.value) return@inRightOf true
         }
         return false
     }
@@ -73,14 +67,14 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         //TODO - test inInLeftOf
         if ((node == null) || (node.left == null)) return false
         node.left?.let {
-            if (it.value == this) return true
+            if (it.value == this) return@inLeftOf true
         }
         return false
     }
 
     protected fun getRightMinNode(localRoot: NodeType): NodeType {/* null - means NodeType.right doesn't exist, another variant impossible */
         //TODO test - getLeafForDelete [проверить, что нет проблем с (->1)]
-        var currentNode: NodeType? = null
+        var currentNode: NodeType?
 
         localRoot.right ?: throw Exception("Incorrect usage of the getRightMinNode") //(->1)
 
@@ -88,7 +82,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
         while (true) {
             currentNode?.let { curNode ->
-                if (curNode.left == null) return curNode
+                if (curNode.left == null) return@getRightMinNode curNode
                 else currentNode = curNode.left
             } ?: throw Exception("Impossible case or multithreading threads problem") //(->1)
         }
@@ -185,10 +179,11 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             }
 
             else -> {
-                for (child in listOf(deleteNode.right, deleteNode.left)) child?.let {
-                    connectUnlinkedSubTreeWithParent(deleteNode, parentDeleteNode, it)
-                    return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
-                }
+                for (child in listOf(deleteNode.right, deleteNode.left))
+                    child?.let {
+                        connectUnlinkedSubTreeWithParent(deleteNode, parentDeleteNode, it)
+                        return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                    }
             }
         }
         throw Exception("Impossible case")
@@ -220,7 +215,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         node: NodeType,
         parent: NodeType?,
         childForLink: NodeType?
-    ) /*Behaviour: link rebased node */
+    ) /* Behaviour: link rebased node */
 
     protected fun rebaseNode(
         node: NodeType,
@@ -257,15 +252,15 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
     /*Behaviour: null - means value not in tree; Pack - value was successfully deleted*/
     abstract fun delete(item: Pack)
 
-    fun inOrder() {
-        TODO("inOrder - implementation")
+    fun inOrder(): List<Pack> {
+        TODO()
     }
 
-    fun postOrder() {
-        TODO("postOrder - implementation")
+    fun postOrder(): List<Pack> {
+        TODO()
     }
 
-    fun preOrder() {
-        TODO("preOrder - implementation")
+    fun preOrder(): List<Pack> {
+        TODO()
     }
 }
