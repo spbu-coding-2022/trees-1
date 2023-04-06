@@ -11,41 +11,45 @@ class AVLStruct<Pack : Comparable<Pack>> :
     override fun generateStateDelete(
         deletedNode: AVLNode<Pack>?,
         contentNode: AVLNode<Pack>?,
-    ): AVLStateContainer<Pack> {
-        TODO("Not yet implemented")
-    }
+    ): AVLStateContainer<Pack> = AVLStateContainer(contentNode, root)
 
-    override fun getNodeKernel(node: AVLNode<Pack>): AVLNode<Pack> {
-        TODO("Not yet implemented")
-    }
+    override fun generateStateInsert(
+        insertNode: AVLNode<Pack>?,
+        contentNode: AVLNode<Pack>?
+    ): AVLStateContainer<Pack> = AVLStateContainer(contentNode, root)
+
+    override fun generateStateFind(
+        findNode: AVLNode<Pack>?,
+        contentNode: AVLNode<Pack>?,
+    ): AVLStateContainer<Pack> = AVLStateContainer(contentNode, root)
 
     override fun connectUnlinkedSubTreeWithParent(
         node: AVLNode<Pack>,
         parent: AVLNode<Pack>?,
         childForLink: AVLNode<Pack>?
     ) {
-        TODO("Not yet implemented")
+        if (root == null) return
+
+        if (parent != null) {
+            when {
+                (node.value < parent.value) -> parent.left = childForLink
+                (node.value > parent.value) -> parent.right = childForLink
+            }
+        } else root?.let {
+            root = childForLink
+        }
     }
 
-    override fun generateStateInsert(
-        insertNode: AVLNode<Pack>?,
-        contentNode: AVLNode<Pack>?
-    ): AVLStateContainer<Pack> {
-        TODO("Not yet implemented")
-    }
+    override fun createNode(item: Pack): AVLNode<Pack> = AVLNode(item)
 
-    override fun generateStateFind(
-        findNode: AVLNode<Pack>?,
-        contentNode: AVLNode<Pack>?,
-        ): AVLStateContainer<Pack> {
-        TODO("Not yet implemented")
-    }
-
-    override fun createNode(item: Pack): AVLNode<Pack> {
-        TODO("Not yet implemented")
-    }
+    override fun getNodeKernel(node: AVLNode<Pack>): AVLNode<Pack> = AVLNode(node.value, height = node.height)
 
     override fun linkNewNode(node: AVLNode<Pack>, parent: AVLNode<Pack>?): AVLNode<Pack> {
-        TODO("Not yet implemented")
+        if (parent == null) root = node
+        else {
+            if (node.value > parent.value) parent.right = node
+            else parent.left = node
+        }
+        return node
     }
 }

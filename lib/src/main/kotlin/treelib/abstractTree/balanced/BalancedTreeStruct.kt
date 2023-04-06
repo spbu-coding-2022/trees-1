@@ -20,10 +20,7 @@ abstract class BalancedTreeStruct<
         }
     }
 
-    // если удалил рут, то не запускаем баланс
     override fun delete(item: Pack){
-        // TODO передаю родителя + что делать если: root null, root заменил я (а не Артем внутри)
-        // TODO если вернулся рут, то нифига не запускать
         val currentState = deleteItem(item)
         if (root == null){
             return

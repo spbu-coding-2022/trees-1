@@ -28,15 +28,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
     }
 
     private fun getParentByValue(item: Pack): NodeType? {
-        //TODO test - getParentByValue [что вообще корректно отрабатывает]
-        /*
-        (1) - shouldn't be used with 'root == null' otherwise - incorrect behavior
-        (2) - shouldn't be used with a value doesn't exist in the tree
-        null - means root.value == item
-        */
-
         var currentNode = root
-//        if (findItem(item).contentNode == null) throw Exception("getParentByValue shouldn't be used with a value doesn't exist in the tree")// (2)
 
         if ((currentNode != null) && (currentNode.value == item)) return null
 
@@ -55,7 +47,6 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
     }
 
     private infix fun Pack.inRightOf(node: NodeType?): Boolean {
-        //TODO - test inInRightOf
         if (node == null) return false
         node.right?.let {
             if (this == it.value) return@inRightOf true
@@ -64,7 +55,6 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
     }
 
     private infix fun Pack.inLeftOf(node: NodeType?): Boolean {
-        //TODO - test inInLeftOf
         if (node == null) return false
         node.left?.let {
             if (it.value == this) return@inLeftOf true
@@ -72,11 +62,10 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         return false
     }
 
-    private fun getRightMinNode(localRoot: NodeType): NodeType {/* null - means NodeType.right doesn't exist, another variant impossible */
-        //TODO test - getLeafForDelete [проверить, что нет проблем с (->1)]
+    private fun getRightMinNode(localRoot: NodeType): NodeType {
         var currentNode: NodeType?
 
-        localRoot.right ?: throw Exception("Incorrect usage of the getRightMinNode") //(->1)
+        localRoot.right ?: throw Exception("Incorrect usage of the getRightMinNode")
 
         currentNode = localRoot.right
 
@@ -84,7 +73,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             currentNode?.let { curNode ->
                 if (curNode.left == null) return@getRightMinNode curNode
                 else currentNode = curNode.left
-            } ?: throw Exception("Impossible case or multithreading threads problem") //(->1)
+            } ?: throw Exception("Impossible case or multithreading threads problem")
         }
     }
 
@@ -251,7 +240,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
     abstract fun insert(item: Pack)
 
-    /*Behaviour: null - means value not in tree; Pack - value was successfully deleted*/
+    /* Behaviour: null - means value not in tree; Pack - value was successfully deleted */
     abstract fun delete(item: Pack)
 
     fun find(obj: Pack): Pack? = findItem(obj).contentNode?.value
