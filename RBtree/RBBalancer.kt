@@ -1,5 +1,6 @@
 package RBtree
 
+import AVLtree.AVLNode
 import AbstractTree.Weighted.BalancerParent
 
 class RBBalancer<Pack: Comparable<Pack>>: BalancerParent<Pack, RBNode<Pack>>() {
