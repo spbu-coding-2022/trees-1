@@ -1,7 +1,7 @@
-package treeLib.AbstractTree.Weighted
+package treelib.abstractTree.balanced
 
-import treeLib.AbstractTree.Node
-import treeLib.AbstractTree.StateContainer
+import treelib.abstractTree.Node
+import treelib.abstractTree.StateContainer
 
 abstract class BalancerNoParent<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, StateContainerType: StateContainer<Pack, NodeType>>: Balancer<Pack, NodeType, StateContainerType> {
     override fun rightRotate(currentNode: NodeType): NodeType {

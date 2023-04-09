@@ -1,4 +1,4 @@
-import treeLib.AVLtree.AVLNode
+import treelib.avlTree.AVLNode
 
 class TestModelAVL {
     val firstTreeValues =

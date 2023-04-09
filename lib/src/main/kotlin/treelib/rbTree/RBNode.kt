@@ -1,7 +1,7 @@
-package treeLib.RBtree
+package treelib.rbTree
 
-import treeLib.AbstractTree.NodeParent
-import treeLib.Single_Objects.Markers
+import treelib.abstractTree.NodeParent
+import treelib.singleObjects.Markers
 
 class RBNode<Pack : Comparable<Pack>>(
     override var value: Pack,

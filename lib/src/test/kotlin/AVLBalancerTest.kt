@@ -1,9 +1,8 @@
-
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import treeLib.AVLtree.AVLBalancer
-import treeLib.AVLtree.AVLNode
-import treeLib.AVLtree.AVLStateContainer
+import treelib.avlTree.AVLBalancer
+import treelib.avlTree.AVLNode
+import treelib.avlTree.AVLStateContainer
 
 class AVLBalancerTest {
 

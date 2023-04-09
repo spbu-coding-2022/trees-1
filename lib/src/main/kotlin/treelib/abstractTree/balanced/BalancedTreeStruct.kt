@@ -1,10 +1,10 @@
-package treeLib.AbstractTree.Weighted
+package treelib.abstractTree.balanced
 
-import treeLib.AbstractTree.Node
-import treeLib.AbstractTree.StateContainer
-import treeLib.AbstractTree.TreeStruct
+import treelib.abstractTree.Node
+import treelib.abstractTree.StateContainer
+import treelib.abstractTree.TreeStruct
 
-abstract class WeightedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, StateContainerType: StateContainer<Pack, NodeType>, BalancerType: Balancer<Pack, NodeType, StateContainerType>>:
+abstract class BalancedTreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, StateContainerType: StateContainer<Pack, NodeType>, BalancerType: Balancer<Pack, NodeType, StateContainerType>>:
     TreeStruct<Pack, NodeType>() {
 
     protected abstract val balancer: BalancerType

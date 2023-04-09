@@ -1,4 +1,4 @@
-package treeLib.AbstractTree
+package treelib.abstractTree
 
 
 interface NodeParent<Pack: Comparable<Pack>, SubNode: NodeParent<Pack, SubNode>>: Node<Pack, SubNode> {

@@ -1,6 +1,6 @@
-package treeLib.RBtree
+package treelib.rbTree
 
-import treeLib.AbstractTree.StateContainer
+import treelib.abstractTree.StateContainer
 
 /*
 Insert: contentNode - the node on which the action was performed

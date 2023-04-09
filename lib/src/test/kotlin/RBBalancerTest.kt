@@ -1,13 +1,12 @@
-
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
-import treeLib.RBtree.RBBalancer
-import treeLib.RBtree.RBNode
-import treeLib.RBtree.RBStateContainer
-import treeLib.Single_Objects.Markers
+import treelib.rbTree.RBBalancer
+import treelib.rbTree.RBNode
+import treelib.rbTree.RBStateContainer
+import treelib.singleObjects.Markers
 class RBBalancerTest {
 
     val testModel = TestModelRBT()

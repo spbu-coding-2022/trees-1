@@ -1,5 +1,5 @@
-import treeLib.RBtree.RBNode
-import treeLib.Single_Objects.Markers
+import treelib.rbTree.RBNode
+import treelib.singleObjects.Markers
 
 class TestModelRBT {
     fun <T: Comparable<T>>countBlackNodes(node: RBNode<T>): Int {

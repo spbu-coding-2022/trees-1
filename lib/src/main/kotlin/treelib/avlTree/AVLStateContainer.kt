@@ -1,6 +1,6 @@
-package treeLib.AVLtree
+package treelib.avlTree
 
-import treeLib.AbstractTree.StateContainer
+import treelib.abstractTree.StateContainer
 
 /*Content node - the parent of the node on which the action was performed*/
 

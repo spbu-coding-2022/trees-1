@@ -1,4 +1,4 @@
-package treeLib.Single_Objects
+package treelib.singleObjects
 
 enum class Markers {
     RED, BLACK

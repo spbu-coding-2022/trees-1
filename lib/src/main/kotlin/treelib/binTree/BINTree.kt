@@ -1,7 +1,7 @@
-package treeLib.BINtree
+package treelib.binTree
 
-import treeLib.AbstractTree.Tree
-import treeLib.Single_Objects.Container
+import treelib.abstractTree.Tree
+import treelib.singleObjects.Container
 
 class BINTree<K : Comparable<K>, V> : Tree<K, V, BINNode<Container<K, V>>>() {
     override val treeStruct: BINStruct<Container<K, V>> = BINStruct()

@@ -1,7 +1,7 @@
-package treeLib.RBtree
+package treelib.rbTree
 
-import treeLib.AbstractTree.Weighted.BalancerParent
-import treeLib.Single_Objects.Markers
+import treelib.abstractTree.balanced.BalancerParent
+import treelib.singleObjects.Markers
 
 class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): BalancerParent<Pack, RBNode<Pack>, RBStateContainer<Pack>>() {
 
