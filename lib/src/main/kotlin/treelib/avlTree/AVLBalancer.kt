@@ -19,7 +19,7 @@ class AVLBalancer<Pack: Comparable<Pack>>(private var root: AVLNode<Pack>?): Bal
     override fun balance(stateContainer: AVLStateContainer<Pack>): AVLNode<Pack> {
         val node = stateContainer.contentNode
         root = stateContainer.root
-        return balance(root, node.value)
+        return balance(root, node?.value ?: throw NullPointerException())
     }
     // В баланс передаем родителя ноды, которую будем удалять
     private fun balance(currentNode: AVLNode<Pack>?, value: Pack): AVLNode<Pack> {

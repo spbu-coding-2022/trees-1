@@ -40,7 +40,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
     }
 
     override fun balance(stateContainer:  RBStateContainer<Pack>): RBNode<Pack> {
-        val node = stateContainer.contentNode
+        val node = stateContainer.contentNode ?: throw NullPointerException()
         val uncle = getUncle(node)
         when {
             /** node insertion case **/

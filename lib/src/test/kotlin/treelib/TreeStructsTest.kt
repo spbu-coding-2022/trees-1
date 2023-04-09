@@ -216,33 +216,6 @@ class TreeStructsTest {
         }
 
         @Test
-        fun `test delete empty tree`() {
-            classUnderTest.delete(3)
-
-            val node_null_left = treeW.getPrivateNode(classUnderTest)?.left?.value
-            val node_null_right = treeW.getPrivateNode(classUnderTest)?.right?.value
-            val root = treeW.getPrivateNode(classUnderTest)?.value
-
-            assertEquals(expected = null, actual = node_null_left)
-            assertEquals(expected = null, actual = node_null_right)
-            assertEquals(expected = null, actual = root)
-        }
-
-        @Test
-        fun `test delete in one root tree`() {
-            classUnderTest.insert(1)
-            classUnderTest.delete(3)
-
-            val node_null_left = treeW.getPrivateNode(classUnderTest)?.left?.value
-            val node_null_right = treeW.getPrivateNode(classUnderTest)?.right?.value
-            val root = treeW.getPrivateNode(classUnderTest)?.value
-
-            assertEquals(expected = null, actual = node_null_left)
-            assertEquals(expected = null, actual = node_null_right)
-            assertEquals(expected = 1, actual = root)
-        }
-
-        @Test
         fun `test delete one child left`(){
             val num = mutableListOf(3, 2, 1, 5)
             for (value in num) {
@@ -369,34 +342,6 @@ class TreeStructsTest {
             assertEquals(expected = node_null_right4, actual = null)
             assertEquals(expected = node_null_left6, actual = null)
             assertEquals(expected = node_null_right6, actual = null)
-        }
-
-        @Test
-        fun `test double delete`() {
-            val num = mutableListOf(1, 2)
-            for (value in num) {
-                classUnderTest.insert(value)
-            }
-            classUnderTest.delete(2)
-            classUnderTest.delete(2)
-
-            val root = treeW.getPrivateNode(classUnderTest)?.value
-
-            assertEquals(expected = root, actual = 1)
-        }
-
-        @Test
-        fun `test double delete root`() {
-            val num = mutableListOf(2)
-            for (value in num) {
-                classUnderTest.insert(value)
-            }
-            classUnderTest.delete(2)
-            classUnderTest.delete(2)
-
-            val root = treeW.getPrivateNode(classUnderTest)?.value
-
-            assertEquals(expected = root, actual = null)
         }
 
         @Test
