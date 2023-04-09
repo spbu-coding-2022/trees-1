@@ -4,9 +4,7 @@ import treelib.abstractTree.Node
 
 class AVLNode<Pack : Comparable<Pack>>(
     override var value: Pack,
-    override var left: AVLNode<Pack>?,
-    override var right: AVLNode<Pack>?,
-    var height: UInt = 1u,
-) : Node<Pack, AVLNode<Pack>> {
-
-}
+    override var left: AVLNode<Pack>? = null,
+    override var right: AVLNode<Pack>? = null,
+    var height: UInt = 1U,
+) : Node<Pack, AVLNode<Pack>>

@@ -5,8 +5,8 @@ import treelib.singleObjects.Markers
 
 class RBNode<Pack : Comparable<Pack>>(
     override var value: Pack,
-    override var left: RBNode<Pack>?,
-    override var right: RBNode<Pack>?,
-    override var parent: RBNode<Pack>?,
-    var color: Markers,
+    override var left: RBNode<Pack>? = null,
+    override var right: RBNode<Pack>? = null,
+    override var parent: RBNode<Pack>? = null,
+    var color: Markers = Markers.RED,
 ) : NodeParent<Pack, RBNode<Pack>>
