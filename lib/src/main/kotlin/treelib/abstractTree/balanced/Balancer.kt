@@ -14,5 +14,4 @@ interface Balancer<
     fun leftRotate(currentNode: NodeType): NodeType
 
     fun balance(state: State): NodeType
-//    TODO что возвращает балансер?
 }

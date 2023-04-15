@@ -1,5 +1,10 @@
 package treelib.abstractTree
 
+import treelib.singleObjects.exceptions.BugInImplementException
+import treelib.singleObjects.exceptions.ImpossibleCaseException
+import treelib.singleObjects.exceptions.MultithreadingException
+import treelib.singleObjects.exceptions.NonExistentValueException
+
 
 abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, State : StateContainer<Pack, NodeType>> {
 
@@ -21,9 +26,9 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                         currentNode = it.left
                     }
 
-                    else -> throw Exception("getLeafForInsert shouldn't be used with a value exists in Struct")
+                    else -> throw BugInImplementException("getLeafForInsert shouldn't be used with a value exists in Struct")
                 }
-            } ?: throw Exception("Impossible case or multithreading problem")
+            } ?: throw MultithreadingException(ImpossibleCaseException())
         }
     }
 
@@ -42,7 +47,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                         else currentNode = it.left
                     }
                 }
-            } ?: throw Exception("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
+            } ?: throw BugInImplementException("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
         }
     }
 
@@ -65,7 +70,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
     private fun getRightMinNode(localRoot: NodeType): NodeType {
         var currentNode: NodeType?
 
-        localRoot.right ?: throw Exception("Incorrect usage of the getRightMinNode")
+        localRoot.right ?: throw BugInImplementException("Incorrect usage of the getRightMinNode: right node doesn't exist")
 
         currentNode = localRoot.right
 
@@ -73,7 +78,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             currentNode?.let { curNode ->
                 if (curNode.left == null) return@getRightMinNode curNode
                 else currentNode = curNode.left
-            } ?: throw Exception("Impossible case or multithreading threads problem")
+            } ?: throw MultithreadingException(ImpossibleCaseException())
         }
     }
 
@@ -85,7 +90,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         val childForLink: NodeType?
 
         when {
-            (node.right != null) && (node.left != null) -> throw Exception("unLink - method Shouldn't be used with node with both children")
+            (node.right != null) && (node.left != null) -> throw BugInImplementException("unLink - method Shouldn't be used with node with both children")
             node.right != null -> childForLink = node.right
             node.left != null -> childForLink = node.left
             else -> childForLink = null
@@ -169,18 +174,18 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
         val parentDeleteNode: NodeType?
         val deleteNode: NodeType?
 
-        if (findItem(item).contentNode == null) throw Exception("Deleted value doesn't exist in tree")
+        if (findItem(item).contentNode == null) throw NonExistentValueException()
 
         parentDeleteNode = getParentByValue(item)
         if (parentDeleteNode != null) {
             deleteNode = when {
                 item inRightOf parentDeleteNode -> parentDeleteNode.right
                 item inLeftOf parentDeleteNode -> parentDeleteNode.left
-                else -> throw Exception("Impossible case in deleteItem (is turned out to be possible)")
+                else -> throw ImpossibleCaseException()
             }
         } else deleteNode = root
 
-        if (deleteNode == null) throw Exception("Impossible case in deleteItem (is turned out to be possible)")
+        if (deleteNode == null) throw ImpossibleCaseException()
 
         val nodeForReplace: NodeType?
         val parentNodeForReplace: NodeType?
@@ -219,7 +224,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                     }
             }
         }
-        throw Exception("Impossible case")
+        throw ImpossibleCaseException()
     }
 
     protected abstract fun connectUnlinkedSubTreeWithParent(
@@ -310,7 +315,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                     }
                     current = parent
                 }
-            } ?: throw Exception("Impossible case or multithreading problem")
+            } ?: throw MultithreadingException(ImpossibleCaseException())
         }
         return arrayNodes
     }
@@ -328,12 +333,12 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                 if (current.right != null)
                     current.right?.let {
                         queue.add(it)
-                    } ?: throw Exception("Impossible case or multithreading threads problem")
+                    } ?: throw MultithreadingException(ImpossibleCaseException())
 
                 if (current.left != null)
                     current.left?.let {
                         queue.add(it)
-                    } ?: throw Exception("Impossible case or multithreading threads problem")
+                    } ?: throw MultithreadingException(ImpossibleCaseException())
             }
         }
         return arrayNodes
