@@ -220,7 +220,11 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                 for (child in listOf(deleteNode.right, deleteNode.left))
                     child?.let {
                         connectUnlinkedSubTreeWithParent(deleteNode, parentDeleteNode, it)
-                        return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                            if (parentDeleteNode != null) {
+                                return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                            } else {
+                                return@deleteItem generateStateDelete(deletedNodeWithoutLinks, root)
+                            }
                     }
             }
         }

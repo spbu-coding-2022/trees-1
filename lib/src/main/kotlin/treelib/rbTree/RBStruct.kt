@@ -1,6 +1,9 @@
 package treelib.rbTree
 
 import treelib.abstractTree.balanced.BalancedTreeStruct
+import treelib.singleObjects.Markers
+import treelib.singleObjects.exceptions.ImpossibleCaseException
+import treelib.singleObjects.exceptions.MultithreadingException
 
 class RBStruct<Pack : Comparable<Pack>> :
     BalancedTreeStruct<Pack, RBNode<Pack>, RBStateContainer<Pack>, RBBalancer<Pack>>() {
@@ -17,12 +20,12 @@ class RBStruct<Pack : Comparable<Pack>> :
     override fun generateStateInsert(
         insertNode: RBNode<Pack>?,
         contentNode: RBNode<Pack>?,
-    ): RBStateContainer<Pack>  = RBStateContainer(contentNode)
+    ): RBStateContainer<Pack>  = RBStateContainer(insertNode)
 
     override fun generateStateFind(
         findNode: RBNode<Pack>?,
         contentNode: RBNode<Pack>?,
-    ): RBStateContainer<Pack>  = RBStateContainer(contentNode)
+    ): RBStateContainer<Pack>  = RBStateContainer(findNode)
 
     override fun connectUnlinkedSubTreeWithParent(
         node: RBNode<Pack>,
@@ -45,6 +48,7 @@ class RBStruct<Pack : Comparable<Pack>> :
             }
         } else root?.let {
             root = childForLink
+            if (childForLink != null) childForLink.parent = null
         }
     }
 
@@ -53,7 +57,12 @@ class RBStruct<Pack : Comparable<Pack>> :
     override fun createNode(item: Pack): RBNode<Pack> = RBNode(item)
 
     override fun linkNewNode(node: RBNode<Pack>, parent: RBNode<Pack>?): RBNode<Pack> {
-        if (parent == null) root = node
+        if (parent == null) {
+            root = node
+            root?.let {
+                it.color = Markers.BLACK
+            } ?: throw MultithreadingException(ImpossibleCaseException())
+        }
         else {
             if (node.value > parent.value) parent.right = node
             else parent.left = node
