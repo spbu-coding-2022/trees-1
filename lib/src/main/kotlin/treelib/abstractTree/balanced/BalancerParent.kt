@@ -2,11 +2,11 @@ package treelib.abstractTree.balanced
 
 import treelib.abstractTree.NodeParent
 import treelib.abstractTree.StateContainer
+import treelib.singleObjects.exceptions.IllegalNodeStateException
 
 abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pack, NodeType>, StateContainerType: StateContainer<Pack, NodeType>>: Balancer<Pack, NodeType, StateContainerType> {
     override fun rightRotate(currentNode: NodeType): NodeType {
-        // пока верим в то, что currentNode не равно null
-        val leftChild = currentNode.left ?: throw NullPointerException()
+        val leftChild = currentNode.left ?: throw IllegalNodeStateException()
 
         val parent = currentNode.parent
         leftChild.right?.parent = currentNode
@@ -23,7 +23,7 @@ abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pac
     }
 
     override fun leftRotate(currentNode: NodeType): NodeType {
-        val rightChild = currentNode.right ?: throw NullPointerException()
+        val rightChild = currentNode.right ?: throw IllegalNodeStateException()
         val parent = currentNode.parent
 
         rightChild.left?.parent = currentNode

@@ -1,6 +1,7 @@
 package treelib.abstractTree
 
 import treelib.singleObjects.Container
+import treelib.singleObjects.exceptions.NonExistentValueException
 
 abstract class Tree<
         Key : Comparable<Key>,
@@ -28,7 +29,7 @@ abstract class Tree<
     fun getItem(key: Key): Value? = treeStruct.find(wrapForFind(key))?.value
 
     fun deleteItem(key: Key) {
-        if (getItem(key) == null) throw Exception("Attempt to remove a non-existent element")
+        if (getItem(key) == null) throw NonExistentValueException()
         treeStruct.delete(wrapForFind(key))
     }
 
