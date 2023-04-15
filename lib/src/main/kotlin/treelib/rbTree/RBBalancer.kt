@@ -2,9 +2,6 @@ package treelib.rbTree
 
 import treelib.abstractTree.balanced.BalancerParent
 import treelib.singleObjects.Markers
-import treelib.singleObjects.exceptions.IllegalBaseNodeException
-import treelib.singleObjects.exceptions.IllegalNodeStateException
-import treelib.singleObjects.exceptions.ImpossibleCaseException
 
 class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): BalancerParent<Pack, RBNode<Pack>, RBStateContainer<Pack>>() {
 
@@ -30,7 +27,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
     private fun getRoot(node: RBNode<Pack>): RBNode<Pack> {
         var currentNode = node
         while (currentNode.parent != null)
-            currentNode = currentNode.parent ?: throw IllegalNodeStateException()
+            currentNode = currentNode.parent ?: throw NullPointerException()
         root = currentNode
         root?.color = Markers.BLACK
         return currentNode
@@ -38,12 +35,13 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
 
     private fun nodeIsLeaf(node: RBNode<Pack>?): Boolean {
         if (node == null)
-            throw IllegalBaseNodeException()
+            throw NullPointerException()
         return node.right == null && node.left == null
     }
 
-    override fun balance(state:  RBStateContainer<Pack>): RBNode<Pack> {
-        val node = state.contentNode ?: throw IllegalBaseNodeException()
+    override fun balance(stateContainer:  RBStateContainer<Pack>): RBNode<Pack> {
+        val node = stateContainer.contentNode ?:
+            throw IllegalStateException() //IllegalBaseNodeException("A non-existent node (null) was passed to the method")
         val uncle = getUncle(node)
         when {
             /** node insertion case **/
@@ -58,14 +56,14 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                     return getRoot(currentNode)
                 }
 
-                var parent = currentNode.parent ?: throw IllegalNodeStateException()
+                var parent = currentNode.parent ?: throw IllegalStateException() // в данном случае родитель не может быть null
                 when (parent) {
                     parent.parent?.left -> {
                         if (currentNode == parent.right) {
                             leftRotate(parent)
                             currentNode = parent
                         }
-                        parent = currentNode.parent?.parent ?: throw IllegalNodeStateException()
+                        parent = currentNode.parent?.parent ?: throw IllegalStateException() // IllegalNodeStateException()
                         currentNode = rightRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
@@ -76,17 +74,17 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                             rightRotate(parent)
                             currentNode = parent
                         }
-                        parent = currentNode.parent?.parent ?: throw IllegalNodeStateException()
+                        parent = currentNode.parent?.parent ?: throw NullPointerException() // IllegalNodeStateException()
                         currentNode = leftRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
                         currentNode.left?.color = Markers.RED
                     }
-                    else -> throw IllegalNodeStateException()
+                    else -> throw IllegalStateException() // невозможное условие выполнения
                 }
                 if (currentNode.parent == null)
                     root = currentNode
-                return root ?: throw IllegalNodeStateException()
+                return root ?: throw NullPointerException()
             }
             /** node removal cases **/
             node.color == Markers.RED && (node.right != null || node.left != null) ->
@@ -116,12 +114,11 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                         firstCase(node, null)
 
                     }
-
-                    else -> throw IllegalNodeStateException()
+                    else -> throw IllegalStateException()
                 }
             }
         }
-        throw ImpossibleCaseException()
+        throw IllegalStateException()
     }
 
     private fun afterInsert(node: RBNode<Pack>): RBNode<Pack> {
@@ -130,7 +127,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
             val uncle = getUncle(currentNode)
             if (uncle?.color == Markers.RED) {
                 currentNode.parent?.color = Markers.BLACK
-                currentNode = currentNode.parent?.parent ?: throw IllegalNodeStateException()
+                currentNode = currentNode.parent?.parent ?: throw NullPointerException() // IllegalNodeStateException()
                 currentNode.color = Markers.RED
                 uncle.color = Markers.BLACK
             }
@@ -145,7 +142,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
     /** black node removal case **/
     private fun firstCase(parent: RBNode<Pack>?, node: RBNode<Pack>?): RBNode<Pack> {
         return when {
-            parent == null && node == null -> throw IllegalBaseNodeException()
+            parent == null && node == null -> throw NullPointerException()
             parent != null -> {
                 when (parent.color) {
                     Markers.RED -> secondCase(parent, node)
@@ -154,13 +151,13 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                 getRoot(parent)
             }
 
-            else -> getRoot(node ?: throw IllegalBaseNodeException())
+            else -> getRoot(node ?: throw NullPointerException() /* IllegalNodeStateException() */)
         }
     }
 
     /** parent is red **/
     private fun secondCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
-        var brother = getBrother(parent, node) ?: throw IllegalBaseNodeException()
+        var brother = getBrother(parent, node) ?: throw NullPointerException() // IllegalNodeStateException()
         if (brother.color == Markers.RED)
             throw NullPointerException()
 
@@ -187,7 +184,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                     brother.color = Markers.RED
                 }
                 else {
-                    throw NullPointerException()
+                    throw IllegalStateException()
                 }
             }
             parent.right ->
@@ -206,17 +203,17 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                     brother.right?.color = Markers.BLACK
                 }
                 else {
-                    throw NullPointerException()
+                    throw IllegalStateException()
                 }
 
             }
-            else -> throw NullPointerException()
+            else -> throw IllegalStateException()
         }
     }
 
     /** parent is black **/
     private fun thirdCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
-        val brother = getBrother(parent, node) ?: throw NullPointerException()
+        val brother = getBrother(parent, node) ?: throw NullPointerException() // IllegalNodeStateException()
         when (brother.color) {
             Markers.RED -> thirdCaseSubFirst(brother, parent)
             Markers.BLACK -> thirdCaseSubSecond(brother, parent)
@@ -228,7 +225,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
         when (brother) {
             brother.parent?.left ->
             {
-                var rightBrotherSon = brother.right ?: throw NullPointerException()
+                var rightBrotherSon = brother.right ?: throw NullPointerException() // IllegalNodeStateException()
 
                 if (rightBrotherSon.right?.color != Markers.RED && rightBrotherSon.left?.color != Markers.RED) {
                     rightBrotherSon.color = Markers.RED
@@ -244,7 +241,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                     rightBrotherSon.color = Markers.RED
                     leftRotate(rightBrotherSon)
 
-                    rightBrotherSon = rightBrotherSon.parent ?: throw NullPointerException()
+                    rightBrotherSon = rightBrotherSon.parent ?: throw NullPointerException() // IllegalNodeStateException()
                     rightBrotherSon.color = Markers.BLACK
                 }
 
@@ -260,14 +257,14 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                 if (leftBrotherSon.right?.color != Markers.RED && leftBrotherSon.left?.color != Markers.RED) {
                     leftBrotherSon.color = Markers.RED
                     brother.color = Markers.BLACK
-                    leftRotate(brother.parent ?: throw NullPointerException())
+                    leftRotate(brother.parent ?: throw NullPointerException()) // IllegalNodeStateException()
                     return
                 }
 
                 if (leftBrotherSon.left?.color == Markers.RED) {
                     rightRotate(leftBrotherSon)
                     leftBrotherSon.color = Markers.RED
-                    leftBrotherSon = leftBrotherSon.parent ?: throw NullPointerException()
+                    leftBrotherSon = leftBrotherSon.parent ?: throw NullPointerException() // IllegalNodeStateException()
                     leftBrotherSon.color = Markers.BLACK
                 }
 
@@ -277,7 +274,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                     leftRotate(parent)
                 }
             }
-            else -> throw NullPointerException()
+            else -> throw IllegalStateException()
         }
     }
 
@@ -315,7 +312,7 @@ class RBBalancer<Pack: Comparable<Pack>>(private var root: RBNode<Pack>?): Balan
                 }
 
             }
-            else -> throw NullPointerException()
+            else -> throw IllegalStateException()
         }
     }
 
