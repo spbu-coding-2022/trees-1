@@ -10,10 +10,10 @@ import utils.TreeStructWrapper
 @DisplayName("Test: AVL Struct")
 class AVLStructTest {
     val treeW = TreeStructWrapper<Int, AVLNode<Int>, AVLStateContainer<Int>, AVLStruct<Int>>()
-    var classUnderTest = AVLStruct<Int>()
+    var treeStruct = AVLStruct<Int>()
 
     @BeforeEach
     fun reInitClassUnderTest() {
-        classUnderTest = AVLStruct()
+        treeStruct = AVLStruct()
     }
 }
