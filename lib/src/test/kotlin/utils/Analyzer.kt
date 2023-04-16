@@ -2,9 +2,16 @@ package utils
 
 import treelib.abstractTree.Node
 
-interface Analyzer<
+abstract class Analyzer<
         Pack : Comparable<Pack>,
         NodeType : Node<Pack, NodeType>,
         > {
-    fun checkTree(root: NodeType)
+
+    var message: String = ""
+
+    protected abstract val assertMethod: (input: String) -> Unit
+
+    protected fun wrappedAssertMethod(input: String) = assertMethod("$message$input")
+
+    abstract fun checkTree(root: NodeType)
 }
