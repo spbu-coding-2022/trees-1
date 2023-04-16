@@ -1,4 +1,4 @@
-package treelib
+package utils
 
 import treelib.abstractTree.Node
 import treelib.abstractTree.StateContainer

@@ -6,7 +6,11 @@ import treelib.singleObjects.exceptions.MultithreadingException
 import treelib.singleObjects.exceptions.NonExistentValueException
 
 
-abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, State : StateContainer<Pack, NodeType>> {
+abstract class TreeStruct<
+        Pack : Comparable<Pack>,
+        NodeType : Node<Pack, NodeType>,
+        State : StateContainer<Pack, NodeType>
+        > {
 
     protected abstract var root: NodeType?
 
