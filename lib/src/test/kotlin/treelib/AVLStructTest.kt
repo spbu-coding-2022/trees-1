@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName
 import treelib.avlTree.AVLNode
 import treelib.avlTree.AVLStateContainer
 import treelib.avlTree.AVLStruct
+import utils.TreeStructWrapper
 
 @DisplayName("Test: AVL Struct")
 class AVLStructTest {

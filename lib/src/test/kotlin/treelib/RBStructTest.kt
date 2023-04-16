@@ -5,12 +5,18 @@ import treelib.rbTree.RBNode
 import treelib.rbTree.RBStateContainer
 import treelib.rbTree.RBStruct
 import treelib.singleObjects.Markers
+import utils.RBAnalyzer
+import utils.TreeStructWrapper
 import kotlin.test.assertEquals
 
 @DisplayName("Test: Red-Black Tree Struct")
 class RBStructTest {
-    val treeW = TreeStructWrapper<Int, RBNode<Int>, RBStateContainer<Int>, RBStruct<Int>>()
-    var classUnderTest = RBStruct<Int>()
+    private val treeW = TreeStructWrapper<Int, RBNode<Int>, RBStateContainer<Int>, RBStruct<Int>>()
+    private var classUnderTest = RBStruct<Int>()
+
+    private fun testAssert(msg: String): Nothing = fail(msg)
+
+    private val analyzer = RBAnalyzer<Int>(::testAssert)
 
     @BeforeEach
     fun reInitClassUnderTest() {
@@ -99,5 +105,4 @@ class RBStructTest {
             { assertEquals(Markers.BLACK, root?.color) },
         )
     }
-
 }

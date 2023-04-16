@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import treelib.binTree.BINNode
 import treelib.binTree.BINStateContainer
 import treelib.binTree.BINStruct
+import utils.TreeStructWrapper
 import kotlin.test.assertEquals
 
 @DisplayName("Test: Binary Search Tree Struct")
