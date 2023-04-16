@@ -136,7 +136,7 @@ abstract class TreeStruct<
         if (root == null) return generateStateFind(null)
 
         while (true) {
-            if (obj == currentNode?.value) return generateStateFind(currentNode)
+            if (obj == currentNode?.value) return generateStateFind(currentNode, currentNode)
             else {
                 currentNode?.let {
                     if (obj > it.value) currentNode = it.right
