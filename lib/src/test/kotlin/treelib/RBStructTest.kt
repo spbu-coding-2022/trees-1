@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 @DisplayName("Test: Red-Black Tree Struct")
 class RBStructTest {
     private val treeW = TreeStructWrapper<Int, RBNode<Int>, RBStateContainer<Int>, RBStruct<Int>>()
-    private var classUnderTest = RBStruct<Int>()
+    private var treeStruct = RBStruct<Int>()
 
     private fun testAssert(msg: String): Nothing = fail(msg)
 
@@ -20,13 +20,13 @@ class RBStructTest {
 
     @BeforeEach
     fun reInitClassUnderTest() {
-        classUnderTest = RBStruct()
+        treeStruct = RBStruct()
     }
 
     @Test
     fun `base test on creation root`() {
-        classUnderTest.insert(6)
-        val root = treeW.getPrivateNode(classUnderTest)
+        treeStruct.insert(6)
+        val root = treeW.getPrivateNode(treeStruct)
         assertAll(
             { assertEquals(root?.value, 6) },
             { assertEquals(root?.color, Markers.BLACK) },
@@ -35,9 +35,9 @@ class RBStructTest {
 
     @Test
     fun `base test on creation root with left`() {
-        classUnderTest.insert(6)
-        classUnderTest.insert(3)
-        val root = treeW.getPrivateNode(classUnderTest)
+        treeStruct.insert(6)
+        treeStruct.insert(3)
+        val root = treeW.getPrivateNode(treeStruct)
         assertAll(
             { assertEquals(root?.left?.value, 3) },
             { assertEquals(root?.left?.color, Markers.RED) },
@@ -46,9 +46,9 @@ class RBStructTest {
 
     @Test
     fun `base test on creation root with right`() {
-        classUnderTest.insert(6)
-        classUnderTest.insert(8)
-        val root = treeW.getPrivateNode(classUnderTest)
+        treeStruct.insert(6)
+        treeStruct.insert(8)
+        val root = treeW.getPrivateNode(treeStruct)
         assertAll(
             { assertEquals(root?.right?.value, 8) },
             { assertEquals(root?.right?.color, Markers.RED) },
@@ -57,10 +57,10 @@ class RBStructTest {
 
     @Test
     fun `base test on creation children`() {
-        classUnderTest.insert(6)
-        classUnderTest.insert(8)
-        classUnderTest.insert(3)
-        val root = treeW.getPrivateNode(classUnderTest)
+        treeStruct.insert(6)
+        treeStruct.insert(8)
+        treeStruct.insert(3)
+        val root = treeW.getPrivateNode(treeStruct)
         assertAll(
             { assertEquals(root?.right?.value, 8) },
             { assertEquals(root?.left?.value, 3) },
@@ -71,11 +71,11 @@ class RBStructTest {
 
     @Test
     fun `base test delete root (left & right children)`() {
-        classUnderTest.insert(6)
-        classUnderTest.insert(8)
-        classUnderTest.insert(3)
-        classUnderTest.delete(6)
-        val root = treeW.getPrivateNode(classUnderTest)
+        treeStruct.insert(6)
+        treeStruct.insert(8)
+        treeStruct.insert(3)
+        treeStruct.delete(6)
+        val root = treeW.getPrivateNode(treeStruct)
         assertAll(
             { assertEquals(root?.value, 8) },
             { assertEquals(root?.color, Markers.BLACK) },
@@ -84,10 +84,10 @@ class RBStructTest {
 
     @Test
     fun `base test delete root (right child)`() {
-        classUnderTest.insert(6)
-        classUnderTest.insert(8)
-        classUnderTest.delete(6)
-        val root = treeW.getPrivateNode(classUnderTest)
+        treeStruct.insert(6)
+        treeStruct.insert(8)
+        treeStruct.delete(6)
+        val root = treeW.getPrivateNode(treeStruct)
         assertAll(
             { assertEquals(8, root?.value) },
             { assertEquals(Markers.BLACK, root?.color) },
@@ -96,10 +96,10 @@ class RBStructTest {
 
     @Test
     fun `base test delete root (left child)`() {
-        classUnderTest.insert(6)
-        classUnderTest.insert(3)
-        classUnderTest.delete(6)
-        val root = treeW.getPrivateNode(classUnderTest)
+        treeStruct.insert(6)
+        treeStruct.insert(3)
+        treeStruct.delete(6)
+        val root = treeW.getPrivateNode(treeStruct)
         assertAll(
             { assertEquals(3, root?.value) },
             { assertEquals(Markers.BLACK, root?.color) },
