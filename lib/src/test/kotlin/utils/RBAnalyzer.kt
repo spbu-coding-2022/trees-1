@@ -5,15 +5,15 @@ import treelib.singleObjects.Markers
 import treelib.singleObjects.exceptions.BugInImplementException
 
 class RBAnalyzer<Pack : Comparable<Pack>>(
-    val assertMethod: (input: String) -> Unit = {
+    override val assertMethod: (input: String) -> Unit = {
         throw BugInImplementException(it)
     }
-) : Analyzer<Pack, RBNode<Pack>> {
+) : Analyzer<Pack, RBNode<Pack>>() {
     /** Magic number for error := -9999999 -> just an impossible value **/
     private val errorMagicNumber = -9999999
 
     override fun checkTree(root: RBNode<Pack>) {
-        if (root.color != Markers.BLACK) assertMethod("The root isn't black!!!")
+        if (root.color != Markers.BLACK) wrappedAssertMethod("The root isn't black!!!")
         checkInvariant(root)
     }
 
@@ -28,17 +28,17 @@ class RBAnalyzer<Pack : Comparable<Pack>>(
         node.right?.let {
             when {
                 it.value == node.value -> {
-                    assertMethod("parent.value == RightChild.value => [${node.value} == ${it.value}]")
+                    wrappedAssertMethod("parent.value == RightChild.value => [${node.value} == ${it.value}]")
                     return@checkInvariant errorMagicNumber
                 }
 
                 it.value < node.value -> {
-                    assertMethod("parent.value > RightChild.value => [${node.value} > ${it.value}]")
+                    wrappedAssertMethod("parent.value > RightChild.value => [${node.value} > ${it.value}]")
                     return@checkInvariant errorMagicNumber
                 }
 
                 (it.color == Markers.RED) && (node.color == Markers.RED) -> {
-                    assertMethod("parent.color == RED == RightChild.color => [parent - ${node.value} <color> RightChild - ${it.value}]")
+                    wrappedAssertMethod("parent.color == RED == RightChild.color => [parent - ${node.value} <color> RightChild - ${it.value}]")
                     return@checkInvariant errorMagicNumber
                 }
 
@@ -49,17 +49,17 @@ class RBAnalyzer<Pack : Comparable<Pack>>(
         node.left?.let {
             when {
                 it.value == node.value -> {
-                    assertMethod("parent.value == LeftChild.value => [${node.value} == ${it.value}]")
+                    wrappedAssertMethod("parent.value == LeftChild.value => [${node.value} == ${it.value}]")
                     return@checkInvariant errorMagicNumber
                 }
 
                 it.value > node.value -> {
-                    assertMethod("parent.value < LeftChild.value => [${node.value} < ${it.value}]")
+                    wrappedAssertMethod("parent.value < LeftChild.value => [${node.value} < ${it.value}]")
                     return@checkInvariant errorMagicNumber
                 }
 
                 (it.color == Markers.RED) && (node.color == Markers.RED) -> {
-                    assertMethod("parent.color == RED == LeftChild.color => [parent - ${node.value} <color> LeftChild - ${it.value}]")
+                    wrappedAssertMethod("parent.color == RED == LeftChild.color => [parent - ${node.value} <color> LeftChild - ${it.value}]")
                     return@checkInvariant errorMagicNumber
                 }
 
@@ -73,7 +73,7 @@ class RBAnalyzer<Pack : Comparable<Pack>>(
         if (leftBlackCount < 0 || rightBlackCount < 0) return errorMagicNumber
 
         if (leftBlackCount != rightBlackCount) {
-            assertMethod(
+            wrappedAssertMethod(
                 "Number of black nodes does not match in children: parent.value - ${node.value} =>[left - $leftBlackCount] != [right - $rightBlackCount]"
             )
             return errorMagicNumber
