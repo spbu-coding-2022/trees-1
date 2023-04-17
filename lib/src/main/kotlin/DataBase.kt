@@ -1,4 +1,3 @@
-
 import org.neo4j.driver.AuthTokens
 import org.neo4j.driver.Driver
 import org.neo4j.driver.GraphDatabase
@@ -10,21 +9,21 @@ import java.io.Closeable
 import java.io.IOException
 import java.util.*
 
-class Neo4jRepository: Closeable {
+class Neo4jRepository : Closeable {
 
     private var driver: Driver? = null
 
     fun open(uri: String, username: String, password: String) {
         try {
             driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password))
-        } catch(ex: IllegalArgumentException) {
-             throw IOException()
-        } catch(ex: SessionExpiredException) {
+        } catch (ex: IllegalArgumentException) {
+            throw IOException()
+        } catch (ex: SessionExpiredException) {
             throw IOException()
         }
     }
 
-    fun <Pack: Comparable<Pack>> saveChanges(preOrder: Array<DBNodeRB<Pack>>, inOrder: Array<DBNodeRB<Pack>>) {
+    fun <Pack : Comparable<Pack>> saveChanges(preOrder: Array<DBNodeRB<Pack>>, inOrder: Array<DBNodeRB<Pack>>) {
 
         /*** сюда по ощущениям лучше всего добавлять именно то поддерево исходного дерева, которое было изменено ***/
         val session = driver?.session() ?: throw IOException()
@@ -53,15 +52,16 @@ class Neo4jRepository: Closeable {
                     }
                 }
                 if (!stack.isEmpty()) {
-                    if ( set.contains( stack.peek() ) ) {
+                    if (set.contains(stack.peek())) {
                         set.remove(stack.peek())
                         val parentNode = stack.pop()
                         parentNode.value as Container<*, *>
-                        session.executeWrite {tx ->
-                            tx.run("MERGE(parent:Node {value: \$parentNodeValue, key: \$parentNodeKey, " +
-                                    "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY}) " +
-                                    "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY}) " +
-                                    "MERGE (parent)-[:RIGHT_SON]->(son)",
+                        session.executeWrite { tx ->
+                            tx.run(
+                                "MERGE(parent:Node {value: \$parentNodeValue, key: \$parentNodeKey, " +
+                                        "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY}) " +
+                                        "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY}) " +
+                                        "MERGE (parent)-[:RIGHT_SON]->(son)",
                                 mutableMapOf(
                                     "parentNodeValue" to parentNode.value.pair.second,
                                     "parentNodeKey" to parentNode.value.pair.first,
@@ -76,15 +76,15 @@ class Neo4jRepository: Closeable {
                                 )
                             )
                         }
-                    }
-                    else {
+                    } else {
                         val parentNode = stack.peek()
                         parentNode.value as Container<*, *>
-                        session.executeWrite {tx ->
-                            tx.run("MERGE(parent:Node {value: \$parentNodeValue, key: \$parentNodeKey, " +
-                                    "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY}) " +
-                                    "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY}) " +
-                                    "MERGE (parent)-[:LEFT_SON]->(son)",
+                        session.executeWrite { tx ->
+                            tx.run(
+                                "MERGE(parent:Node {value: \$parentNodeValue, key: \$parentNodeKey, " +
+                                        "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY}) " +
+                                        "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY}) " +
+                                        "MERGE (parent)-[:LEFT_SON]->(son)",
                                 mutableMapOf(
                                     "parentNodeValue" to parentNode.value.pair.second,
                                     "parentNodeKey" to parentNode.value.pair.first,
@@ -106,7 +106,7 @@ class Neo4jRepository: Closeable {
 
             var currentNode: DBNodeRB<Pack>? = null
 
-            while(!stack.isEmpty() && inOrderIndex < inOrder.size && stack.peek().value == inOrder[inOrderIndex].value) {
+            while (!stack.isEmpty() && inOrderIndex < inOrder.size && stack.peek().value == inOrder[inOrderIndex].value) {
                 currentNode = stack.pop()
                 ++inOrderIndex
             }
@@ -121,30 +121,38 @@ class Neo4jRepository: Closeable {
         session.close()
     }
 
-    fun exportRBtree(): Pair<List<DBNodeRB<Container<String, Comparable<String>>>>, List<DBNodeRB<Container<String, Comparable<String>>>>>{
+    fun exportRBtree(): Pair<List<DBNodeRB<Container<String, Comparable<String>>>>, List<DBNodeRB<Container<String, Comparable<String>>>>> {
 
         val session = driver?.session() ?: throw IOException()
         var preOrder: List<DBNodeRB<Container<String, Comparable<String>>>> = listOf()
         var inOrder: List<DBNodeRB<Container<String, Comparable<String>>>> = listOf()
 
-        session.executeRead {tx ->
-            preOrder = tx.run("MATCH (node: Node) " +
-                    "RETURN node.value, node.key, node.color, node.x, node.y ").list()
-                .map{ DBNodeRB(
-                    value = Container(Pair(it.values().get(0).toString(), it.values().get(1).toString())),
-                    color = if (it.values().get(2).toString() == """RED""") Markers.RED else Markers.BLACK,
-                    x = it.values().get(3).toString().toDouble(),
-                    y = it.values().get(4).toString().toDouble())
+        session.executeRead { tx ->
+            preOrder = tx.run(
+                "MATCH (node: Node) " +
+                        "RETURN node.value, node.key, node.color, node.x, node.y "
+            ).list()
+                .map {
+                    DBNodeRB(
+                        value = Container(Pair(it.values().get(0).toString(), it.values().get(1).toString())),
+                        color = if (it.values().get(2).toString() == """RED""") Markers.RED else Markers.BLACK,
+                        x = it.values().get(3).toString().toDouble(),
+                        y = it.values().get(4).toString().toDouble()
+                    )
                 }
 
-            inOrder = tx.run("MATCH (node: Node) " +
-                    "RETURN node.value, node.key, node.color, node.x, node.y " +
-                    "ORDER BY node.key").list()
-                .map{ DBNodeRB(
-                    value = Container(Pair(it.values().get(0).toString(), it.values().get(1).toString())),
-                    color = if (it.values().get(2).toString() == """RED""") Markers.RED else Markers.BLACK,
-                    x = it.values().get(3).toString().toDouble(),
-                    y = it.values().get(4).toString().toDouble())
+            inOrder = tx.run(
+                "MATCH (node: Node) " +
+                        "RETURN node.value, node.key, node.color, node.x, node.y " +
+                        "ORDER BY node.key"
+            ).list()
+                .map {
+                    DBNodeRB(
+                        value = Container(Pair(it.values().get(0).toString(), it.values().get(1).toString())),
+                        color = if (it.values().get(2).toString() == """RED""") Markers.RED else Markers.BLACK,
+                        x = it.values().get(3).toString().toDouble(),
+                        y = it.values().get(4).toString().toDouble()
+                    )
                 }
         }
 
