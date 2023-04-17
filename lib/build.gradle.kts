@@ -1,5 +1,4 @@
 val sqliteJdbcVersion: String by project
-
 plugins {
     java
     kotlin("jvm") version "1.8.10"
@@ -21,15 +20,20 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    testImplementation("io.mockk:mockk:1.13.4")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     api("org.apache.commons:commons-math3:3.6.1")
     implementation("com.google.guava:guava:31.1-jre")
 
-     // JDBC Sqlite
+    val neo4jCore = "4.0.5"
+    implementation("org.neo4j", "neo4j-ogm-core", neo4jCore)
+    implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
+
+    // JDBC Sqlite
     implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
+
+    testImplementation("io.mockk:mockk:1.13.4")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 
