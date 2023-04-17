@@ -19,14 +19,18 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    api("org.apache.commons:commons-math3:3.6.1")
+    implementation("com.google.guava:guava:31.1-jre")
+
+    val neo4jCore = "4.0.5"
+    implementation("org.neo4j", "neo4j-ogm-core", neo4jCore)
+    implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
+
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
-    api("org.apache.commons:commons-math3:3.6.1")
-    implementation("com.google.guava:guava:31.1-jre")
+    implementation(kotlin("stdlib-jdk8"))
 }
-
 
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
