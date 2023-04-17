@@ -162,7 +162,8 @@ abstract class TreeStruct<
 
             linkNewNode(currentNode, parentNode)
 
-            return generateStateInsert(currentNode, parentNode)
+            if (parentNode != null) return generateStateInsert(currentNode, parentNode)
+            else return generateStateInsert(currentNode, currentNode)
         }
 
         updateNode.value = item
@@ -258,8 +259,8 @@ abstract class TreeStruct<
 
     fun find(obj: Pack): Pack? = findItem(obj).contentNode?.value
 
-    fun inOrder(): List<Pack> {
-        val arrayNodes = mutableListOf<Pack>()
+    fun inOrder(): List<NodeType> {
+        val arrayNodes = mutableListOf<NodeType>()
         var flagVisited = 0
         var current = root
         val parents = ArrayDeque<NodeType>()
@@ -276,7 +277,7 @@ abstract class TreeStruct<
                 }
             }
             current?.let {
-                arrayNodes.add(it.value)
+                arrayNodes.add(it)
                 if (it.right != null) {
                     flagVisited = 0
                     current = it.right
@@ -291,9 +292,9 @@ abstract class TreeStruct<
         return arrayNodes
     }
 
-    fun postOrder(): List<Pack> {
+    fun postOrder(): List<NodeType> {
         val parents = ArrayDeque<NodeType>()
-        val arrayNodes = mutableListOf<Pack>()
+        val arrayNodes = mutableListOf<NodeType>()
         var flagVisited = 0
         var current = root
 
@@ -314,7 +315,7 @@ abstract class TreeStruct<
                     current = it.right
                     flagVisited = 0
                 } else {
-                    arrayNodes.add(it.value)
+                    arrayNodes.add(it)
                     if (parents.isEmpty())
                         return@postOrder arrayNodes
                     val parent = parents.removeLast()
@@ -328,8 +329,8 @@ abstract class TreeStruct<
         return arrayNodes
     }
 
-    fun preOrder(): List<Pack> {
-        val arrayNodes = mutableListOf<Pack>()
+    fun preOrder(): List<NodeType> {
+        val arrayNodes = mutableListOf<NodeType>()
         var current: NodeType
         val queue = ArrayDeque<NodeType>()
 
@@ -337,7 +338,7 @@ abstract class TreeStruct<
             queue.add(root)
             while (queue.isNotEmpty()) {
                 current = queue.removeLast()
-                arrayNodes.add(current.value)
+                arrayNodes.add(current)
                 if (current.right != null)
                     current.right?.let {
                         queue.add(it)
