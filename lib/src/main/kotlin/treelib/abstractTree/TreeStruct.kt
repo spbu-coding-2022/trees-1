@@ -133,7 +133,7 @@ abstract class TreeStruct<
 
     protected fun findItem(obj: Pack): State {
         var currentNode = root
-        if (root == null) return generateStateFind(null)
+        if (root == null) return generateStateFind(null, null)
 
         while (true) {
             if (obj == currentNode?.value) return generateStateFind(currentNode, currentNode)
@@ -141,7 +141,7 @@ abstract class TreeStruct<
                 currentNode?.let {
                     if (obj > it.value) currentNode = it.right
                     else currentNode = it.left
-                } ?: return generateStateFind(null)
+                } ?: return generateStateFind(null, null)
             }
         }
     }
@@ -166,7 +166,7 @@ abstract class TreeStruct<
         }
 
         updateNode.value = item
-        return generateStateInsert(null)
+        return generateStateInsert(null, null)
     }
 
     protected abstract fun generateStateDelete(

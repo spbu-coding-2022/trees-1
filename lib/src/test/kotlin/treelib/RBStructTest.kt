@@ -7,6 +7,7 @@ import treelib.rbTree.RBStruct
 import treelib.singleObjects.Markers
 import utils.RBAnalyzer
 import utils.TreeStructWrapper
+import utils.fuzzers.RBStructFuzzer
 import kotlin.test.assertEquals
 
 @DisplayName("Test: Red-Black Tree Struct")
@@ -30,6 +31,7 @@ class RBStructTest {
         assertAll(
             { assertEquals(root?.value, 6) },
             { assertEquals(root?.color, Markers.BLACK) },
+            { analyzer.checkTree(root!!) }
         )
     }
 
@@ -41,6 +43,7 @@ class RBStructTest {
         assertAll(
             { assertEquals(root?.left?.value, 3) },
             { assertEquals(root?.left?.color, Markers.RED) },
+            { analyzer.checkTree(root!!) }
         )
     }
 
@@ -52,6 +55,7 @@ class RBStructTest {
         assertAll(
             { assertEquals(root?.right?.value, 8) },
             { assertEquals(root?.right?.color, Markers.RED) },
+            { analyzer.checkTree(root!!) }
         )
     }
 
@@ -66,6 +70,7 @@ class RBStructTest {
             { assertEquals(root?.left?.value, 3) },
             { assertEquals(root?.right?.color, Markers.RED) },
             { assertEquals(root?.left?.color, Markers.RED) },
+            { analyzer.checkTree(root!!) }
         )
     }
 
@@ -79,6 +84,7 @@ class RBStructTest {
         assertAll(
             { assertEquals(root?.value, 8) },
             { assertEquals(root?.color, Markers.BLACK) },
+            { analyzer.checkTree(root!!) }
         )
     }
 
@@ -91,6 +97,7 @@ class RBStructTest {
         assertAll(
             { assertEquals(8, root?.value) },
             { assertEquals(Markers.BLACK, root?.color) },
+            { analyzer.checkTree(root!!) }
         )
     }
 
@@ -103,6 +110,20 @@ class RBStructTest {
         assertAll(
             { assertEquals(3, root?.value) },
             { assertEquals(Markers.BLACK, root?.color) },
+            { analyzer.checkTree(root!!) }
         )
     }
+
+    @Test
+    fun `fazzer test`() {
+        val fazzer = RBStructFuzzer(arrayOf(1, 2, 3, 4, 5, 6, 7,8,9,20,100,123,234,556,345677,88765,43,364,23456,2754), ::testAssert)
+        fazzer.saveNextTestSets("TEST_TEST")
+
+        assertAll(
+            {
+                fazzer.fuzzInvariantInsert(15, 10)
+            }
+        )
+    }
+
 }
