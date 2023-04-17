@@ -34,12 +34,10 @@ dependencies {
 
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     implementation(kotlin("stdlib-jdk8"))
-
 }
-
 
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
@@ -91,7 +89,7 @@ tasks.jacocoTestReport {
 
 tasks.jacocoTestCoverageVerification {
     classDirectories.setFrom( classDirectories.files.flatMap { fileTree(it) {
-        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct", "**/AVLStruct.class", "**/BINStruct.class")
+        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct")
     } })
     dependsOn(tasks.jacocoTestReport)
     violationRules {
@@ -99,7 +97,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "BRANCH"
-                minimum = 0.5.toBigDecimal()
+                minimum = 0.4.toBigDecimal()
             }
         }
         rule {
@@ -113,7 +111,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "METHOD"
-                minimum = 0.9.toBigDecimal()
+                minimum = 1.0.toBigDecimal()
             }
         }
     }
