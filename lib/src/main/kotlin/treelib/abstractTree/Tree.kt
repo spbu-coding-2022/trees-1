@@ -33,15 +33,15 @@ abstract class Tree<
         treeStruct.delete(wrapForFind(key))
     }
 
-    private fun createPoorList(info: List<Container<Key, Value?>>): List<Pair<Key, Value?>> {
-        val returnInfo = mutableListOf<Pair<Key, Value?>>()
-        for (element in info) returnInfo.add(element.pair)
+    private fun createPoorList(info: List<NodeType>): List<NodeType> {
+        val returnInfo = mutableListOf<NodeType>()
+        for (element in info) returnInfo.add(element)
         return returnInfo
     }
 
-    fun inOrder(): List<Pair<Key, Value?>> = createPoorList(treeStruct.inOrder())
+    fun inOrder(): List<NodeType> = createPoorList(treeStruct.inOrder())
 
-    fun preOrder(): List<Pair<Key, Value?>> = createPoorList(treeStruct.preOrder())
+    fun preOrder(): List<NodeType> = createPoorList(treeStruct.preOrder())
 
-    fun postOrder(): List<Pair<Key, Value?>> = createPoorList(treeStruct.postOrder())
+    fun postOrder(): List<NodeType> = createPoorList(treeStruct.postOrder())
 }
