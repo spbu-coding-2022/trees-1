@@ -141,7 +141,8 @@ abstract class TreeStruct<
                 currentNode?.let {
                     if (obj > it.value) currentNode = it.right
                     else currentNode = it.left
-                } ?: return generateStateFind(null, null)
+                }
+                if (currentNode == null) return generateStateFind(null, null)
             }
         }
     }
@@ -162,7 +163,8 @@ abstract class TreeStruct<
 
             linkNewNode(currentNode, parentNode)
 
-            return generateStateInsert(currentNode, parentNode)
+            if (parentNode == null) return generateStateInsert(currentNode, currentNode)
+            else return generateStateInsert(currentNode, parentNode)
         }
 
         updateNode.value = item
