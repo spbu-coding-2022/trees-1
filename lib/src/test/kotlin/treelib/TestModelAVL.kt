@@ -1,3 +1,5 @@
+package treelib
+
 import treelib.avlTree.AVLNode
 
 class TestModelAVL {

@@ -1,3 +1,5 @@
+package treelib
+
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import treelib.avlTree.AVLBalancer

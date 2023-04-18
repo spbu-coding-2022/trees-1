@@ -1,3 +1,5 @@
+package treelib
+
 import treelib.rbTree.RBNode
 import treelib.singleObjects.Markers
 
