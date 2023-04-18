@@ -4,12 +4,12 @@ import treelib.abstractTree.Tree
 
 import treelib.singleObjects.Container
 
-class AVLTree<Key : Comparable<Key>, Value> :
-    Tree<Key, Value, AVLNode<Container<Key, Value?>>, AVLStateContainer<Container<Key, Value?>>>() {
+class AVLTree<K : Comparable<K>, V> :
+    Tree<K, V, AVLNode<Container<K, V?>>, AVLStateContainer<Container<K, V?>>, AVLVertex<Container<K, V?>>>() {
 
-    override val treeStruct = AVLStruct<Container<Key, Value?>>()
+    override val treeStruct = AVLStruct<Container<K, V?>>()
 
-    operator fun AVLTree<Key, Value>.get(key: Key): Value? = getItem(key)
+    operator fun AVLTree<K, V>.get(key: K): V? = getItem(key)
 
-    operator fun AVLTree<Key, Value>.set(key: Key, value: Value) = putItem(key to value)
+    operator fun AVLTree<K, V>.set(key: K, value: V) = putItem(key to value)
 }

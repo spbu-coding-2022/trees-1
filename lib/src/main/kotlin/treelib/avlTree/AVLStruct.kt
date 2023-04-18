@@ -3,7 +3,7 @@ package treelib.avlTree
 import treelib.abstractTree.balanced.BalancedTreeStruct
 
 class AVLStruct<Pack : Comparable<Pack>> :
-    BalancedTreeStruct<Pack, AVLNode<Pack>, AVLStateContainer<Pack>, AVLBalancer<Pack>>() {
+    BalancedTreeStruct<Pack, AVLNode<Pack>, AVLStateContainer<Pack>, AVLVertex<Pack>, AVLBalancer<Pack>>() {
 
     override var root: AVLNode<Pack>? = null
     override val balancer = AVLBalancer(root)
@@ -38,6 +38,10 @@ class AVLStruct<Pack : Comparable<Pack>> :
         } else root?.let {
             root = childForLink
         }
+    }
+
+    override fun toVertex(node: AVLNode<Pack>): AVLVertex<Pack> {
+        return AVLVertex(node.value, node.height)
     }
 
     override fun createNode(item: Pack): AVLNode<Pack> = AVLNode(item)

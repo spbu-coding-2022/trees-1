@@ -4,12 +4,12 @@ import treelib.abstractTree.Tree
 
 import treelib.singleObjects.Container
 
-class RBTree<Key : Comparable<Key>, Value> :
-    Tree<Key, Value, RBNode<Container<Key, Value?>>, RBStateContainer<Container<Key, Value?>>>() {
+class RBTree<K : Comparable<K>, V> :
+    Tree<K, V, RBNode<Container<K, V?>>, RBStateContainer<Container<K, V?>>, RBVertex<Container<K, V?>>>() {
 
-    override val treeStruct = RBStruct<Container<Key, Value?>>()
+    override val treeStruct = RBStruct<Container<K, V?>>()
 
-    operator fun RBTree<Key, Value>.get(key: Key): Value? = getItem(key)
+    operator fun RBTree<K, V>.get(key: K): V? = getItem(key)
 
-    operator fun RBTree<Key, Value>.set(key: Key, value: Value) = putItem(key to value)
+    operator fun RBTree<K, V>.set(key: K, value: V) = putItem(key to value)
 }

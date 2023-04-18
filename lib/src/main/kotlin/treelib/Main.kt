@@ -1,6 +1,8 @@
 package treelib
 
 import Controller
+import treelib.rbTree.RBStruct
+import treelib.singleObjects.Container
 
 
 fun main() {
@@ -30,10 +32,35 @@ fun main() {
     neo4jRep.open("bolt://localhost:7687", "neo4j", "test-neo4j")
     neo4jRep.saveChanges(preArr, inArr)
      */
+
+    val tree = RBStruct<Container<Int, Int>>()
+    tree.insert(Container(Pair(25 , 1)))
+    tree.insert(Container(Pair(15 , 1)))
+    tree.insert(Container(Pair(50 , 1)))
+    tree.insert(Container(Pair(10 , 1)))
+    tree.insert(Container(Pair(22 , 1)))
+    tree.insert(Container(Pair(35 , 1)))
+    tree.insert(Container(Pair(70 , 1)))
+    tree.insert(Container(Pair(4 , 1)))
+    tree.insert(Container(Pair(12 , 1)))
+    tree.insert(Container(Pair(18 , 1)))
+    tree.insert(Container(Pair(24 , 1)))
+    tree.insert(Container(Pair(31 , 1)))
+    tree.insert(Container(Pair(44 , 1)))
+    tree.insert(Container(Pair(66 , 1)))
+    tree.insert(Container(Pair(90 , 1)))
     val controller = Controller()
-    controller.saveTree()
+    controller.saveTree(tree)
+    tree.insert(Container(Pair(100, 1)))
+    controller.saveTree(tree)
+    controller.initTree()
 
     //neo4jRep.exportRBtree()
 
     //neo4jRep.close()
+}
+
+fun test() {
+    val cont = Controller()
+    cont.initTree()
 }
