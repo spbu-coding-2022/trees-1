@@ -7,12 +7,13 @@ import org.junit.jupiter.api.fail
 import treelib.avlTree.AVLNode
 import treelib.avlTree.AVLStateContainer
 import treelib.avlTree.AVLStruct
+import treelib.avlTree.AVLVertex
 import utils.AVLAnalyzer
 import utils.TreeStructWrapper
 
 @DisplayName("Test: AVL Struct")
 class AVLStructTest {
-    private val treeW = TreeStructWrapper<Int, AVLNode<Int>, AVLStateContainer<Int>, AVLStruct<Int>>()
+    private val treeW = TreeStructWrapper<Int, AVLNode<Int>, AVLVertex<Int>, AVLStateContainer<Int>, AVLStruct<Int>>()
     private val treeH = AVLAnalyzer<Int>(::testAssert)
     private var treeStruct = AVLStruct<Int>()
 

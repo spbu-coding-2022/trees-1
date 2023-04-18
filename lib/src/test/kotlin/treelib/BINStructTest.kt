@@ -7,13 +7,14 @@ import org.junit.jupiter.api.fail
 import treelib.binTree.BINNode
 import treelib.binTree.BINStateContainer
 import treelib.binTree.BINStruct
+import treelib.binTree.BINVertex
 import utils.BINAnalyzer
 import utils.TreeStructWrapper
 import kotlin.test.assertEquals
 
 @DisplayName("Test: Binary Search Tree Struct")
 class BINStructTest {
-    val treeW = TreeStructWrapper<Int, BINNode<Int>, BINStateContainer<Int>, BINStruct<Int>>()
+    val treeW = TreeStructWrapper<Int, BINNode<Int>, BINVertex<Int>,  BINStateContainer<Int>, BINStruct<Int>>()
     var treeStruct = BINStruct<Int>()
 
     private fun testAssert(msg: String): Nothing = fail(msg)

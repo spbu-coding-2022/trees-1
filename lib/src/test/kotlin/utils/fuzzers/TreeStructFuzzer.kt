@@ -3,20 +3,22 @@ package utils.fuzzers
 import treelib.abstractTree.Node
 import treelib.abstractTree.StateContainer
 import treelib.abstractTree.TreeStruct
-import kotlin.random.Random
-import utils.Analyzer
+import treelib.abstractTree.Vertex
 import treelib.singleObjects.exceptions.*
-import kotlin.random.nextInt
+import utils.Analyzer
 import utils.TreeStructWrapper
 import java.io.File
 import java.time.Instant
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 abstract class TreeStructFuzzer<
         Pack : Comparable<Pack>,
         NodeType : Node<Pack, NodeType>,
+        VertexType: Vertex<Pack>,
         AnalyzerType : Analyzer<Pack, NodeType>,
         State : StateContainer<Pack, NodeType>,
-        TreeStructType : TreeStruct<Pack, NodeType, State>,
+        TreeStructType : TreeStruct<Pack, NodeType, State, VertexType>,
         > {
     abstract val baseInput: Array<Pack>
 
@@ -26,7 +28,7 @@ abstract class TreeStructFuzzer<
 
     private var dirPath: String? = null
 
-    protected val treeWrapper = TreeStructWrapper<Pack, NodeType, State, TreeStructType>()
+    protected val treeWrapper = TreeStructWrapper<Pack, NodeType, VertexType,  State, TreeStructType>()
 
     protected abstract fun createTreeStruct(): TreeStructType
 
