@@ -1,3 +1,5 @@
+val sqliteJdbcVersion: String by project
+
 plugins {
     java
     kotlin("jvm") version "1.8.10"
@@ -24,6 +26,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     api("org.apache.commons:commons-math3:3.6.1")
     implementation("com.google.guava:guava:31.1-jre")
+
+     // JDBC Sqlite
+    implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
 }
 
 tasks.test {
