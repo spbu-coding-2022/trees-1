@@ -22,10 +22,12 @@ jobs:
       - name: Run Tests
         run: ./gradlew clean test
 
-      - name: Run Test Coverage
+      - if: matrix.os == 'ubuntu-latest' # Container action is only supported on Linux
+        name: Run Test Coverage
         run: ./gradlew jacocoTestReport
 
-      - name: Jacoco Code Coverage Report
+      - if: matrix.os == 'ubuntu-latest'
+        name: Jacoco Code Coverage Report
         uses: cicirello/jacoco-badge-generator@v2.8.0
         with:
           generate-branches-badge: true
