@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
@@ -30,6 +31,7 @@ dependencies {
      // JDBC Sqlite
     implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
 }
+
 
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
