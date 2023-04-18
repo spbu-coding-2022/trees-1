@@ -3,7 +3,7 @@ package treelib.binTree
 import treelib.abstractTree.TreeStruct
 
 class BINStruct<Pack : Comparable<Pack>> :
-    TreeStruct<Pack, BINNode<Pack>, BINStateContainer<Pack>>() {
+    TreeStruct<Pack, BINNode<Pack>, BINStateContainer<Pack>, BINVertex<Pack>>() {
 
     override var root: BINNode<Pack>? = null
 
@@ -51,6 +51,10 @@ class BINStruct<Pack : Comparable<Pack>> :
             else parent.left = node
         }
         return node
+    }
+
+    override fun toVertex(node: BINNode<Pack>): BINVertex<Pack> {
+        return BINVertex(node.value)
     }
 
     override fun createNode(item: Pack) = BINNode(item)

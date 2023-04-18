@@ -9,7 +9,8 @@ import treelib.singleObjects.exceptions.NonExistentValueException
 abstract class TreeStruct<
         Pack : Comparable<Pack>,
         NodeType : Node<Pack, NodeType>,
-        State : StateContainer<Pack, NodeType>
+        State : StateContainer<Pack, NodeType>,
+        VertexType: Vertex<Pack>
         > {
 
     protected abstract var root: NodeType?
@@ -163,8 +164,8 @@ abstract class TreeStruct<
 
             linkNewNode(currentNode, parentNode)
 
-            if (parentNode == null) return generateStateInsert(currentNode, currentNode)
-            else return generateStateInsert(currentNode, parentNode)
+            if (parentNode != null) return generateStateInsert(currentNode, parentNode)
+            else return generateStateInsert(currentNode, currentNode)
         }
 
         updateNode.value = item
@@ -260,8 +261,8 @@ abstract class TreeStruct<
 
     fun find(obj: Pack): Pack? = findItem(obj).contentNode?.value
 
-    fun inOrder(): List<Pack> {
-        val arrayNodes = mutableListOf<Pack>()
+    fun inOrder(): List<VertexType> {
+        val arrayNodes = mutableListOf<NodeType>()
         var flagVisited = 0
         var current = root
         val parents = ArrayDeque<NodeType>()
@@ -278,24 +279,26 @@ abstract class TreeStruct<
                 }
             }
             current?.let {
-                arrayNodes.add(it.value)
+                arrayNodes.add(it)
                 if (it.right != null) {
                     flagVisited = 0
                     current = it.right
                 } else {
                     if (parents.isEmpty())
-                        return@inOrder arrayNodes
+                        return@inOrder arrayNodes.map {toVertex(it)}
                     flagVisited = 1
                     current = parents.removeLast()
                 }
             }
         }
-        return arrayNodes
+        return arrayNodes.map{toVertex(it)}
     }
 
-    fun postOrder(): List<Pack> {
+    abstract fun toVertex(node: NodeType): VertexType
+
+    fun postOrder(): List<VertexType> {
         val parents = ArrayDeque<NodeType>()
-        val arrayNodes = mutableListOf<Pack>()
+        val arrayNodes = mutableListOf<NodeType>()
         var flagVisited = 0
         var current = root
 
@@ -316,9 +319,9 @@ abstract class TreeStruct<
                     current = it.right
                     flagVisited = 0
                 } else {
-                    arrayNodes.add(it.value)
+                    arrayNodes.add(it)
                     if (parents.isEmpty())
-                        return@postOrder arrayNodes
+                        return@postOrder arrayNodes.map{toVertex(it)}
                     val parent = parents.removeLast()
                     if (parent.right == it) {
                         flagVisited = 2
@@ -327,11 +330,11 @@ abstract class TreeStruct<
                 }
             } ?: throw MultithreadingException(ImpossibleCaseException())
         }
-        return arrayNodes
+        return arrayNodes.map{toVertex(it)}
     }
 
-    fun preOrder(): List<Pack> {
-        val arrayNodes = mutableListOf<Pack>()
+    fun preOrder(): List<VertexType> {
+        val arrayNodes = mutableListOf<NodeType>()
         var current: NodeType
         val queue = ArrayDeque<NodeType>()
 
@@ -339,7 +342,7 @@ abstract class TreeStruct<
             queue.add(root)
             while (queue.isNotEmpty()) {
                 current = queue.removeLast()
-                arrayNodes.add(current.value)
+                arrayNodes.add(current)
                 if (current.right != null)
                     current.right?.let {
                         queue.add(it)
@@ -351,6 +354,8 @@ abstract class TreeStruct<
                     } ?: throw MultithreadingException(ImpossibleCaseException())
             }
         }
-        return arrayNodes
+        return arrayNodes.map {toVertex(it)}
     }
+
+
 }

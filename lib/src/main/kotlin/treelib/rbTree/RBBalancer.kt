@@ -2,6 +2,8 @@ package treelib.rbTree
 
 import treelib.abstractTree.balanced.BalancerParent
 import treelib.singleObjects.Markers
+import treelib.singleObjects.exceptions.IllegalBaseNodeException
+import treelib.singleObjects.exceptions.IllegalNodeStateException
 
 class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
     BalancerParent<Pack, RBNode<Pack>, RBStateContainer<Pack>>() {
@@ -42,7 +44,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
 
     override fun balance(stateContainer: RBStateContainer<Pack>): RBNode<Pack> {
         val node = stateContainer.contentNode
-            ?: throw IllegalStateException() //IllegalBaseNodeException("A non-existent node (null) was passed to the method")
+            ?: throw IllegalBaseNodeException()
         val uncle = getUncle(node)
         when {
             /** node insertion case **/
@@ -65,7 +67,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                             currentNode = parent
                         }
                         parent =
-                            currentNode.parent?.parent ?: throw IllegalStateException() // IllegalNodeStateException()
+                            currentNode.parent?.parent ?: throw IllegalNodeStateException()
                         currentNode = rightRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
@@ -78,7 +80,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                             currentNode = parent
                         }
                         parent =
-                            currentNode.parent?.parent ?: throw NullPointerException() // IllegalNodeStateException()
+                            currentNode.parent?.parent ?: throw IllegalNodeStateException()
                         currentNode = leftRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
@@ -133,7 +135,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
             val uncle = getUncle(currentNode)
             if (uncle?.color == Markers.RED) {
                 currentNode.parent?.color = Markers.BLACK
-                currentNode = currentNode.parent?.parent ?: throw NullPointerException() // IllegalNodeStateException()
+                currentNode = currentNode.parent?.parent ?: throw IllegalNodeStateException()
                 currentNode.color = Markers.RED
                 uncle.color = Markers.BLACK
             } else if (uncle != null) {
@@ -156,13 +158,13 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                 getRoot(parent)
             }
 
-            else -> getRoot(node ?: throw NullPointerException() /* IllegalNodeStateException() */)
+            else -> getRoot(node ?: throw IllegalNodeStateException())
         }
     }
 
     /** parent is red **/
     private fun secondCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
-        var brother = getBrother(parent, node) ?: throw NullPointerException() // IllegalNodeStateException()
+        var brother = getBrother(parent, node) ?: throw IllegalNodeStateException()
         if (brother.color == Markers.RED)
             throw NullPointerException()
 
@@ -214,7 +216,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
 
     /** parent is black **/
     private fun thirdCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
-        val brother = getBrother(parent, node) ?: throw NullPointerException() // IllegalNodeStateException()
+        val brother = getBrother(parent, node) ?: throw IllegalNodeStateException()
         when (brother.color) {
             Markers.RED -> thirdCaseSubFirst(brother, parent)
             Markers.BLACK -> thirdCaseSubSecond(brother, parent)
@@ -225,7 +227,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
     private fun thirdCaseSubFirst(brother: RBNode<Pack>, parent: RBNode<Pack>) {
         when (brother) {
             brother.parent?.left -> {
-                var rightBrotherSon = brother.right ?: throw NullPointerException() // IllegalNodeStateException()
+                var rightBrotherSon = brother.right ?: throw IllegalNodeStateException()
 
                 if (rightBrotherSon.right?.color != Markers.RED && rightBrotherSon.left?.color != Markers.RED) {
                     rightBrotherSon.color = Markers.RED
@@ -242,7 +244,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                     leftRotate(rightBrotherSon)
 
                     rightBrotherSon =
-                        rightBrotherSon.parent ?: throw NullPointerException() // IllegalNodeStateException()
+                        rightBrotherSon.parent ?: throw IllegalNodeStateException()
                     rightBrotherSon.color = Markers.BLACK
                 }
 
@@ -258,7 +260,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                 if (leftBrotherSon.right?.color != Markers.RED && leftBrotherSon.left?.color != Markers.RED) {
                     leftBrotherSon.color = Markers.RED
                     brother.color = Markers.BLACK
-                    leftRotate(brother.parent ?: throw NullPointerException()) // IllegalNodeStateException()
+                    leftRotate(brother.parent ?: throw IllegalNodeStateException())
                     return
                 }
 
@@ -266,7 +268,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                     rightRotate(leftBrotherSon)
                     leftBrotherSon.color = Markers.RED
                     leftBrotherSon =
-                        leftBrotherSon.parent ?: throw NullPointerException() // IllegalNodeStateException()
+                        leftBrotherSon.parent ?: throw IllegalNodeStateException()
                     leftBrotherSon.color = Markers.BLACK
                 }
 

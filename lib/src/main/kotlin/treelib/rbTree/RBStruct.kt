@@ -1,6 +1,5 @@
 package treelib.rbTree
 
-import treelib.DBNodeRB
 import treelib.abstractTree.balanced.BalancedTreeStruct
 import treelib.singleObjects.Markers
 import treelib.singleObjects.exceptions.ImpossibleCaseException
@@ -8,7 +7,7 @@ import treelib.singleObjects.exceptions.MultithreadingException
 import java.util.*
 
 class RBStruct<Pack : Comparable<Pack>> :
-    BalancedTreeStruct<Pack, RBNode<Pack>, RBStateContainer<Pack>, RBBalancer<Pack>>() {
+    BalancedTreeStruct<Pack, RBNode<Pack>, RBStateContainer<Pack>, RBVertex<Pack>, RBBalancer<Pack>>() {
 
     override var root: RBNode<Pack>? = null
 
@@ -57,6 +56,10 @@ class RBStruct<Pack : Comparable<Pack>> :
 
     override fun getNodeKernel(node: RBNode<Pack>): RBNode<Pack> = RBNode(node.value, color = node.color)
 
+    override fun toVertex(node: RBNode<Pack>): RBVertex<Pack> {
+        return RBVertex(node.value, node.color)
+    }
+
     override fun createNode(item: Pack): RBNode<Pack> = RBNode(item)
 
     override fun linkNewNode(node: RBNode<Pack>, parent: RBNode<Pack>?): RBNode<Pack> {
@@ -73,7 +76,7 @@ class RBStruct<Pack : Comparable<Pack>> :
         return node
     }
 
-    fun restoreTreeFromDatabase(preOrder: List<DBNodeRB<Pack>>, inOrder: List<DBNodeRB<Pack>>) {
+    fun <RBVertexType: RBVertex<Pack>> restoreTreeFromDatabase(preOrder: List<RBVertexType>, inOrder: List<RBVertexType>) {
         var inOrderIndex = 0
         var preOrderIndex = 0
         val set = HashSet<RBNode<Pack>>()
@@ -81,7 +84,7 @@ class RBStruct<Pack : Comparable<Pack>> :
 
         while (preOrderIndex in preOrder.indices) {
             var currentNode: RBNode<Pack>?
-            var drawNode: DBNodeRB<Pack>
+            var drawNode: RBVertexType
 
             do {
                 drawNode = preOrder[preOrderIndex]
@@ -117,7 +120,7 @@ class RBStruct<Pack : Comparable<Pack>> :
 
     }
 
-    private fun createRBNode(drawNode: DBNodeRB<Pack>): RBNode<Pack> {
+    private fun <RBVertexType: RBVertex<Pack>> createRBNode(drawNode: RBVertexType): RBNode<Pack> {
         val node = RBNode(value = drawNode.value, color = drawNode.color)
         return node
     }
