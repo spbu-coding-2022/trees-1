@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*
 import treelib.rbTree.RBNode
 import treelib.rbTree.RBStateContainer
 import treelib.rbTree.RBStruct
+import treelib.rbTree.RBVertex
 import treelib.singleObjects.Markers
 import utils.RBAnalyzer
 import utils.TreeStructWrapper
@@ -12,7 +13,7 @@ import kotlin.test.assertEquals
 
 @DisplayName("Test: Red-Black Tree Struct")
 class RBStructTest {
-    private val treeW = TreeStructWrapper<Int, RBNode<Int>, RBStateContainer<Int>, RBStruct<Int>>()
+    private val treeW = TreeStructWrapper<Int, RBNode<Int>, RBVertex<Int>, RBStateContainer<Int>, RBStruct<Int>>()
     private var treeStruct = RBStruct<Int>()
 
     private fun testAssert(msg: String): Nothing = fail(msg)
