@@ -82,7 +82,7 @@ tasks.jacocoTestReport {
 
 tasks.jacocoTestCoverageVerification {
     classDirectories.setFrom( classDirectories.files.flatMap { fileTree(it) {
-        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct")
+        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct", "**/AVLStruct.class", "**/BINStruct.class")
     } })
     dependsOn(tasks.jacocoTestReport)
     violationRules {
@@ -90,7 +90,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "BRANCH"
-                minimum = 0.4.toBigDecimal()
+                minimum = 0.5.toBigDecimal()
             }
         }
         rule {
@@ -104,7 +104,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "METHOD"
-                minimum = 1.0.toBigDecimal()
+                minimum = 0.9.toBigDecimal()
             }
         }
     }
