@@ -34,6 +34,7 @@ dependencies {
 
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     implementation(kotlin("stdlib-jdk8"))
 

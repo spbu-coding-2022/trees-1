@@ -3,21 +3,18 @@ package treelib
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import treelib.binTree.BINNode
-import treelib.binTree.BINStateContainer
-import treelib.binTree.BINStruct
-import treelib.binTree.BINTree
-import utils.TreeWrapper
+import treelib.binTree.*
 import treelib.singleObjects.Container
 import utils.TreeStructWrapper
+import utils.TreeWrapper
 import kotlin.test.assertEquals
 
 class BINTreeTest {
     private val tree = BINTree<Int, Int>()
     private val treeW =
-        TreeWrapper<Int, Int, BINNode<Container<Int, Int?>>, BINStateContainer<Container<Int, Int?>>, BINStruct<Container<Int, Int?>>, BINTree<Int, Int>>()
+        TreeWrapper<Int, Int, BINNode<Container<Int, Int?>>, BINVertex<Container<Int, Int?>>, BINStateContainer<Container<Int, Int?>>, BINStruct<Container<Int, Int?>>, BINTree<Int, Int>>()
     private val treeSW =
-        TreeStructWrapper<Container<Int, Int?>, BINNode<Container<Int, Int?>>, BINStateContainer<Container<Int, Int?>>, BINStruct<Container<Int, Int?>>>()
+        TreeStructWrapper<Container<Int, Int?>, BINNode<Container<Int, Int?>>, BINVertex<Container<Int, Int?>>, BINStateContainer<Container<Int, Int?>>, BINStruct<Container<Int, Int?>>>()
 
 
 // line - 0.6, branch - 0.5, methods = 0.9

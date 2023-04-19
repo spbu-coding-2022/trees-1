@@ -2,10 +2,7 @@ package treelib
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import treelib.avlTree.AVLNode
-import treelib.avlTree.AVLStateContainer
-import treelib.avlTree.AVLStruct
-import treelib.avlTree.AVLTree
+import treelib.avlTree.*
 import treelib.singleObjects.Container
 import utils.TreeStructWrapper
 import utils.TreeWrapper
@@ -15,9 +12,9 @@ import kotlin.test.assertEquals
 class AVLTreeTest {
     private val tree = AVLTree<Int, Int>()
     private val treeW =
-        TreeWrapper<Int, Int, AVLNode<Container<Int, Int?>>, AVLStateContainer<Container<Int, Int?>>, AVLStruct<Container<Int, Int?>>, AVLTree<Int, Int>>()
+        TreeWrapper<Int, Int, AVLNode<Container<Int, Int?>>, AVLVertex<Container<Int, Int?>>, AVLStateContainer<Container<Int, Int?>>, AVLStruct<Container<Int, Int?>>, AVLTree<Int, Int>>()
     private val treeSW =
-        TreeStructWrapper<Container<Int, Int?>, AVLNode<Container<Int, Int?>>, AVLStateContainer<Container<Int, Int?>>, AVLStruct<Container<Int, Int?>>>()
+        TreeStructWrapper<Container<Int, Int?>, AVLNode<Container<Int, Int?>>, AVLVertex<Container<Int, Int?>>, AVLStateContainer<Container<Int, Int?>>, AVLStruct<Container<Int, Int?>>>()
 
 
     @ParameterizedTest
