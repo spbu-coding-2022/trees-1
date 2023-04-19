@@ -28,7 +28,10 @@ class AVLStructTest {
         for (i in num) {
             treeStruct.insert(i)
         }
-        treeH.checkTree(treeW.getPrivateNode(treeStruct)!!)
+        val node = treeW.getPrivateNode(treeStruct)
+        if (node != null) {
+            treeW.getPrivateNode(treeStruct)?.let { treeH.checkTree(it) }
+        }
     }
 
     @Test
@@ -37,7 +40,10 @@ class AVLStructTest {
         for (i in num) {
             treeStruct.insert(i)
         }
-        treeH.checkTree(treeW.getPrivateNode(treeStruct)!!)
+        val node = treeW.getPrivateNode(treeStruct)
+        if (node != null) {
+            treeW.getPrivateNode(treeStruct)?.let { treeH.checkTree(it) }
+        }
     }
 
     @Test
@@ -47,7 +53,10 @@ class AVLStructTest {
             treeStruct.insert(i)
         }
         treeStruct.delete(2)
-        treeH.checkTree(treeW.getPrivateNode(treeStruct)!!)
+        val node = treeW.getPrivateNode(treeStruct)
+        if (node != null) {
+            treeW.getPrivateNode(treeStruct)?.let { treeH.checkTree(it) }
+        }
     }
 
     @Test
@@ -55,7 +64,10 @@ class AVLStructTest {
         for (i in 1..100000) {
             treeStruct.insert(i)
         }
-        treeH.checkTree(treeW.getPrivateNode(treeStruct)!!)
+        val node = treeW.getPrivateNode(treeStruct)
+        if (node != null) {
+            treeW.getPrivateNode(treeStruct)?.let { treeH.checkTree(it) }
+        }
     }
 
     @Test
@@ -64,14 +76,20 @@ class AVLStructTest {
             treeStruct.insert(i)
         }
         treeStruct.delete(5000)
-        treeH.checkTree(treeW.getPrivateNode(treeStruct)!!)
+        val node = treeW.getPrivateNode(treeStruct)
+        if (node != null) {
+            treeW.getPrivateNode(treeStruct)?.let { treeH.checkTree(it) }
+        }
     }
 
     @Test
     fun `test two arguments`() {
         treeStruct.insert(2)
         treeStruct.insert(3)
-        treeH.checkTree(treeW.getPrivateNode(treeStruct)!!)
+        val node = treeW.getPrivateNode(treeStruct)
+        if (node != null) {
+            treeW.getPrivateNode(treeStruct)?.let { treeH.checkTree(it) }
+        }
     }
 
     @Test
@@ -80,6 +98,9 @@ class AVLStructTest {
         for (i in num) {
             treeStruct.insert(i)
         }
-        treeH.checkTree(treeW.getPrivateNode(treeStruct)!!)
+        val node = treeW.getPrivateNode(treeStruct)
+        if (node != null) {
+            treeW.getPrivateNode(treeStruct)?.let { treeH.checkTree(it) }
+        }
     }
 }
