@@ -17,7 +17,7 @@ class BINTreeTest {
         TreeStructWrapper<Container<Int, Int?>, BINNode<Container<Int, Int?>>, BINVertex<Container<Int, Int?>>, BINStateContainer<Container<Int, Int?>>, BINStruct<Container<Int, Int?>>>()
 
 
-// line - 0.6, branch - 0.5, methods = 0.9
+    // line - 0.6, branch - 0.5, methods = 0.9
     @ParameterizedTest
     @ValueSource(ints = [1, 2, 0, 6, 4])
     fun `test putItem`(str: Int) {
@@ -27,14 +27,17 @@ class BINTreeTest {
     @ParameterizedTest
     @ValueSource(strings = ["1 2 3 4", "5 6 7 8 9"])
     fun `test putItems`(str: String) {
-        val numbers = str.split(" ").map{ it.toInt() }.toMutableList()
+        val numbers = str.split(" ").map { it.toInt() }.toMutableList()
         val num = mutableListOf<Pair<Int, Int>>()
         for (i in numbers) {
             num.add(Pair(i, 1))
         }
         tree.putItems(num)
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = numbers[0])
-        assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.right?.value?.key, actual = numbers[1])
+        assertEquals(
+            expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.right?.value?.key,
+            actual = numbers[1]
+        )
     }
 
     @Test
@@ -52,7 +55,7 @@ class BINTreeTest {
     @ParameterizedTest
     @ValueSource(strings = ["5 2 3", "5 6 7", "5 6 13", "5 6 1", "192 5 6"])
     fun `test putItems and delete`(str: String) {
-        val numbers = str.split(" ").map{ it.toInt() }.toMutableList()
+        val numbers = str.split(" ").map { it.toInt() }.toMutableList()
         val num = mutableListOf<Pair<Int, Int>>()
         for (i in numbers) {
             num.add(Pair(i, 1))
@@ -67,7 +70,7 @@ class BINTreeTest {
     @ParameterizedTest
     @ValueSource(strings = ["5 2 3 9", "5 6 7 1", "5 6 13 4", "5 6 1", "192 5 6 222"])
     fun `test putItems and delete root`(str: String) {
-        val numbers = str.split(" ").map{ it.toInt() }.toMutableList()
+        val numbers = str.split(" ").map { it.toInt() }.toMutableList()
         val num = mutableListOf<Pair<Int, Int>>()
         for (i in numbers) {
             num.add(Pair(i, 1))
@@ -78,6 +81,9 @@ class BINTreeTest {
         val index = numbers.indexOf(root)
         tree.deleteItem(root)
 
-        assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = numbers[index + 1])
+        assertEquals(
+            expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key,
+            actual = numbers[index + 1]
+        )
     }
 }

@@ -6,10 +6,10 @@ import treelib.binTree.BINStruct
 import treelib.binTree.BINVertex
 import utils.BINAnalyzer
 
-class BINStructFuzzer<Pack:Comparable<Pack>>(
+class BINStructFuzzer<Pack : Comparable<Pack>>(
     override val baseInput: Array<Pack>,
     override val assertMethod: (input: String) -> Unit
-): TreeStructFuzzer<Pack, BINNode<Pack>, BINVertex<Pack>, BINAnalyzer<Pack>, BINStateContainer<Pack>, BINStruct<Pack>>() {
+) : TreeStructFuzzer<Pack, BINNode<Pack>, BINVertex<Pack>, BINAnalyzer<Pack>, BINStateContainer<Pack>, BINStruct<Pack>>() {
 
     override fun createTreeStruct(): BINStruct<Pack> = BINStruct()
 

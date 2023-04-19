@@ -71,9 +71,9 @@ class BINStruct<Pack : Comparable<Pack>> :
 
     private fun toNode(vertex: BINVertex<Pack>): BINNode<Pack> = BINNode(value = vertex.value)
 
-    fun <BINVertexType: BINVertex<Pack>> restoreStruct(preOrder: List<BINVertexType>){
+    fun <BINVertexType : BINVertex<Pack>> restoreStruct(preOrder: List<BINVertexType>) {
         if (root != null) throw IncorrectUsage("The tree already exists")
-        for (vertex in preOrder){
+        for (vertex in preOrder) {
             val currentNode = toNode(vertex)
             val leaf = getLeafForInsert(currentNode.value)
             linkNewNode(currentNode, leaf)

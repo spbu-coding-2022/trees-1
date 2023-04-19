@@ -18,6 +18,7 @@ class AVLStructTest {
     private var treeStruct = AVLStruct<Int>()
 
     private fun testAssert(msg: String): Nothing = fail(msg)
+
     @BeforeEach
     fun reInitClassUnderTest() {
         treeStruct = AVLStruct()

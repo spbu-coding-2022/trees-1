@@ -83,7 +83,7 @@ class SQLiteRepository<Pack : Comparable<Pack>>(
                 while (result.next()) {
                     info.add(result.getString(avlTreeName))
                 }
-                logInfoMethod("")
+                logInfoMethod("Available tree is given")
             } catch (ex: SQLException) {
                 logErrorMethod(ex)
             } finally {
@@ -110,7 +110,7 @@ class SQLiteRepository<Pack : Comparable<Pack>>(
         }
     }
 
-    private fun getTreeId(treeName: String): Int {
+    fun getTreeId(treeName: String): Int {
         var id: Int? = null
         try {
             val statement = connection.prepareStatement("SELECT id FROM $treeTable WHERE name=?;")
@@ -147,7 +147,7 @@ class SQLiteRepository<Pack : Comparable<Pack>>(
 
     }
 
-    fun addVertexes(list: List<DrawAVLVertex<Pack>>, treeName: String) {
+    fun addVertexes(list: MutableList<DrawAVLVertex<Pack>>, treeName: String) {
         for (el in list) addVertex(el, treeName)
     }
 

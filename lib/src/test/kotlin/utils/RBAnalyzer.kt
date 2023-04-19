@@ -79,7 +79,7 @@ class RBAnalyzer<Pack : Comparable<Pack>>(
             return errorMagicNumber
         }
 
-        if(node.color == Markers.BLACK) return leftBlackCount + 1
+        if (node.color == Markers.BLACK) return leftBlackCount + 1
         else return rightBlackCount
     }
 }

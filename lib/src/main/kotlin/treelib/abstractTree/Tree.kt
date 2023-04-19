@@ -8,7 +8,7 @@ abstract class Tree<
         V,
         NodeType : Node<Container<K, V?>, NodeType>,
         State : StateContainer<Container<K, V?>, NodeType>,
-        VertexType: Vertex<Container<K, V?>>
+        VertexType : Vertex<Container<K, V?>>
         > {
 
     protected abstract val treeStruct: TreeStruct<Container<K, V?>, NodeType, State, VertexType>

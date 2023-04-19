@@ -117,7 +117,30 @@ class RBStructTest {
 
     @Test
     fun `fazzer test`() {
-        val fazzer = RBStructFuzzer(arrayOf(1, 2, 3, 4, 5, 6, 7,8,9,20,100,123,234,556,345677,88765,43,364,23456,2754), ::testAssert)
+        val fazzer = RBStructFuzzer(
+            arrayOf(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                20,
+                100,
+                123,
+                234,
+                556,
+                345677,
+                88765,
+                43,
+                364,
+                23456,
+                2754
+            ), ::testAssert
+        )
         fazzer.saveNextTestSets("TEST_TEST")
 
         assertAll(

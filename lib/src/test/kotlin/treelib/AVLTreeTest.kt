@@ -20,7 +20,7 @@ class AVLTreeTest {
     @ParameterizedTest
     @ValueSource(strings = ["5 3 8 9", "1 2 3 4", "4 3 5 2", "4 3 2 1", "2 3 1 4"])
     fun `test check root`(str: String) {
-        val numbers = str.split(" ").map{ it.toInt() }.toMutableList()
+        val numbers = str.split(" ").map { it.toInt() }.toMutableList()
         val num = mutableListOf<Pair<Int, Int>>()
         for (i in numbers) {
             num.add(Pair(i, 1))
@@ -31,8 +31,7 @@ class AVLTreeTest {
         val root = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key
         if (root == numbers[1]) {
             assertEquals(expected = root, actual = numbers[1])
-        }
-        else {
+        } else {
             assertEquals(expected = root, actual = numbers[2])
         }
     }
@@ -40,8 +39,8 @@ class AVLTreeTest {
     @ParameterizedTest
     @ValueSource(strings = ["1 1000", "1 10000", "1 100000", "1 1000000"])
     fun `test add many args and delete root`(str: String) {
-        val numbers = str.split(" ").map{ it.toInt() }.toMutableList()
-        for (i in numbers[0] .. numbers[1]) {
+        val numbers = str.split(" ").map { it.toInt() }.toMutableList()
+        for (i in numbers[0]..numbers[1]) {
             tree.putItem(Pair(i, i))
         }
         val root = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key
@@ -51,16 +50,27 @@ class AVLTreeTest {
 
         when (numbers[1]) {
             1000 -> assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = 513)
-            10000 -> assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = 4097)
-            100000 -> assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = 65537)
-            else -> assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = 524289)
+            10000 -> assertEquals(
+                expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key,
+                actual = 4097
+            )
+
+            100000 -> assertEquals(
+                expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key,
+                actual = 65537
+            )
+
+            else -> assertEquals(
+                expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key,
+                actual = 524289
+            )
         }
     }
 
     @ParameterizedTest
     @ValueSource(strings = ["5", "0"])
     fun `test delete root one arg`(str: String) {
-        val numbers = str.split(" ").map{ it.toInt() }.toMutableList()
+        val numbers = str.split(" ").map { it.toInt() }.toMutableList()
         val num = mutableListOf<Pair<Int, Int>>()
         for (i in numbers) {
             num.add(Pair(i, 1))

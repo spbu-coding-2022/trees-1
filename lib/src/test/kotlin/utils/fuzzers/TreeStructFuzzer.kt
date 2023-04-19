@@ -43,7 +43,6 @@ abstract class TreeStructFuzzer<
 
         for (iterations in 0 until testNumbers) {
             val treeStruct = createTreeStruct()
-            println(dataSize)
             val testSetIndexes = getInputSetIndexes(dataSize)
             val testID = "${Instant.now().toEpochMilli() + iterations}-insert"
             val analyzer = createAnalyzer()
@@ -119,12 +118,9 @@ abstract class TreeStructFuzzer<
     private fun saveCurrentTestSet(testId: String, testSet: List<Int>) {
         val file = File("./$dirPath/$testId.txt")
         file.createNewFile()
-//        println("./$dirPath/$testId.txt")
         for (index in testSet) {
-//            print("${baseInput[index]} ")
             file.appendText("${baseInput[index]} \n")
         }
-//        println()
     }
 
 }

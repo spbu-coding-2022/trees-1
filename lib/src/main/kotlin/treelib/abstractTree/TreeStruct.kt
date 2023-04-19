@@ -10,7 +10,7 @@ abstract class TreeStruct<
         Pack : Comparable<Pack>,
         NodeType : Node<Pack, NodeType>,
         State : StateContainer<Pack, NodeType>,
-        VertexType: Vertex<Pack>
+        VertexType : Vertex<Pack>
         > {
 
     protected abstract var root: NodeType?
@@ -52,7 +52,8 @@ abstract class TreeStruct<
                         else currentNode = it.left
                     }
                 }
-            } ?: throw BugInImplementException("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
+            }
+                ?: throw BugInImplementException("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
         }
     }
 
@@ -75,7 +76,8 @@ abstract class TreeStruct<
     private fun getRightMinNode(localRoot: NodeType): NodeType {
         var currentNode: NodeType?
 
-        localRoot.right ?: throw BugInImplementException("Incorrect usage of the getRightMinNode: right node doesn't exist")
+        localRoot.right
+            ?: throw BugInImplementException("Incorrect usage of the getRightMinNode: right node doesn't exist")
 
         currentNode = localRoot.right
 
@@ -227,11 +229,11 @@ abstract class TreeStruct<
                 for (child in listOf(deleteNode.right, deleteNode.left))
                     child?.let {
                         connectUnlinkedSubTreeWithParent(deleteNode, parentDeleteNode, it)
-                            if (parentDeleteNode != null) {
-                                return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
-                            } else {
-                                return@deleteItem generateStateDelete(deletedNodeWithoutLinks, root)
-                            }
+                        if (parentDeleteNode != null) {
+                            return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                        } else {
+                            return@deleteItem generateStateDelete(deletedNodeWithoutLinks, root)
+                        }
                     }
             }
         }
@@ -285,13 +287,13 @@ abstract class TreeStruct<
                     current = it.right
                 } else {
                     if (parents.isEmpty())
-                        return@inOrder arrayNodes.map {toVertex(it)}
+                        return@inOrder arrayNodes.map { toVertex(it) }
                     flagVisited = 1
                     current = parents.removeLast()
                 }
             }
         }
-        return arrayNodes.map{toVertex(it)}
+        return arrayNodes.map { toVertex(it) }
     }
 
     abstract fun toVertex(node: NodeType): VertexType
@@ -321,7 +323,7 @@ abstract class TreeStruct<
                 } else {
                     arrayNodes.add(it)
                     if (parents.isEmpty())
-                        return@postOrder arrayNodes.map{toVertex(it)}
+                        return@postOrder arrayNodes.map { toVertex(it) }
                     val parent = parents.removeLast()
                     if (parent.right == it) {
                         flagVisited = 2
@@ -330,7 +332,7 @@ abstract class TreeStruct<
                 }
             } ?: throw MultithreadingException(ImpossibleCaseException())
         }
-        return arrayNodes.map{toVertex(it)}
+        return arrayNodes.map { toVertex(it) }
     }
 
     fun preOrder(): List<VertexType> {
@@ -354,7 +356,7 @@ abstract class TreeStruct<
                     } ?: throw MultithreadingException(ImpossibleCaseException())
             }
         }
-        return arrayNodes.map {toVertex(it)}
+        return arrayNodes.map { toVertex(it) }
     }
 
 

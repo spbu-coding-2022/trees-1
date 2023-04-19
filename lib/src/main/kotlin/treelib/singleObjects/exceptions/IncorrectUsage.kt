@@ -1,6 +1,6 @@
 package treelib.singleObjects.exceptions
 
-class IncorrectUsage  : Exception {
+class IncorrectUsage : Exception {
     constructor() : super(
         "Incorrect use of the tree"
     )

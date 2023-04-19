@@ -9,10 +9,11 @@ import treelib.rbTree.RBBalancer
 import treelib.rbTree.RBNode
 import treelib.rbTree.RBStateContainer
 import treelib.singleObjects.Markers
+
 class RBBalancerTest {
 
     val testModel = TestModelRBT()
-    fun <T: Comparable<T>> countBlackNodes(node: RBNode<T>) = testModel.countBlackNodes(node)
+    fun <T : Comparable<T>> countBlackNodes(node: RBNode<T>) = testModel.countBlackNodes(node)
 
     @DisplayName("Tests to check the operation of the balancer after removal")
     @Nested
@@ -22,7 +23,10 @@ class RBBalancerTest {
             val firstBalancer = RBBalancer<Int>(null)
             assertEquals(15, firstBalancer.balance(RBStateContainer(RBNode(15, null, null, null, Markers.BLACK))).value)
             val secondBalancer = RBBalancer<String>(null)
-            assertEquals("Test", secondBalancer.balance(RBStateContainer(RBNode("Test", null, null, null, Markers.BLACK))).value)
+            assertEquals(
+                "Test",
+                secondBalancer.balance(RBStateContainer(RBNode("Test", null, null, null, Markers.BLACK))).value
+            )
         }
 
         @Test
@@ -100,7 +104,7 @@ class RBBalancerTest {
                 { assertEquals(10, root?.left?.left?.value) },
                 { assertEquals(12, root?.left?.left?.right?.value) },
                 { assertEquals(14, nodes[17]?.right?.value) },
-                { assertEquals(null, nodes[17]?.left)}
+                { assertEquals(null, nodes[17]?.left) }
             )
         }
 
@@ -118,7 +122,7 @@ class RBBalancerTest {
                 { assertEquals(Markers.BLACK, root.color) },
                 { assertEquals(null, root.parent) },
                 { assertEquals(nodes[28]?.value, root.left?.value) },
-                { assertEquals( nodes[29]?.value, root.right?.value ) }
+                { assertEquals(nodes[29]?.value, root.right?.value) }
             )
 
             assertAll(
@@ -137,7 +141,7 @@ class RBBalancerTest {
                 { assertEquals(42, root.right?.left?.right?.value) },
                 { assertEquals(37, root.right?.left?.left?.value) },
                 { assertEquals(38, nodes[20]?.right?.value) },
-                { assertEquals(null, nodes[20]?.left)}
+                { assertEquals(null, nodes[20]?.left) }
             )
         }
 
@@ -155,8 +159,8 @@ class RBBalancerTest {
                 { assertEquals(Markers.BLACK, root.color) },
                 { assertEquals(29, root.value) },
                 { assertEquals(null, root.parent) },
-                { assertEquals(null, root.left)},
-                { assertEquals(null, root.right)}
+                { assertEquals(null, root.left) },
+                { assertEquals(null, root.right) }
             )
         }
 
@@ -166,7 +170,7 @@ class RBBalancerTest {
             val root = nodes[30]!!
             nodes[13]?.value = 68
             val rightBrotherSon = RBNode(70, null, null, nodes[13], Markers.RED)
-            val leftBrotherSon= RBNode(65, null, null, nodes[13], Markers.RED)
+            val leftBrotherSon = RBNode(65, null, null, nodes[13], Markers.RED)
             nodes[13]?.right = rightBrotherSon
             nodes[13]?.left = leftBrotherSon
             val balancer = RBBalancer(nodes[30])
@@ -190,8 +194,8 @@ class RBBalancerTest {
                 { assertEquals(68, root.right?.right?.left?.value) },
                 { assertEquals(70, root.right?.right?.left?.right?.value) },
                 { assertEquals(63, root.right?.right?.left?.left?.value) },
-                { assertEquals(65, nodes[22]?.right?.value)},
-                { assertEquals(null, nodes[22]?.left)},
+                { assertEquals(65, nodes[22]?.right?.value) },
+                { assertEquals(null, nodes[22]?.left) },
             )
 
 

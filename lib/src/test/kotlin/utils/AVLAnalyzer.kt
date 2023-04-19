@@ -4,7 +4,7 @@ import treelib.avlTree.AVLNode
 import kotlin.math.abs
 import kotlin.math.max
 
-class AVLAnalyzer<V: Comparable<V>>(override val assertMethod: (input: String) -> Unit) : Analyzer<V, AVLNode<V>>() {
+class AVLAnalyzer<V : Comparable<V>>(override val assertMethod: (input: String) -> Unit) : Analyzer<V, AVLNode<V>>() {
     private var heightL = 0
     private var heightR = 0
     private var heightMax = 0

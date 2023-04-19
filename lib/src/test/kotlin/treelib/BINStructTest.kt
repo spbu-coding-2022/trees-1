@@ -14,7 +14,7 @@ import kotlin.test.assertEquals
 
 @DisplayName("Test: Binary Search Tree Struct")
 class BINStructTest {
-    val treeW = TreeStructWrapper<Int, BINNode<Int>, BINVertex<Int>,  BINStateContainer<Int>, BINStruct<Int>>()
+    val treeW = TreeStructWrapper<Int, BINNode<Int>, BINVertex<Int>, BINStateContainer<Int>, BINStruct<Int>>()
     var treeStruct = BINStruct<Int>()
 
     private fun testAssert(msg: String): Nothing = fail(msg)
@@ -481,7 +481,7 @@ class BINStructTest {
     }
 
     @Test
-    fun `test analyzer`(){
+    fun `test analyzer`() {
         val num = mutableListOf(6, 8, 10, 7, 12, 9)
         for (i in num) {
             treeStruct.insert(i)

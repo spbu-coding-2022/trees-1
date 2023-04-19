@@ -1,6 +1,6 @@
 package treelib.singleObjects.exceptions
 
-class IllegalBaseNodeException  : Exception {
+class IllegalBaseNodeException : Exception {
     constructor() : super(
         "A non-existent node (null) was passed to the method"
     )

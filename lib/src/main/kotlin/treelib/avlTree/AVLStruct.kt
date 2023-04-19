@@ -57,9 +57,10 @@ class AVLStruct<Pack : Comparable<Pack>> :
         }
         return node
     }
-    fun <AVLVertexType: AVLVertex<Pack>> restoreStruct(preOrder: List<AVLVertexType>){
+
+    fun <AVLVertexType : AVLVertex<Pack>> restoreStruct(preOrder: MutableList<AVLVertexType>) {
         if (root != null) throw IncorrectUsage("The tree already exists")
-        for (vertex in preOrder){
+        for (vertex in preOrder) {
             val currentNode = toNode(vertex)
             val leaf = getLeafForInsert(currentNode.value)
             linkNewNode(currentNode, leaf)
