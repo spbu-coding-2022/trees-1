@@ -76,7 +76,7 @@ class RBStruct<Pack : Comparable<Pack>> :
         return node
     }
 
-    fun <RBVertexType: RBVertex<Pack>> restoreTreeFromDatabase(preOrder: List<RBVertexType>, inOrder: List<RBVertexType>) {
+    fun <RBVertexType: RBVertex<Pack>> restoreStruct(preOrder: List<RBVertexType>, inOrder: List<RBVertexType>) {
         var inOrderIndex = 0
         var preOrderIndex = 0
         val set = HashSet<RBNode<Pack>>()
@@ -117,7 +117,6 @@ class RBStruct<Pack : Comparable<Pack>> :
                 stack.push(currentNode)
             }
         }
-
     }
 
     private fun <RBVertexType: RBVertex<Pack>> createRBNode(drawNode: RBVertexType): RBNode<Pack> {

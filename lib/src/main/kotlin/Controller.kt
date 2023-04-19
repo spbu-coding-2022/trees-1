@@ -14,7 +14,7 @@ class Controller {
             neo4jDB.exportRBtree()
 
         val RBtree = RBStruct<Container<String, Comparable<String>>>()
-        RBtree.restoreTreeFromDatabase(orders.first, orders.second)
+        RBtree.restoreStruct(orders.first, orders.second)
         neo4jDB.close()
     }
 
