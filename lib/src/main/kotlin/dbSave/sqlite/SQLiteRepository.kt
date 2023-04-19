@@ -1,10 +1,10 @@
-package treelib.dbSave.avlSQLite
+package dbSave.sqlite
 
 import java.io.Closeable
 import java.sql.DriverManager
 import java.sql.SQLException
 
-class SQLiteAVL<Pack : Comparable<Pack>>(
+class SQLiteRepository<Pack : Comparable<Pack>>(
     private val dbPath: String,
     private val serializeData: (input: Pack) -> String,
     private val deSerializeData: (input: String) -> Pack,
@@ -124,7 +124,7 @@ class SQLiteAVL<Pack : Comparable<Pack>>(
         else throw SQLException("Impossible case")
     }
 
-    fun addVertex(avlDVertex: AVLDrawVertex<Pack>, treeName: String) {
+    fun addVertex(avlDVertex: DrawAVLVertex<Pack>, treeName: String) {
         val isInDB = getVertexId(avlDVertex, treeName)
         if (isInDB != 0) {
             deleteVertex(isInDB, treeName)
@@ -147,7 +147,7 @@ class SQLiteAVL<Pack : Comparable<Pack>>(
 
     }
 
-    fun addVertexes(list: List<AVLDrawVertex<Pack>>, treeName: String) {
+    fun addVertexes(list: List<DrawAVLVertex<Pack>>, treeName: String) {
         for (el in list) addVertex(el, treeName)
     }
 
@@ -163,15 +163,15 @@ class SQLiteAVL<Pack : Comparable<Pack>>(
         }
     }
 
-    fun getAllVertexes(treeName: String): MutableList<AVLDrawVertex<Pack>> {
-        val info = mutableListOf<AVLDrawVertex<Pack>>()
+    fun getAllVertexes(treeName: String): MutableList<DrawAVLVertex<Pack>> {
+        val info = mutableListOf<DrawAVLVertex<Pack>>()
         connection.createStatement().also { stmt ->
             try {
                 val result =
                     stmt.executeQuery("SELECT $treeName.$value as $value, $treeName.$height as $height, $treeName.$xCord as $xCord, $treeName.$yCord as $yCord FROM $treeName;")
                 while (result.next()) {
                     info.add(
-                        AVLDrawVertex(
+                        DrawAVLVertex(
                             value = deSerializeData(result.getString(value)),
                             height = result.getInt(height),
                             x = result.getDouble(xCord),
@@ -189,7 +189,7 @@ class SQLiteAVL<Pack : Comparable<Pack>>(
         }
     }
 
-    private fun getVertexId(vertex: AVLDrawVertex<Pack>, tableName: String): Int {
+    private fun getVertexId(vertex: DrawAVLVertex<Pack>, tableName: String): Int {
         var id: Int? = null
         try {
             val stmt =

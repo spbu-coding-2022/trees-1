@@ -1,8 +1,8 @@
-package treelib.dbSave.avlSQLite
+package dbSave.sqlite
 
-import treelib.controller.DrawVertex
+import dbSave.DrawVertex
 
-class AVLDrawVertex<Pack: Comparable<Pack>>(
+class DrawAVLVertex<Pack: Comparable<Pack>>(
     override val value: Pack,
     override val x: Double,
     override val y: Double,
