@@ -6,11 +6,16 @@ import treelib.singleObjects.exceptions.MultithreadingException
 import treelib.singleObjects.exceptions.NonExistentValueException
 
 
-abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, State : StateContainer<Pack, NodeType>> {
+abstract class TreeStruct<
+        Pack : Comparable<Pack>,
+        NodeType : Node<Pack, NodeType>,
+        State : StateContainer<Pack, NodeType>,
+        VertexType : Vertex<Pack>
+        > {
 
     protected abstract var root: NodeType?
 
-    private fun getLeafForInsert(item: Pack): NodeType? {
+    protected fun getLeafForInsert(item: Pack): NodeType? {
         var currentNode: NodeType? = root ?: return null
 
         while (true) {
@@ -47,7 +52,8 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                         else currentNode = it.left
                     }
                 }
-            } ?: throw BugInImplementException("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
+            }
+                ?: throw BugInImplementException("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
         }
     }
 
@@ -70,7 +76,8 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
     private fun getRightMinNode(localRoot: NodeType): NodeType {
         var currentNode: NodeType?
 
-        localRoot.right ?: throw BugInImplementException("Incorrect usage of the getRightMinNode: right node doesn't exist")
+        localRoot.right
+            ?: throw BugInImplementException("Incorrect usage of the getRightMinNode: right node doesn't exist")
 
         currentNode = localRoot.right
 
@@ -129,15 +136,16 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
     protected fun findItem(obj: Pack): State {
         var currentNode = root
-        if (root == null) return generateStateFind(null)
+        if (root == null) return generateStateFind(null, null)
 
         while (true) {
-            if (obj == currentNode?.value) return generateStateFind(currentNode)
+            if (obj == currentNode?.value) return generateStateFind(currentNode, currentNode)
             else {
                 currentNode?.let {
                     if (obj > it.value) currentNode = it.right
                     else currentNode = it.left
-                } ?: return generateStateFind(null)
+                }
+                if (currentNode == null) return generateStateFind(null, null)
             }
         }
     }
@@ -158,11 +166,12 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
             linkNewNode(currentNode, parentNode)
 
-            return generateStateInsert(currentNode, parentNode)
+            if (parentNode != null) return generateStateInsert(currentNode, parentNode)
+            else return generateStateInsert(currentNode, currentNode)
         }
 
         updateNode.value = item
-        return generateStateInsert(null)
+        return generateStateInsert(null, null)
     }
 
     protected abstract fun generateStateDelete(
@@ -220,7 +229,11 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                 for (child in listOf(deleteNode.right, deleteNode.left))
                     child?.let {
                         connectUnlinkedSubTreeWithParent(deleteNode, parentDeleteNode, it)
-                        return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                        if (parentDeleteNode != null) {
+                            return@deleteItem generateStateDelete(deletedNodeWithoutLinks, parentDeleteNode)
+                        } else {
+                            return@deleteItem generateStateDelete(deletedNodeWithoutLinks, root)
+                        }
                     }
             }
         }
@@ -250,8 +263,8 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
 
     fun find(obj: Pack): Pack? = findItem(obj).contentNode?.value
 
-    fun inOrder(): List<Pack> {
-        val arrayNodes = mutableListOf<Pack>()
+    fun inOrder(): List<VertexType> {
+        val arrayNodes = mutableListOf<NodeType>()
         var flagVisited = 0
         var current = root
         val parents = ArrayDeque<NodeType>()
@@ -268,24 +281,26 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                 }
             }
             current?.let {
-                arrayNodes.add(it.value)
+                arrayNodes.add(it)
                 if (it.right != null) {
                     flagVisited = 0
                     current = it.right
                 } else {
                     if (parents.isEmpty())
-                        return@inOrder arrayNodes
+                        return@inOrder arrayNodes.map { toVertex(it) }
                     flagVisited = 1
                     current = parents.removeLast()
                 }
             }
         }
-        return arrayNodes
+        return arrayNodes.map { toVertex(it) }
     }
 
-    fun postOrder(): List<Pack> {
+    abstract fun toVertex(node: NodeType): VertexType
+
+    fun postOrder(): List<VertexType> {
         val parents = ArrayDeque<NodeType>()
-        val arrayNodes = mutableListOf<Pack>()
+        val arrayNodes = mutableListOf<NodeType>()
         var flagVisited = 0
         var current = root
 
@@ -306,9 +321,9 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                     current = it.right
                     flagVisited = 0
                 } else {
-                    arrayNodes.add(it.value)
+                    arrayNodes.add(it)
                     if (parents.isEmpty())
-                        return@postOrder arrayNodes
+                        return@postOrder arrayNodes.map { toVertex(it) }
                     val parent = parents.removeLast()
                     if (parent.right == it) {
                         flagVisited = 2
@@ -317,11 +332,11 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                 }
             } ?: throw MultithreadingException(ImpossibleCaseException())
         }
-        return arrayNodes
+        return arrayNodes.map { toVertex(it) }
     }
 
-    fun preOrder(): List<Pack> {
-        val arrayNodes = mutableListOf<Pack>()
+    fun preOrder(): List<VertexType> {
+        val arrayNodes = mutableListOf<NodeType>()
         var current: NodeType
         val queue = ArrayDeque<NodeType>()
 
@@ -329,7 +344,7 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
             queue.add(root)
             while (queue.isNotEmpty()) {
                 current = queue.removeLast()
-                arrayNodes.add(current.value)
+                arrayNodes.add(current)
                 if (current.right != null)
                     current.right?.let {
                         queue.add(it)
@@ -341,6 +356,8 @@ abstract class TreeStruct<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeTyp
                     } ?: throw MultithreadingException(ImpossibleCaseException())
             }
         }
-        return arrayNodes
+        return arrayNodes.map { toVertex(it) }
     }
+
+
 }

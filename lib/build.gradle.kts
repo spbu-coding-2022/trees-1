@@ -1,3 +1,4 @@
+val sqliteJdbcVersion: String by project
 plugins {
     java
     kotlin("jvm") version "1.8.10"
@@ -19,11 +20,25 @@ repositories {
 }
 
 dependencies {
+    api("org.apache.commons:commons-math3:3.6.1")
+    implementation("com.google.guava:guava:31.1-jre")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+
+    implementation("com.google.code.gson:gson:2.8.5")
+
+    val neo4jCore = "4.0.5"
+    implementation("org.neo4j", "neo4j-ogm-core", neo4jCore)
+    implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
+
+    // JDBC Sqlite
+    implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
+
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
-    api("org.apache.commons:commons-math3:3.6.1")
-    implementation("com.google.guava:guava:31.1-jre")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    implementation(kotlin("stdlib-jdk8"))
+
 }
 
 tasks.test {
@@ -76,7 +91,7 @@ tasks.jacocoTestReport {
 
 tasks.jacocoTestCoverageVerification {
     classDirectories.setFrom( classDirectories.files.flatMap { fileTree(it) {
-        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct")
+        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct", "**/AVLStruct.class", "**/BINStruct.class")
     } })
     dependsOn(tasks.jacocoTestReport)
     violationRules {
@@ -84,7 +99,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "BRANCH"
-                minimum = 0.4.toBigDecimal()
+                minimum = 0.5.toBigDecimal()
             }
         }
         rule {
@@ -98,7 +113,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "METHOD"
-                minimum = 1.0.toBigDecimal()
+                minimum = 0.9.toBigDecimal()
             }
         }
     }

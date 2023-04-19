@@ -4,7 +4,8 @@ import treelib.abstractTree.NodeParent
 import treelib.abstractTree.StateContainer
 import treelib.singleObjects.exceptions.IllegalNodeStateException
 
-abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pack, NodeType>, StateContainerType: StateContainer<Pack, NodeType>>: Balancer<Pack, NodeType, StateContainerType> {
+abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pack, NodeType>, StateContainerType : StateContainer<Pack, NodeType>> :
+    Balancer<Pack, NodeType, StateContainerType> {
     override fun rightRotate(currentNode: NodeType): NodeType {
         val leftChild = currentNode.left ?: throw IllegalNodeStateException()
 

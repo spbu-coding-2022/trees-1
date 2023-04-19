@@ -1,3 +1,5 @@
+package treelib
+
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import treelib.avlTree.AVLBalancer
@@ -124,7 +126,6 @@ class AVLBalancerTest {
         }
 
 
-
     }
 
     @DisplayName("Tests to check the operation of the balancer after insertion")
@@ -172,8 +173,8 @@ class AVLBalancerTest {
                 { assertEquals(2, root.right?.left?.height?.toInt()) },
                 { assertEquals(3, root.left?.left?.height?.toInt()) },
                 { assertEquals(2, root.left?.left?.right?.height?.toInt()) },
-                { assertEquals(1, root.left?.left?.right?.right?.height?.toInt())},
-                { assertEquals(1, root.left?.left?.left?.height?.toInt())}
+                { assertEquals(1, root.left?.left?.right?.right?.height?.toInt()) },
+                { assertEquals(1, root.left?.left?.left?.height?.toInt()) }
             )
             assertAll(
                 "Grouped Assertions of values",
@@ -181,8 +182,8 @@ class AVLBalancerTest {
                 { assertEquals(205, root.right?.left?.value) },
                 { assertEquals(44, root.left?.left?.value) },
                 { assertEquals(46, root.left?.left?.right?.value) },
-                { assertEquals(47, root.left?.left?.right?.right?.value)},
-                { assertEquals(null, root.left?.left?.right?.left?.left?.value)}
+                { assertEquals(47, root.left?.left?.right?.right?.value) },
+                { assertEquals(null, root.left?.left?.right?.left?.left?.value) }
             )
 
             /** Second insert **/
@@ -203,7 +204,7 @@ class AVLBalancerTest {
                 { assertEquals(46, root.left?.left?.value) },
                 { assertEquals(1, root.left?.left?.left?.left?.value) },
                 { assertEquals(null, root.left?.left?.right?.left?.value) },
-                { assertEquals(null, root.left?.left?.right?.right?.left?.value)}
+                { assertEquals(null, root.left?.left?.right?.right?.left?.value) }
             )
 
             /** Third insert **/
@@ -223,11 +224,11 @@ class AVLBalancerTest {
                 { assertEquals(101, root.value) },
                 { assertEquals(205, root.right?.left?.value) },
                 { assertEquals(46, root.left?.left?.value) },
-                { assertEquals(49, root.left?.left?.right?.value)},
+                { assertEquals(49, root.left?.left?.right?.value) },
                 { assertEquals(1, root.left?.left?.left?.left?.value) },
                 { assertEquals(47, root.left?.left?.right?.left?.value) },
-                { assertEquals(null, root.left?.left?.right?.right?.left?.value)},
-                { assertEquals(null, root.left?.left?.right?.right?.right?.value)}
+                { assertEquals(null, root.left?.left?.right?.right?.left?.value) },
+                { assertEquals(null, root.left?.left?.right?.right?.right?.value) }
             )
         }
     }

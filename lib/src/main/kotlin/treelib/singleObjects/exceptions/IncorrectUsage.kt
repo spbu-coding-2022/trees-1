@@ -1,16 +1,16 @@
 package treelib.singleObjects.exceptions
 
-class IllegalBaseNodeException : Exception {
+class IncorrectUsage : Exception {
     constructor() : super(
-        "A non-existent node (null) was passed to the method"
+        "Incorrect use of the tree"
     )
 
     constructor(message: String) : super(
-        "A non-existent node (null) was passed to the method: $message",
+        "$message",
     )
 
     constructor(message: String, cause: Throwable) : super(
-        "A non-existent node (null) was passed to the method: $message",
+        "$message",
         cause,
     )
 
