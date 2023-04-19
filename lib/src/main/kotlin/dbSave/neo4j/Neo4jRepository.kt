@@ -88,7 +88,7 @@ class Neo4jRepository : Closeable {
 
     fun exportRBtree(): Pair<List<DrawRBVertex<Container<String, Comparable<String>>>>, List<DrawRBVertex<Container<String, Comparable<String>>>>> {
 
-        /*** Вот тут короче надо обращаться к neo4j с темЮ чтобы она инициализировала себя как-то ***/
+        /*** Плохо, что передаем Container с четко привязанными типами (K, V), потому что может быть так, что вместо контейнера будет просто инт  ***/
 
         val session = driver?.session() ?: throw IOException()
         var preOrder: List<DrawRBVertex<Container<String, Comparable<String>>>> = listOf()

@@ -5,9 +5,11 @@ import dbSave.neo4j.Neo4jRepository
 import treelib.rbTree.RBStruct
 import treelib.singleObjects.Container
 
-class Neo4jController {
+class RBTreeManager {
 
-    fun initTree() {
+    /*** using neo4j ***/
+
+    fun initTree(treeName: String): RBStruct<Container<String, Comparable<String>>> {
         val neo4jDB = Neo4jRepository()
         neo4jDB.open("bolt://localhost:7687", "neo4j", "test-neo4j")
 
@@ -18,6 +20,8 @@ class Neo4jController {
         val RBtree = RBStruct<Container<String, Comparable<String>>>()
         RBtree.restoreStruct(orders.first, orders.second)
         neo4jDB.close()
+
+        return RBtree
     }
 
     fun <Pack : Comparable<Pack>> saveTree(tree: RBStruct<Pack>) {
@@ -31,7 +35,6 @@ class Neo4jController {
 
         neo4jDB.saveChanges(preOrder.toTypedArray(), inOrder.toTypedArray())
         neo4jDB.close()
-
     }
 
 }

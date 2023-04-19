@@ -3,13 +3,13 @@ import com.google.common.reflect.TypeToken
 import com.google.gson.GsonBuilder
 import java.io.File
 
-class JsonRepository<Pack: Comparable<Pack>>(private val dirPath: String) {
+class JsonRepository(private val dirPath: String) {
 
     init {
         File(dirPath).mkdirs()
     }
 
-    fun saveChanges(preOrder: Array<DrawBINVertex<Pack>>, typeToken: TypeToken<Array<DrawBINVertex<Pack>>>, fileName: String) {
+    fun <Pack: Comparable<Pack>>saveChanges(preOrder: Array<DrawBINVertex<Pack>>, fileName: String) {
 
         val gson = GsonBuilder().setPrettyPrinting().create()
         val json = gson.toJson(preOrder)
@@ -19,16 +19,14 @@ class JsonRepository<Pack: Comparable<Pack>>(private val dirPath: String) {
             writeText(json)
         }
 
-        val preOrd = gson.fromJson<Array<DrawBINVertex<Pack>>>(json, typeToken.type)
-
     }
 
-    fun exportTree(fileName: String) {
+    fun<Pack: Comparable<Pack>> exportTree(fileName: String, typeToken: TypeToken<Array<DrawBINVertex<Pack>>>): Array<DrawBINVertex<Pack>> {
         val gson = GsonBuilder().setPrettyPrinting().create()
-        //val json = gson.fromJson(File(dirPath, fileName).readText(), ArrayVertices::class.java)
+        val json = File(dirPath, fileName).readText()
+        val preOrder = gson.fromJson<Array<DrawBINVertex<Pack>>>(json, typeToken.type)
 
-
+        return preOrder
     }
-
 
 }
