@@ -1,5 +1,6 @@
-package treelib.rbTree
+package dbSave.neo4j
 
+import treelib.rbTree.RBVertex
 import treelib.singleObjects.Markers
 
 class DrawRBVertex<Pack : Comparable<Pack>>(

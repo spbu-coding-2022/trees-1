@@ -1,9 +1,11 @@
+package controller
 
-import treelib.rbTree.DrawRBVertex
+import dbSave.neo4j.DrawRBVertex
+import dbSave.neo4j.Neo4jRepository
 import treelib.rbTree.RBStruct
 import treelib.singleObjects.Container
 
-class Controller {
+class Neo4jController {
 
     fun initTree() {
         val neo4jDB = Neo4jRepository()

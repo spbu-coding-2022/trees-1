@@ -23,6 +23,8 @@ dependencies {
     api("org.apache.commons:commons-math3:3.6.1")
     implementation("com.google.guava:guava:31.1-jre")
 
+    implementation("com.google.code.gson:gson:2.8.5")
+
     val neo4jCore = "4.0.5"
     implementation("org.neo4j", "neo4j-ogm-core", neo4jCore)
     implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
@@ -34,6 +36,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     implementation(kotlin("stdlib-jdk8"))
+
 }
 
 
