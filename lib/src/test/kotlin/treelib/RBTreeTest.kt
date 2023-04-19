@@ -2,10 +2,7 @@ package treelib
 
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import treelib.rbTree.RBNode
-import treelib.rbTree.RBStateContainer
-import treelib.rbTree.RBStruct
-import treelib.rbTree.RBTree
+import treelib.rbTree.*
 import treelib.singleObjects.Container
 import treelib.singleObjects.Markers
 import utils.TreeStructWrapper
@@ -15,9 +12,9 @@ import kotlin.test.assertEquals
 class RBTreeTest {
     private val tree = RBTree<Int, Int>()
     private val treeW =
-        TreeWrapper<Int, Int, RBNode<Container<Int, Int?>>, RBStateContainer<Container<Int, Int?>>, RBStruct<Container<Int, Int?>>, RBTree<Int, Int>>()
+        TreeWrapper<Int, Int, RBNode<Container<Int, Int?>>, RBVertex<Container<Int, Int?>>, RBStateContainer<Container<Int, Int?>>, RBStruct<Container<Int, Int?>>, RBTree<Int, Int>>()
     private val treeSW =
-        TreeStructWrapper<Container<Int, Int?>, RBNode<Container<Int, Int?>>, RBStateContainer<Container<Int, Int?>>, RBStruct<Container<Int, Int?>>>()
+        TreeStructWrapper<Container<Int, Int?>, RBNode<Container<Int, Int?>>, RBVertex<Container<Int, Int?>>, RBStateContainer<Container<Int, Int?>>, RBStruct<Container<Int, Int?>>>()
 
 
     @ParameterizedTest
