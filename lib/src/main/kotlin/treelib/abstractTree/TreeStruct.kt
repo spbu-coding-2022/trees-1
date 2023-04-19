@@ -15,7 +15,7 @@ abstract class TreeStruct<
 
     protected abstract var root: NodeType?
 
-    private fun getLeafForInsert(item: Pack): NodeType? {
+    protected fun getLeafForInsert(item: Pack): NodeType? {
         var currentNode: NodeType? = root ?: return null
 
         while (true) {

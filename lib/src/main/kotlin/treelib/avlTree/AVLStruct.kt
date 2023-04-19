@@ -1,6 +1,7 @@
 package treelib.avlTree
 
 import treelib.abstractTree.balanced.BalancedTreeStruct
+import treelib.singleObjects.exceptions.IncorrectUsage
 
 class AVLStruct<Pack : Comparable<Pack>> :
     BalancedTreeStruct<Pack, AVLNode<Pack>, AVLStateContainer<Pack>, AVLVertex<Pack>, AVLBalancer<Pack>>() {
@@ -40,9 +41,9 @@ class AVLStruct<Pack : Comparable<Pack>> :
         }
     }
 
-    override fun toVertex(node: AVLNode<Pack>): AVLVertex<Pack> {
-        return AVLVertex(node.value, node.height)
-    }
+    override fun toVertex(node: AVLNode<Pack>): AVLVertex<Pack> = AVLVertex(node.value, node.height)
+
+    fun toNode(vertex: AVLVertex<Pack>): AVLNode<Pack> = AVLNode(value = vertex.value, height = vertex.height)
 
     override fun createNode(item: Pack): AVLNode<Pack> = AVLNode(item)
 
@@ -55,5 +56,13 @@ class AVLStruct<Pack : Comparable<Pack>> :
             else parent.left = node
         }
         return node
+    }
+    fun <AVLVertexType: AVLVertex<Pack>> restoreStruct(preOrder: List<AVLVertexType>){
+        if (root != null) throw IncorrectUsage("The tree already exists")
+        for (vertex in preOrder){
+            val currentNode = toNode(vertex)
+            val leaf = getLeafForInsert(currentNode.value)
+            linkNewNode(currentNode, leaf)
+        }
     }
 }
