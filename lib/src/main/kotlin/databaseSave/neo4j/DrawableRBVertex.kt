@@ -1,9 +1,9 @@
-package dbSave.neo4j
+package databaseSave.neo4j
 
 import treelib.rbTree.RBVertex
 import treelib.singleObjects.Markers
 
-class DrawRBVertex<Pack : Comparable<Pack>>(
+class DrawableRBVertex<Pack : Comparable<Pack>>(
     value: Pack,
     color: Markers,
     val x: Double = 0.0,

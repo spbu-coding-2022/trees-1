@@ -1,7 +1,7 @@
-package controller
+package databaseManage
 
-import dbSave.neo4j.DrawRBVertex
-import dbSave.neo4j.Neo4jRepository
+import databaseSave.neo4j.DrawableRBVertex
+import databaseSave.neo4j.Neo4jRepository
 import treelib.rbTree.RBStruct
 import treelib.singleObjects.Container
 
@@ -17,7 +17,7 @@ class RBTreeManager {
 
     fun initTree(treeName: String): RBStruct<Container<String, Comparable<String>>> {
         /***    orders.first = preOrder, orders.second = inOrder   ***/
-        val orders: Pair<List<DrawRBVertex<Container<String, Comparable<String>>>>, List<DrawRBVertex<Container<String, Comparable<String>>>>> =
+        val orders: Pair<List<DrawableRBVertex<Container<String, Comparable<String>>>>, List<DrawableRBVertex<Container<String, Comparable<String>>>>> =
             neo4jDB.exportRBtree(treeName)
 
         val RBtree = RBStruct<Container<String, Comparable<String>>>()
@@ -29,8 +29,8 @@ class RBTreeManager {
 
     fun <Pack : Comparable<Pack>> saveTree(tree: RBStruct<Pack>, treeName: String) {
 
-        val preOrder = tree.preOrder().map { DrawRBVertex(it.value, it.color) }
-        val inOrder = tree.inOrder().map { DrawRBVertex(it.value, it.color) }
+        val preOrder = tree.preOrder().map { DrawableRBVertex(it.value, it.color) }
+        val inOrder = tree.inOrder().map { DrawableRBVertex(it.value, it.color) }
 
         neo4jDB.saveChanges(preOrder.toTypedArray(), inOrder.toTypedArray(), treeName)
         neo4jDB.close()

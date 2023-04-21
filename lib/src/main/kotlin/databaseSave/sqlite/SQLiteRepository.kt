@@ -1,4 +1,4 @@
-package dbSave.sqlite
+package databaseSave.sqlite
 
 import java.io.Closeable
 import java.sql.DriverManager

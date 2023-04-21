@@ -1,4 +1,4 @@
-package dbSave.jsonFormat
+package databaseSave.jsonFormat
 
 import com.google.common.reflect.TypeToken
 import com.google.gson.GsonBuilder
@@ -11,7 +11,7 @@ class JsonRepository(private val dirPath: String) {
     }
 
     fun <Pack: Comparable<Pack>>saveChanges(
-        preOrder: Array<DrawBINVertex<Pack>>,
+        preOrder: Array<DrawableBINVertex<Pack>>,
         fileName: String
     ) {
 
@@ -25,11 +25,11 @@ class JsonRepository(private val dirPath: String) {
 
     }
 
-    fun <Pack: Comparable<Pack>>exportTree(fileName: String, typeToken: TypeToken<Array<DrawBINVertex<Pack>>>) {
+    fun <Pack: Comparable<Pack>>exportTree(fileName: String, typeToken: TypeToken<Array<DrawableBINVertex<Pack>>>) {
         val gson = GsonBuilder().setPrettyPrinting().create()
         val json = File(dirPath, fileName).readText()
 
-        val preOrd = gson.fromJson<Array<DrawBINVertex<Pack>>>(json, typeToken.type)
+        val preOrd = gson.fromJson<Array<DrawableBINVertex<Pack>>>(json, typeToken.type)
 
 
     }

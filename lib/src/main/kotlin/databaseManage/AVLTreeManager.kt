@@ -1,12 +1,12 @@
-package controller
+package databaseManage
 
-import dbSave.sqlite.DrawAVLVertex
-import dbSave.sqlite.SQLiteRepository
+import databaseSave.sqlite.DrawAVLVertex
+import databaseSave.sqlite.SQLiteRepository
 import treelib.avlTree.AVLStruct
 import treelib.avlTree.AVLVertex
 import java.io.Closeable
 
-class SQLiteController<Pack : Comparable<Pack>>(
+class AVLTreeManager<Pack : Comparable<Pack>>(
     private var treeName: String,
     private val dbPath: String,
     private val serializeData: (input: Pack) -> String,

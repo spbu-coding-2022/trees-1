@@ -1,10 +1,10 @@
-package dbSave.sqlite
+package databaseSave.sqlite
 
-import dbSave.DrawVertex
+import databaseSave.DrawableVertex
 
 class DrawAVLVertex<Pack : Comparable<Pack>>(
     override val value: Pack,
     override val x: Double,
     override val y: Double,
     val height: Int,
-) : DrawVertex<Pack>
+) : DrawableVertex<Pack>

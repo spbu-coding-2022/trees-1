@@ -1,4 +1,4 @@
-package dbSave.neo4j
+package databaseSave.neo4j
 
 
 import org.neo4j.driver.AuthTokens
@@ -27,8 +27,8 @@ class Neo4jRepository : Closeable {
     }
 
     fun <Pack : Comparable<Pack>> saveChanges(
-        preOrder: Array<DrawRBVertex<Pack>>,
-        inOrder: Array<DrawRBVertex<Pack>>,
+        preOrder: Array<DrawableRBVertex<Pack>>,
+        inOrder: Array<DrawableRBVertex<Pack>>,
         treeName: String
     ) {
 
@@ -36,8 +36,8 @@ class Neo4jRepository : Closeable {
 
         var inOrderIndex = 0
         var preOrderIndex = 0
-        val set = HashSet<DrawRBVertex<Pack>>()
-        val stack = LinkedList<DrawRBVertex<Pack>>()
+        val set = HashSet<DrawableRBVertex<Pack>>()
+        val stack = LinkedList<DrawableRBVertex<Pack>>()
         var id = 0
 
         while (preOrderIndex in preOrder.indices) {
@@ -70,7 +70,7 @@ class Neo4jRepository : Closeable {
                 stack.push(currentNode)
             } while (preOrder[preOrderIndex++].value != inOrder[inOrderIndex].value && preOrderIndex < preOrder.size)
 
-            var currentNode: DrawRBVertex<Pack>? = null
+            var currentNode: DrawableRBVertex<Pack>? = null
 
             while (!stack.isEmpty() && inOrderIndex < inOrder.size && stack.peek().value == inOrder[inOrderIndex].value) {
                 currentNode = stack.pop()
@@ -87,11 +87,11 @@ class Neo4jRepository : Closeable {
         session.close()
     }
 
-    fun exportRBtree(treeName: String): Pair<List<DrawRBVertex<Container<String, Comparable<String>>>>, List<DrawRBVertex<Container<String, Comparable<String>>>>> {
+    fun exportRBtree(treeName: String): Pair<List<DrawableRBVertex<Container<String, Comparable<String>>>>, List<DrawableRBVertex<Container<String, Comparable<String>>>>> {
 
         val session = driver?.session() ?: throw IOException()
-        var preOrder: List<DrawRBVertex<Container<String, Comparable<String>>>> = listOf()
-        var inOrder: List<DrawRBVertex<Container<String, Comparable<String>>>> = listOf()
+        var preOrder: List<DrawableRBVertex<Container<String, Comparable<String>>>> = listOf()
+        var inOrder: List<DrawableRBVertex<Container<String, Comparable<String>>>> = listOf()
 
         session.executeRead { tx ->
             preOrder = tx.run(
@@ -101,7 +101,7 @@ class Neo4jRepository : Closeable {
                 mutableMapOf("name" to treeName) as Map<String, Any>?
             ).list()
                 .map {
-                    DrawRBVertex(
+                    DrawableRBVertex(
                         value = Container(Pair(it.values()[1].toString(), it.values()[0].toString())),
                         color = if (it.values()[2].toString() == """RED""") Markers.RED else Markers.BLACK,
                         x = it.values()[3].toString().toDouble(),
@@ -116,7 +116,7 @@ class Neo4jRepository : Closeable {
                 mutableMapOf("name" to treeName) as Map<String, Any>?
             ).list()
                 .map {
-                    DrawRBVertex(
+                    DrawableRBVertex(
                         value = Container(Pair(it.values()[1].toString(), it.values()[0].toString())),
                         color = if (it.values()[2].toString() == """RED""") Markers.RED else Markers.BLACK,
                         x = it.values()[3].toString().toDouble(),
@@ -154,7 +154,7 @@ class Neo4jRepository : Closeable {
 
     private fun <Pack : Comparable<Pack>> createRoot(
         tx: TransactionContext,
-        rootNode: DrawRBVertex<Pack>,
+        rootNode: DrawableRBVertex<Pack>,
         id: Int,
         treeName: String
     ) {
@@ -174,8 +174,8 @@ class Neo4jRepository : Closeable {
     }
 
     private fun <Pack : Comparable<Pack>> createRightSon(
-        tx: TransactionContext, parentNode: DrawRBVertex<Pack>,
-        currentNode: DrawRBVertex<Pack>, id: Int, treeName: String
+        tx: TransactionContext, parentNode: DrawableRBVertex<Pack>,
+        currentNode: DrawableRBVertex<Pack>, id: Int, treeName: String
     ) {
         parentNode.value as Container<*, *>
         currentNode.value as Container<*, *>
@@ -202,8 +202,8 @@ class Neo4jRepository : Closeable {
     }
 
     private fun <Pack : Comparable<Pack>> createLeftSon(
-        tx: TransactionContext, parentNode: DrawRBVertex<Pack>,
-        currentNode: DrawRBVertex<Pack>, id: Int, treeName: String
+        tx: TransactionContext, parentNode: DrawableRBVertex<Pack>,
+        currentNode: DrawableRBVertex<Pack>, id: Int, treeName: String
     ) {
         parentNode.value as Container<*, *>
         currentNode.value as Container<*, *>

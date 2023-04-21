@@ -1,6 +1,6 @@
-package controller
+package databaseManage
 
-import dbSave.jsonFormat.JsonRepository
+import databaseSave.jsonFormat.JsonRepository
 import treelib.binTree.BINStruct
 
 class BINTreeManager: TreeManager() {
