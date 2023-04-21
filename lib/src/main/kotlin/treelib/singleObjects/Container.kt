@@ -2,7 +2,6 @@ package treelib.singleObjects
 
 import kotlinx.serialization.Serializable
 
-@Serializable
 class Container<K : Comparable<K>, V>(val pair: Pair<K, V?>) : Comparable<Container<K, V>> {
 
     val key = pair.first

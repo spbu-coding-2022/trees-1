@@ -40,7 +40,6 @@ class Neo4jRepository : Closeable {
         while (preOrderIndex in preOrder.indices) {
             do {
                 val currentNode = preOrder[preOrderIndex]
-                //currentNode.value as Container<*, *>
                 if (preOrderIndex == 0) {
                     session.executeWrite { tx ->
                         cleanDB(tx)
