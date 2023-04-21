@@ -33,6 +33,6 @@ jobs:
           generate-branches-badge: true
           jacoco-csv-file: lib/build/jacoco/report.csv
 
-      - if: github.event_name == "pull_request"
+      - if: ${{ github.event_name == 'pull_request' }}
         name: Jacoco Test Coverage Verification
         run: ./gradlew jacocoTestCoverageVerification
