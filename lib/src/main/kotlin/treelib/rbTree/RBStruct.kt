@@ -98,14 +98,13 @@ class RBStruct<Pack : Comparable<Pack>> :
                         stack.pop().right = currentNode
                     } else {
                         stack.peek().left = currentNode
-                        // связь с ролитилем
                     }
                 }
                 stack.push(currentNode)
-            } while (preOrder[preOrderIndex++] != inOrder[inOrderIndex] && preOrderIndex < preOrder.size)
+            } while (preOrder[preOrderIndex++].value != inOrder[inOrderIndex].value && preOrderIndex < preOrder.size)
 
             currentNode = null
-            while (stack.isEmpty() && inOrderIndex < inOrder.size &&
+            while (!stack.isEmpty() && inOrderIndex < inOrder.size &&
                 stack.peek().value == inOrder[inOrderIndex].value
             ) {
                 currentNode = stack.pop()
