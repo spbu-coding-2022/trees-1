@@ -26,9 +26,12 @@ class Neo4jRepository : Closeable {
         }
     }
 
-    fun <Pack : Comparable<Pack>> saveChanges(preOrder: Array<DrawRBVertex<Pack>>, inOrder: Array<DrawRBVertex<Pack>>) {
+    fun <Pack : Comparable<Pack>> saveChanges(
+        preOrder: Array<DrawRBVertex<Pack>>,
+        inOrder: Array<DrawRBVertex<Pack>>,
+        treeName: String
+    ) {
 
-        /*** сюда по ощущениям лучше всего добавлять именно то поддерево исходного дерева, которое было изменено ***/
         val session = driver?.session() ?: throw IOException()
 
         var inOrderIndex = 0
@@ -42,8 +45,8 @@ class Neo4jRepository : Closeable {
                 val currentNode = preOrder[preOrderIndex]
                 if (preOrderIndex == 0) {
                     session.executeWrite { tx ->
-                        cleanDB(tx)
-                        createRoot(tx, currentNode, id)
+                        //cleanDB(tx)
+                        createRoot(tx, currentNode, id, treeName)
                     }
                     ++id
                 }
@@ -51,16 +54,15 @@ class Neo4jRepository : Closeable {
                     if (set.contains(stack.peek())) {
                         set.remove(stack.peek())
                         val parentNode = stack.pop()
-                        //parentNode.value as Container<*, *>
                         session.executeWrite { tx ->
-                            createRightSon(tx, parentNode, currentNode, id)
+                            createRightSon(tx, parentNode, currentNode, id, treeName)
                         }
                         ++id
                     } else {
                         val parentNode = stack.peek()
                         parentNode.value as Container<*, *>
                         session.executeWrite { tx ->
-                            createLeftSon(tx, parentNode, currentNode, id)
+                            createLeftSon(tx, parentNode, currentNode, id, treeName)
                         }
                         ++id
                     }
@@ -85,9 +87,7 @@ class Neo4jRepository : Closeable {
         session.close()
     }
 
-    fun exportRBtree(): Pair<List<DrawRBVertex<Container<String, Comparable<String>>>>, List<DrawRBVertex<Container<String, Comparable<String>>>>> {
-
-        /*** Плохо, что передаем Container с четко привязанными типами (K, V), потому что может быть так, что вместо контейнера будет просто инт  ***/
+    fun exportRBtree(treeName: String): Pair<List<DrawRBVertex<Container<String, Comparable<String>>>>, List<DrawRBVertex<Container<String, Comparable<String>>>>> {
 
         val session = driver?.session() ?: throw IOException()
         var preOrder: List<DrawRBVertex<Container<String, Comparable<String>>>> = listOf()
@@ -95,9 +95,10 @@ class Neo4jRepository : Closeable {
 
         session.executeRead { tx ->
             preOrder = tx.run(
-                "MATCH (node: Node) " +
+                "MATCH (node: Node {treeName: \$name}) " +
                         "RETURN node.value, node.key, node.color, node.x, node.y " +
-                        "ORDER BY node.id"
+                        "ORDER BY node.id",
+                mutableMapOf("name" to treeName) as Map<String, Any>?
             ).list()
                 .map {
                     DrawRBVertex(
@@ -109,9 +110,10 @@ class Neo4jRepository : Closeable {
                 }
 
             inOrder = tx.run(
-                "MATCH (node: Node) " +
+                "MATCH (node: Node {treeName: \$name}) " +
                         "RETURN node.value, node.key, node.color, node.x, node.y " +
-                        "ORDER BY node.key"
+                        "ORDER BY node.key",
+                mutableMapOf("name" to treeName) as Map<String, Any>?
             ).list()
                 .map {
                     DrawRBVertex(
@@ -129,35 +131,58 @@ class Neo4jRepository : Closeable {
 
     }
 
-    private fun cleanDB(tx: TransactionContext) {
-        tx.run("MATCH (n: Node) DETACH DELETE n")
+    fun removeTree(treeName: String) {
+
+        val session = driver?.session() ?: throw IOException()
+
+        session.executeWrite { tx ->
+            tx.run(
+                "MATCH (n: Node {treeName: \$name}) DETACH DELETE n",
+                mutableMapOf("name" to treeName) as Map<String, Any>?
+            )
+        }
+
     }
 
-    private fun <Pack : Comparable<Pack>> createRoot(tx: TransactionContext, rootNode: DrawRBVertex<Pack>, id: Int) {
+    fun clean() {
+        val session = driver?.session() ?: throw IOException()
+
+        session.executeWrite { tx ->
+            tx.run("MATCH (n: Node) DETACH DELETE n")
+        }
+    }
+
+    private fun <Pack : Comparable<Pack>> createRoot(
+        tx: TransactionContext,
+        rootNode: DrawRBVertex<Pack>,
+        id: Int,
+        treeName: String
+    ) {
         rootNode.value as Container<*, *>
         tx.run(
-            "MERGE(:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY, id: \$nodeID})",
+            "MERGE(:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY, id: \$nodeID, treeName: \$name})",
             mutableMapOf(
                 "nodeValue" to rootNode.value.pair.second,
                 "nodeKey" to rootNode.value.pair.first,
                 "nodeColor" to rootNode.color.toString(),
                 "nodeX" to rootNode.x,
                 "nodeY" to rootNode.y,
-                "nodeID" to id
+                "nodeID" to id,
+                "name" to treeName
             )
         )
     }
 
     private fun <Pack : Comparable<Pack>> createRightSon(
         tx: TransactionContext, parentNode: DrawRBVertex<Pack>,
-        currentNode: DrawRBVertex<Pack>, id: Int
+        currentNode: DrawRBVertex<Pack>, id: Int, treeName: String
     ) {
         parentNode.value as Container<*, *>
         currentNode.value as Container<*, *>
         tx.run(
             "MERGE(parent:Node {value: \$parentNodeValue, key: \$parentNodeKey, " +
-                    "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY}) " +
-                    "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY, id: \$nodeID}) " +
+                    "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY, treeName: \$name}) " +
+                    "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY, id: \$nodeID, treeName: \$name}) " +
                     "MERGE (parent)-[:RIGHT_SON]->(son)",
             mutableMapOf(
                 "parentNodeValue" to parentNode.value.pair.second,
@@ -171,20 +196,21 @@ class Neo4jRepository : Closeable {
                 "nodeX" to currentNode.x,
                 "nodeY" to currentNode.y,
                 "nodeID" to id,
+                "name" to treeName
             )
         )
     }
 
     private fun <Pack : Comparable<Pack>> createLeftSon(
         tx: TransactionContext, parentNode: DrawRBVertex<Pack>,
-        currentNode: DrawRBVertex<Pack>, id: Int
+        currentNode: DrawRBVertex<Pack>, id: Int, treeName: String
     ) {
         parentNode.value as Container<*, *>
         currentNode.value as Container<*, *>
         tx.run(
             "MERGE(parent:Node {value: \$parentNodeValue, key: \$parentNodeKey, " +
-                    "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY}) " +
-                    "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY, id: \$nodeID}) " +
+                    "color: \$parentNodeColor, x: \$parentNodeX, y: \$parentNodeY, treeName: \$name}) " +
+                    "MERGE(son:Node {value: \$nodeValue, key: \$nodeKey, color: \$nodeColor, x: \$nodeX, y: \$nodeY, id: \$nodeID, treeName: \$name}) " +
                     "MERGE (parent)-[:LEFT_SON]->(son)",
             mutableMapOf(
                 "parentNodeValue" to parentNode.value.pair.second,
@@ -198,6 +224,7 @@ class Neo4jRepository : Closeable {
                 "nodeX" to currentNode.x,
                 "nodeY" to currentNode.y,
                 "nodeID" to id,
+                "name" to treeName
             )
         )
     }

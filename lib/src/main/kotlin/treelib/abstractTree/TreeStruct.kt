@@ -328,6 +328,9 @@ abstract class TreeStruct<
                     if (parent.right == it) {
                         flagVisited = 2
                     }
+                    else {
+                        flagVisited = 1
+                    }
                     current = parent
                 }
             } ?: throw MultithreadingException(ImpossibleCaseException())

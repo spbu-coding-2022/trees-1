@@ -5,7 +5,7 @@ services:
     image: neo4j:latest
     volumes:
       - ./neo4jDB:/data
-    container_name: init_neo4j
+    container_name: neo4j-db
     ports:
       - "7474:7474"
       - "7687:7687"
