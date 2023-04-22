@@ -17,10 +17,10 @@ class AVLBalancer<Pack : Comparable<Pack>>(private var root: AVLNode<Pack>?) :
             currentNode.height = maxOf(getHeight(currentNode.left), getHeight(currentNode.right)) + 1u
     }
 
-    override fun balance(stateContainer: AVLStateContainer<Pack>): AVLNode<Pack> {
-        val node = stateContainer.contentNode
+    override fun balance(state: AVLStateContainer<Pack>): AVLNode<Pack> {
+        val node = state.contentNode
             ?: throw IllegalStateException("") // IllegalBaseNodeException("A non-existent node (null) was passed to the method")
-        root = stateContainer.root
+        root = state.root
         return balance(root, node.value)
     }
 

@@ -41,8 +41,8 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
         return node.right == null && node.left == null
     }
 
-    override fun balance(stateContainer: RBStateContainer<Pack>): RBNode<Pack> {
-        val node = stateContainer.contentNode
+    override fun balance(state: RBStateContainer<Pack>): RBNode<Pack> {
+        val node = state.contentNode
             ?: throw IllegalBaseNodeException()
         val uncle = getUncle(node)
         when {
@@ -132,7 +132,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                 }
             }
         }
-        throw IllegalStateException()
+        throw IllegalStateException("")
     }
 
     private fun afterInsert(node: RBNode<Pack>): RBNode<Pack> {

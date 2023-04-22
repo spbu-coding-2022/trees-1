@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken
 import databaseSave.jsonFormat.DrawableBINVertex
 import databaseSave.jsonFormat.JsonRepository
 import treelib.binTree.BINStruct
-import treelib.singleObjects.Container
+import treelib.commonObjects.Container
 
 class BINTreeManager: TreeManager() {
 
