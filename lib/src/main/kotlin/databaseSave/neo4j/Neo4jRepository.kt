@@ -87,11 +87,11 @@ class Neo4jRepository : Closeable {
         session.close()
     }
 
-    fun exportRBtree(treeName: String): Pair<List<DrawableRBVertex<Container<String, Comparable<String>>>>, List<DrawableRBVertex<Container<String, Comparable<String>>>>> {
+    fun exportRBtree(treeName: String): Pair<List<DrawableRBVertex<Container<Int, String>>>, List<DrawableRBVertex<Container<Int, String>>>> {
 
         val session = driver?.session() ?: throw IOException()
-        var preOrder: List<DrawableRBVertex<Container<String, Comparable<String>>>> = listOf()
-        var inOrder: List<DrawableRBVertex<Container<String, Comparable<String>>>> = listOf()
+        var preOrder: List<DrawableRBVertex<Container<Int, String>>> = listOf()
+        var inOrder: List<DrawableRBVertex<Container<Int, String>>> = listOf()
 
         session.executeRead { tx ->
             preOrder = tx.run(
@@ -102,7 +102,7 @@ class Neo4jRepository : Closeable {
             ).list()
                 .map {
                     DrawableRBVertex(
-                        value = Container(Pair(it.values()[1].toString(), it.values()[0].toString())),
+                        value = Container(Pair(it.values()[1].toString().toInt(), it.values()[0].toString())),
                         color = if (it.values()[2].toString() == """RED""") Markers.RED else Markers.BLACK,
                         x = it.values()[3].toString().toDouble(),
                         y = it.values()[4].toString().toDouble()
@@ -117,7 +117,7 @@ class Neo4jRepository : Closeable {
             ).list()
                 .map {
                     DrawableRBVertex(
-                        value = Container(Pair(it.values()[1].toString(), it.values()[0].toString())),
+                        value = Container(Pair(it.values()[1].toString().toInt(), it.values()[0].toString())),
                         color = if (it.values()[2].toString() == """RED""") Markers.RED else Markers.BLACK,
                         x = it.values()[3].toString().toDouble(),
                         y = it.values()[4].toString().toDouble()

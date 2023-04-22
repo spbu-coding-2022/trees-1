@@ -1,7 +1,7 @@
 package databaseSave.jsonFormat
 
-import com.google.common.reflect.TypeToken
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import java.io.File
 
 class JsonRepository(private val dirPath: String) {
@@ -25,13 +25,22 @@ class JsonRepository(private val dirPath: String) {
 
     }
 
-    fun <Pack: Comparable<Pack>>exportTree(fileName: String, typeToken: TypeToken<Array<DrawableBINVertex<Pack>>>) {
+    fun <Pack: Comparable<Pack>>exportTree(fileName: String, typeToken: TypeToken<Array<DrawableBINVertex<Pack>>>): Array<DrawableBINVertex<Pack>> {
         val gson = GsonBuilder().setPrettyPrinting().create()
         val json = File(dirPath, fileName).readText()
 
-        val preOrd = gson.fromJson<Array<DrawableBINVertex<Pack>>>(json, typeToken.type)
+        val preOrder = gson.fromJson<Array<DrawableBINVertex<Pack>>>(json, typeToken.type)
 
+        return preOrder
+    }
 
+    fun removeTree(treeName: String) {
+        File(dirPath, treeName).delete()
+    }
+
+    fun clean() {
+        //Runtime.getRuntime().exec(arrayOf("echo ${dirPath} > 1.txt"))
+        File(dirPath).deleteRecursively()
     }
 
 
