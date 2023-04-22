@@ -5,7 +5,7 @@ import treelib.abstractTree.StateContainer
 
 abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pack, NodeType>, StateContainerType : StateContainer<Pack, NodeType>> :
     Balancer<Pack, NodeType, StateContainerType> {
-    override fun rightRotate(currentNode: NodeType): NodeType {
+    fun rightRotate(currentNode: NodeType): NodeType {
         val leftChild = currentNode.left ?: throw InternalError()
 
         val parent = currentNode.parent
@@ -22,7 +22,7 @@ abstract class BalancerParent<Pack : Comparable<Pack>, NodeType : NodeParent<Pac
         return leftChild
     }
 
-    override fun leftRotate(currentNode: NodeType): NodeType {
+    fun leftRotate(currentNode: NodeType): NodeType {
         val rightChild = currentNode.right ?: throw InternalError()
         val parent = currentNode.parent
 
