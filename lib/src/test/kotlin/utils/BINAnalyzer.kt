@@ -1,11 +1,10 @@
 package utils
 
 import treelib.binTree.BINNode
-import treelib.commonObjects.exceptions.BugInImplementException
 
 class BINAnalyzer<Pack : Comparable<Pack>>(
     override val assertMethod: (input: String) -> Unit = {
-        throw BugInImplementException(it)
+        throw InternalError(it)
     }
 ) : Analyzer<Pack, BINNode<Pack>>() {
 

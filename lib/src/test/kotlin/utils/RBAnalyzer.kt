@@ -2,11 +2,10 @@ package utils
 
 import treelib.rbTree.RBNode
 import treelib.rbTree.Markers
-import treelib.commonObjects.exceptions.BugInImplementException
 
 class RBAnalyzer<Pack : Comparable<Pack>>(
     override val assertMethod: (input: String) -> Unit = {
-        throw BugInImplementException(it)
+        throw InternalError(it)
     }
 ) : Analyzer<Pack, RBNode<Pack>>() {
     /** Magic number for error := -9999999 -> just an impossible value **/

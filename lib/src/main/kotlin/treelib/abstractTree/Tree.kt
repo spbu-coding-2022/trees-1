@@ -1,7 +1,7 @@
 package treelib.abstractTree
 
 import treelib.commonObjects.Container
-import treelib.commonObjects.exceptions.NonExistentValueException
+import treelib.commonObjects.exceptions.VauleNotFound
 
 abstract class Tree<
         K : Comparable<K>,
@@ -32,7 +32,7 @@ abstract class Tree<
     operator fun get(key: K): V? = treeStruct.find(wrapForFind(key))?.value
 
     fun deleteItem(key: K) {
-        if (treeStruct.find(wrapForFind(key)) == null) throw NonExistentValueException()
+        if (treeStruct.find(wrapForFind(key)) == null) throw VauleNotFound()
         treeStruct.delete(wrapForFind(key))
     }
 

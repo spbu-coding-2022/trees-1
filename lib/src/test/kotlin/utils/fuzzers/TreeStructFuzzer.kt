@@ -81,7 +81,7 @@ abstract class TreeStructFuzzer<
         if (inputSize == null) dataSize = baseInput.size
         else dataSize = inputSize
 
-        if (dataSize > baseInput.size) throw BugInImplementException("inputSize > size of the baseInput")
+        if (dataSize > baseInput.size) throw InternalError("inputSize > size of the baseInput")
         return dataSize
     }
 
@@ -91,12 +91,7 @@ abstract class TreeStructFuzzer<
 
     private fun exceptionsCatch(ex: Exception) {
         when (ex) {
-            is BugInImplementException,
-            is IllegalBaseNodeException,
-            is IllegalNodeStateException,
-            is ImpossibleCaseException,
-            is MultithreadingException,
-            is NonExistentValueException,
+            is VauleNotFound,
             -> {/*TODO: Implement */
             }
 

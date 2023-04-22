@@ -1,9 +1,7 @@
 package treelib.abstractTree
 
-import treelib.commonObjects.exceptions.BugInImplementException
 import treelib.commonObjects.exceptions.ImpossibleCaseException
-import treelib.commonObjects.exceptions.MultithreadingException
-import treelib.commonObjects.exceptions.NonExistentValueException
+import treelib.commonObjects.exceptions.VauleNotFound
 
 
 abstract class TreeStruct<
@@ -31,9 +29,9 @@ abstract class TreeStruct<
                         currentNode = it.left
                     }
 
-                    else -> throw BugInImplementException("getLeafForInsert shouldn't be used with a value exists in Struct")
+                    else -> throw InternalError("getLeafForInsert shouldn't be used with a value exists in Struct")
                 }
-            } ?: throw MultithreadingException(ImpossibleCaseException())
+            } ?: throw ImpossibleCaseException()
         }
     }
 
@@ -53,7 +51,7 @@ abstract class TreeStruct<
                     }
                 }
             }
-                ?: throw BugInImplementException("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
+                ?: throw InternalError("getParentByValue shouldn't be used with value doesn't exist in tree")// (1)l ->
         }
     }
 
@@ -77,7 +75,7 @@ abstract class TreeStruct<
         var currentNode: NodeType?
 
         localRoot.right
-            ?: throw BugInImplementException("Incorrect usage of the getRightMinNode: right node doesn't exist")
+            ?: throw InternalError("Incorrect usage of the getRightMinNode: right node doesn't exist")
 
         currentNode = localRoot.right
 
@@ -85,7 +83,7 @@ abstract class TreeStruct<
             currentNode?.let { curNode ->
                 if (curNode.left == null) return@getRightMinNode curNode
                 else currentNode = curNode.left
-            } ?: throw MultithreadingException(ImpossibleCaseException())
+            } ?: throw ImpossibleCaseException()
         }
     }
 
@@ -97,7 +95,7 @@ abstract class TreeStruct<
         val childForLink: NodeType?
 
         when {
-            (node.right != null) && (node.left != null) -> throw BugInImplementException("unLink - method Shouldn't be used with node with both children")
+            (node.right != null) && (node.left != null) -> throw InternalError("unLink - method Shouldn't be used with node with both children")
             node.right != null -> childForLink = node.right
             node.left != null -> childForLink = node.left
             else -> childForLink = null
@@ -183,7 +181,7 @@ abstract class TreeStruct<
         val parentDeleteNode: NodeType?
         val deleteNode: NodeType?
 
-        if (findItem(item).contentNode == null) throw NonExistentValueException()
+        if (findItem(item).contentNode == null) throw VauleNotFound()
 
         parentDeleteNode = getParentByValue(item)
         if (parentDeleteNode != null) {
@@ -333,7 +331,7 @@ abstract class TreeStruct<
                     }
                     current = parent
                 }
-            } ?: throw MultithreadingException(ImpossibleCaseException())
+            } ?: throw ImpossibleCaseException()
         }
         return arrayNodes.map { toVertex(it) }
     }
@@ -351,12 +349,12 @@ abstract class TreeStruct<
                 if (current.right != null)
                     current.right?.let {
                         queue.add(it)
-                    } ?: throw MultithreadingException(ImpossibleCaseException())
+                    } ?: throw ImpossibleCaseException()
 
                 if (current.left != null)
                     current.left?.let {
                         queue.add(it)
-                    } ?: throw MultithreadingException(ImpossibleCaseException())
+                    } ?: throw ImpossibleCaseException()
             }
         }
         return arrayNodes.map { toVertex(it) }

@@ -2,7 +2,6 @@ package treelib.rbTree
 
 import treelib.abstractTree.balanced.BalancedTreeStruct
 import treelib.commonObjects.exceptions.ImpossibleCaseException
-import treelib.commonObjects.exceptions.MultithreadingException
 import java.util.*
 
 class RBStruct<Pack : Comparable<Pack>> :
@@ -66,7 +65,7 @@ class RBStruct<Pack : Comparable<Pack>> :
             root = node
             root?.let {
                 it.color = Markers.BLACK
-            } ?: throw MultithreadingException(ImpossibleCaseException())
+            } ?: throw ImpossibleCaseException()
         } else {
             if (node.value > parent.value) parent.right = node
             else parent.left = node

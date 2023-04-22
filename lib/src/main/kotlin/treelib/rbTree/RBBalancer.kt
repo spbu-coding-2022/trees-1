@@ -1,8 +1,7 @@
 package treelib.rbTree
 
 import treelib.abstractTree.balanced.BalancerParent
-import treelib.commonObjects.exceptions.IllegalBaseNodeException
-import treelib.commonObjects.exceptions.IllegalNodeStateException
+
 
 class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
     BalancerParent<Pack, RBNode<Pack>, RBStateContainer<Pack>>() {
@@ -41,9 +40,9 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
         return node.right == null && node.left == null
     }
 
-    override fun balance(state: RBStateContainer<Pack>): RBNode<Pack> {
-        val node = state.contentNode
-            ?: throw IllegalBaseNodeException()
+    override fun balance(stateContainer: RBStateContainer<Pack>): RBNode<Pack> {
+        val node = stateContainer.contentNode
+            ?: throw InternalError()
         val uncle = getUncle(node)
         when {
             /** node insertion case **/
@@ -66,7 +65,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                             currentNode = parent
                         }
                         parent =
-                            currentNode.parent?.parent ?: throw IllegalNodeStateException()
+                            currentNode.parent?.parent ?: throw InternalError()
                         currentNode = rightRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
@@ -79,7 +78,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                             currentNode = parent
                         }
                         parent =
-                            currentNode.parent?.parent ?: throw IllegalNodeStateException()
+                            currentNode.parent?.parent ?: throw InternalError()
                         currentNode = leftRotate(parent)
                         currentNode.color = Markers.BLACK
                         currentNode.right?.color = Markers.RED
@@ -120,19 +119,12 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                         firstCase(node, null)
 
                     }
-                    node.left?.color == Markers.BLACK && node.right?.color == Markers.RED && nodeIsLeaf(node.right) -> {
-                        node.right?.color = Markers.BLACK
-                        getRoot(node)
-                    }
-                    node.right?.color == Markers.BLACK && node.left?.color == Markers.RED && nodeIsLeaf(node.left) -> {
-                        node.left?.color = Markers.BLACK
-                        getRoot(node)
-                    }
+
                     else -> throw IllegalStateException()
                 }
             }
         }
-        throw IllegalStateException("")
+        throw IllegalStateException()
     }
 
     private fun afterInsert(node: RBNode<Pack>): RBNode<Pack> {
@@ -141,7 +133,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
             val uncle = getUncle(currentNode)
             if (uncle?.color == Markers.RED) {
                 currentNode.parent?.color = Markers.BLACK
-                currentNode = currentNode.parent?.parent ?: throw IllegalNodeStateException()
+                currentNode = currentNode.parent?.parent ?: throw InternalError()
                 currentNode.color = Markers.RED
                 uncle.color = Markers.BLACK
             } else if (uncle != null) {
@@ -164,13 +156,13 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                 getRoot(parent)
             }
 
-            else -> getRoot(node ?: throw IllegalNodeStateException())
+            else -> getRoot(node ?: throw InternalError())
         }
     }
 
     /** parent is red **/
     private fun secondCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
-        var brother = getBrother(parent, node) ?: throw IllegalNodeStateException()
+        var brother = getBrother(parent, node) ?: throw InternalError()
         if (brother.color == Markers.RED)
             throw NullPointerException()
 
@@ -222,7 +214,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
 
     /** parent is black **/
     private fun thirdCase(parent: RBNode<Pack>, node: RBNode<Pack>?) {
-        val brother = getBrother(parent, node) ?: throw IllegalNodeStateException()
+        val brother = getBrother(parent, node) ?: throw InternalError()
         when (brother.color) {
             Markers.RED -> thirdCaseSubFirst(brother, parent)
             Markers.BLACK -> thirdCaseSubSecond(brother, parent)
@@ -233,7 +225,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
     private fun thirdCaseSubFirst(brother: RBNode<Pack>, parent: RBNode<Pack>) {
         when (brother) {
             brother.parent?.left -> {
-                var rightBrotherSon = brother.right ?: throw IllegalNodeStateException()
+                var rightBrotherSon = brother.right ?: throw InternalError()
 
                 if (rightBrotherSon.right?.color != Markers.RED && rightBrotherSon.left?.color != Markers.RED) {
                     rightBrotherSon.color = Markers.RED
@@ -250,7 +242,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                     leftRotate(rightBrotherSon)
 
                     rightBrotherSon =
-                        rightBrotherSon.parent ?: throw IllegalNodeStateException()
+                        rightBrotherSon.parent ?: throw InternalError()
                     rightBrotherSon.color = Markers.BLACK
                 }
 
@@ -266,7 +258,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                 if (leftBrotherSon.right?.color != Markers.RED && leftBrotherSon.left?.color != Markers.RED) {
                     leftBrotherSon.color = Markers.RED
                     brother.color = Markers.BLACK
-                    leftRotate(brother.parent ?: throw IllegalNodeStateException())
+                    leftRotate(brother.parent ?: throw InternalError())
                     return
                 }
 
@@ -274,7 +266,7 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
                     rightRotate(leftBrotherSon)
                     leftBrotherSon.color = Markers.RED
                     leftBrotherSon =
-                        leftBrotherSon.parent ?: throw IllegalNodeStateException()
+                        leftBrotherSon.parent ?: throw InternalError()
                     leftBrotherSon.color = Markers.BLACK
                 }
 
