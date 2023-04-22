@@ -1,7 +1,7 @@
 package treelib.avlTree
 
 import treelib.abstractTree.balanced.BalancedTreeStruct
-import treelib.singleObjects.exceptions.IncorrectUsage
+import treelib.commonObjects.exceptions.IncorrectUsage
 
 class AVLStruct<Pack : Comparable<Pack>> :
     BalancedTreeStruct<Pack, AVLNode<Pack>, AVLStateContainer<Pack>, AVLVertex<Pack>, AVLBalancer<Pack>>() {

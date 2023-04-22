@@ -1,9 +1,8 @@
 package treelib.rbTree
 
 import treelib.abstractTree.balanced.BalancedTreeStruct
-import treelib.singleObjects.Markers
-import treelib.singleObjects.exceptions.ImpossibleCaseException
-import treelib.singleObjects.exceptions.MultithreadingException
+import treelib.commonObjects.exceptions.ImpossibleCaseException
+import treelib.commonObjects.exceptions.MultithreadingException
 import java.util.*
 
 class RBStruct<Pack : Comparable<Pack>> :

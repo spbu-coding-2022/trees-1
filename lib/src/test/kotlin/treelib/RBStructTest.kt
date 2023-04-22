@@ -5,7 +5,7 @@ import treelib.rbTree.RBNode
 import treelib.rbTree.RBStateContainer
 import treelib.rbTree.RBStruct
 import treelib.rbTree.RBVertex
-import treelib.singleObjects.Markers
+import treelib.rbTree.Markers
 import utils.RBAnalyzer
 import utils.TreeStructWrapper
 import utils.fuzzers.RBStructFuzzer
@@ -30,9 +30,9 @@ class RBStructTest {
         treeStruct.insert(6)
         val root = treeW.getPrivateNode(treeStruct)
         assertAll(
-            { assertEquals(root?.value, 6) },
-            { assertEquals(root?.color, Markers.BLACK) },
-            { analyzer.checkTree(root!!) }
+                { assertEquals(root?.value, 6) },
+                { assertEquals(root?.color, Markers.BLACK) },
+                { analyzer.checkTree(root!!) }
         )
     }
 
@@ -42,9 +42,9 @@ class RBStructTest {
         treeStruct.insert(3)
         val root = treeW.getPrivateNode(treeStruct)
         assertAll(
-            { assertEquals(root?.left?.value, 3) },
-            { assertEquals(root?.left?.color, Markers.RED) },
-            { analyzer.checkTree(root!!) }
+                { assertEquals(root?.left?.value, 3) },
+                { assertEquals(root?.left?.color, Markers.RED) },
+                { analyzer.checkTree(root!!) }
         )
     }
 
@@ -54,9 +54,9 @@ class RBStructTest {
         treeStruct.insert(8)
         val root = treeW.getPrivateNode(treeStruct)
         assertAll(
-            { assertEquals(root?.right?.value, 8) },
-            { assertEquals(root?.right?.color, Markers.RED) },
-            { analyzer.checkTree(root!!) }
+                { assertEquals(root?.right?.value, 8) },
+                { assertEquals(root?.right?.color, Markers.RED) },
+                { analyzer.checkTree(root!!) }
         )
     }
 
@@ -67,11 +67,11 @@ class RBStructTest {
         treeStruct.insert(3)
         val root = treeW.getPrivateNode(treeStruct)
         assertAll(
-            { assertEquals(root?.right?.value, 8) },
-            { assertEquals(root?.left?.value, 3) },
-            { assertEquals(root?.right?.color, Markers.RED) },
-            { assertEquals(root?.left?.color, Markers.RED) },
-            { analyzer.checkTree(root!!) }
+                { assertEquals(root?.right?.value, 8) },
+                { assertEquals(root?.left?.value, 3) },
+                { assertEquals(root?.right?.color, Markers.RED) },
+                { assertEquals(root?.left?.color, Markers.RED) },
+                { analyzer.checkTree(root!!) }
         )
     }
 
@@ -83,9 +83,9 @@ class RBStructTest {
         treeStruct.delete(6)
         val root = treeW.getPrivateNode(treeStruct)
         assertAll(
-            { assertEquals(root?.value, 8) },
-            { assertEquals(root?.color, Markers.BLACK) },
-            { analyzer.checkTree(root!!) }
+                { assertEquals(root?.value, 8) },
+                { assertEquals(root?.color, Markers.BLACK) },
+                { analyzer.checkTree(root!!) }
         )
     }
 
@@ -96,9 +96,9 @@ class RBStructTest {
         treeStruct.delete(6)
         val root = treeW.getPrivateNode(treeStruct)
         assertAll(
-            { assertEquals(8, root?.value) },
-            { assertEquals(Markers.BLACK, root?.color) },
-            { analyzer.checkTree(root!!) }
+                { assertEquals(8, root?.value) },
+                { assertEquals(Markers.BLACK, root?.color) },
+                { analyzer.checkTree(root!!) }
         )
     }
 
@@ -109,45 +109,44 @@ class RBStructTest {
         treeStruct.delete(6)
         val root = treeW.getPrivateNode(treeStruct)
         assertAll(
-            { assertEquals(3, root?.value) },
-            { assertEquals(Markers.BLACK, root?.color) },
-            { analyzer.checkTree(root!!) }
+                { assertEquals(3, root?.value) },
+                { assertEquals(Markers.BLACK, root?.color) },
+                { analyzer.checkTree(root!!) }
         )
     }
 
     @Test
     fun `fazzer test`() {
         val fazzer = RBStructFuzzer(
-            arrayOf(
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                20,
-                100,
-                123,
-                234,
-                556,
-                345677,
-                88765,
-                43,
-                364,
-                23456,
-                2754
-            ), ::testAssert
+                arrayOf(
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        8,
+                        9,
+                        20,
+                        100,
+                        123,
+                        234,
+                        556,
+                        345677,
+                        88765,
+                        43,
+                        364,
+                        23456,
+                        2754
+                ), ::testAssert
         )
         fazzer.saveNextTestSets("TEST_TEST")
 
         assertAll(
-            {
-                fazzer.fuzzInvariantInsert(15, 10)
-            }
+                {
+                    fazzer.fuzzInvariantInsert(15, 10)
+                }
         )
     }
-
 }

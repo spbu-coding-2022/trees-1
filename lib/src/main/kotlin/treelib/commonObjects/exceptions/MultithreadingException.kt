@@ -1,4 +1,4 @@
-package treelib.singleObjects.exceptions
+package treelib.commonObjects.exceptions
 
 open class MultithreadingException : Exception {
     constructor() : super(

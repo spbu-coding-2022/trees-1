@@ -1,4 +1,4 @@
-package treelib.singleObjects.exceptions
+package treelib.commonObjects.exceptions
 
 class IncorrectUsage : Exception {
     constructor() : super(

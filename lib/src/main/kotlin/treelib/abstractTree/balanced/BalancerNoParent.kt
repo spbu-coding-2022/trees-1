@@ -2,7 +2,7 @@ package treelib.abstractTree.balanced
 
 import treelib.abstractTree.Node
 import treelib.abstractTree.StateContainer
-import treelib.singleObjects.exceptions.IllegalNodeStateException
+import treelib.commonObjects.exceptions.IllegalNodeStateException
 
 abstract class BalancerNoParent<Pack : Comparable<Pack>, NodeType : Node<Pack, NodeType>, StateContainerType : StateContainer<Pack, NodeType>> :
     Balancer<Pack, NodeType, StateContainerType> {

@@ -2,7 +2,7 @@ package treelib.rbTree
 
 import treelib.abstractTree.Tree
 
-import treelib.singleObjects.Container
+import treelib.commonObjects.Container
 
 class RBTree<K : Comparable<K>, V> :
     Tree<K, V, RBNode<Container<K, V?>>, RBStateContainer<Container<K, V?>>, RBVertex<Container<K, V?>>>() {

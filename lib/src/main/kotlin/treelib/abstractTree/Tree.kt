@@ -1,7 +1,7 @@
 package treelib.abstractTree
 
-import treelib.singleObjects.Container
-import treelib.singleObjects.exceptions.NonExistentValueException
+import treelib.commonObjects.Container
+import treelib.commonObjects.exceptions.NonExistentValueException
 
 abstract class Tree<
         K : Comparable<K>,
@@ -19,18 +19,20 @@ abstract class Tree<
         treeStruct.insert(Container(item))
     }
 
-    fun putItems(vararg items: Pair<K, V?>) {
+    fun putItem(vararg items: Pair<K, V?>) {
         for (element in items) putItem(element)
     }
 
-    fun putItems(items: Iterable<Pair<K, V?>>) {
+    fun putItem(items: Iterable<Pair<K, V?>>) {
         for (element in items) putItem(element)
     }
 
     fun getItem(key: K): V? = treeStruct.find(wrapForFind(key))?.value
 
+    operator fun get(key: K): V? = treeStruct.find(wrapForFind(key))?.value
+
     fun deleteItem(key: K) {
-        if (getItem(key) == null) throw NonExistentValueException()
+        if (treeStruct.find(wrapForFind(key)) == null) throw NonExistentValueException()
         treeStruct.delete(wrapForFind(key))
     }
 

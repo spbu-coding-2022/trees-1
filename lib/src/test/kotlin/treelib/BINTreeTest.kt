@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import treelib.binTree.*
-import treelib.singleObjects.Container
+import treelib.commonObjects.Container
 import utils.TreeStructWrapper
 import utils.TreeWrapper
 import kotlin.test.assertEquals
@@ -32,7 +32,7 @@ class BINTreeTest {
         for (i in numbers) {
             num.add(Pair(i, 1))
         }
-        tree.putItems(num)
+        tree.putItem(num)
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = numbers[0])
         assertEquals(
             expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.right?.value?.key,
@@ -43,7 +43,7 @@ class BINTreeTest {
     @Test
     fun `test getItem`() {
         val num = mutableListOf(Pair(1, 1), Pair(2, 1), Pair(5, 1), Pair(4, 1), Pair(3, 5))
-        tree.putItems(num)
+        tree.putItem(num)
         val temp = tree.getItem(3)
 
         assertEquals(
@@ -60,7 +60,7 @@ class BINTreeTest {
         for (i in numbers) {
             num.add(Pair(i, 1))
         }
-        tree.putItems(num)
+        tree.putItem(num)
         tree.deleteItem(numbers[2])
 
         assertEquals(expected = tree.getItem(numbers[2]), actual = null)
@@ -75,7 +75,7 @@ class BINTreeTest {
         for (i in numbers) {
             num.add(Pair(i, 1))
         }
-        tree.putItems(num)
+        tree.putItem(num)
         val root = numbers[0]
         numbers.sort()
         val index = numbers.indexOf(root)
