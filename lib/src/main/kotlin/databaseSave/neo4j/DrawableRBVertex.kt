@@ -1,7 +1,7 @@
 package databaseSave.neo4j
 
 import treelib.rbTree.RBVertex
-import treelib.singleObjects.Markers
+import treelib.rbTree.Markers
 
 class DrawableRBVertex<Pack : Comparable<Pack>>(
     value: Pack,

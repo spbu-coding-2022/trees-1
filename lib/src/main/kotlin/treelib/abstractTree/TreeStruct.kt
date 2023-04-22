@@ -1,9 +1,9 @@
 package treelib.abstractTree
 
-import treelib.singleObjects.exceptions.BugInImplementException
-import treelib.singleObjects.exceptions.ImpossibleCaseException
-import treelib.singleObjects.exceptions.MultithreadingException
-import treelib.singleObjects.exceptions.NonExistentValueException
+import treelib.commonObjects.exceptions.BugInImplementException
+import treelib.commonObjects.exceptions.ImpossibleCaseException
+import treelib.commonObjects.exceptions.MultithreadingException
+import treelib.commonObjects.exceptions.NonExistentValueException
 
 
 abstract class TreeStruct<
@@ -361,6 +361,4 @@ abstract class TreeStruct<
         }
         return arrayNodes.map { toVertex(it) }
     }
-
-
 }

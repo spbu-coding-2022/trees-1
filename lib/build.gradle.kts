@@ -5,6 +5,7 @@ plugins {
     jacoco
     `java-library`
     `maven-publish`
+    kotlin("plugin.serialization") version "1.5.0"
     // checkstyle
 }
 

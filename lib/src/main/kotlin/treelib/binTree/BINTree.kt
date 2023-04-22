@@ -1,7 +1,7 @@
 package treelib.binTree
 
 import treelib.abstractTree.Tree
-import treelib.singleObjects.Container
+import treelib.commonObjects.Container
 
 class BINTree<K : Comparable<K>, V>
     : Tree<K, V, BINNode<Container<K, V?>>, BINStateContainer<Container<K, V?>>, BINVertex<Container<K, V?>>>() {

@@ -1,7 +1,7 @@
 package treelib
 
 import treelib.rbTree.RBNode
-import treelib.singleObjects.Markers
+import treelib.rbTree.Markers
 
 class TestModelRBT {
     fun <T : Comparable<T>> countBlackNodes(node: RBNode<T>): Int {

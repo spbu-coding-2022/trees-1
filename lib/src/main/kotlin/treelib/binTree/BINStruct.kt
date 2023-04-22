@@ -1,8 +1,7 @@
 package treelib.binTree
 
 import treelib.abstractTree.TreeStruct
-import treelib.abstractTree.Vertex
-import treelib.singleObjects.exceptions.IncorrectUsage
+import treelib.commonObjects.exceptions.IncorrectUsage
 
 class BINStruct<Pack : Comparable<Pack>> :
     TreeStruct<Pack, BINNode<Pack>, BINStateContainer<Pack>, BINVertex<Pack>>() {

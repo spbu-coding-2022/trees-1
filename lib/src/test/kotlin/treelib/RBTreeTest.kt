@@ -3,8 +3,8 @@ package treelib
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import treelib.rbTree.*
-import treelib.singleObjects.Container
-import treelib.singleObjects.Markers
+import treelib.commonObjects.Container
+import treelib.rbTree.Markers
 import utils.TreeStructWrapper
 import utils.TreeWrapper
 import kotlin.test.assertEquals
@@ -26,7 +26,7 @@ class RBTreeTest {
             num.add(Pair(i, i))
         }
 
-        tree.putItems(num)
+        tree.putItem(num)
 
         val rootR = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.right?.color
         assertEquals(expected = rootR, actual = Markers.RED)
@@ -46,7 +46,7 @@ class RBTreeTest {
             num.add(Pair(i, i))
         }
 
-        tree.putItems(num)
+        tree.putItem(num)
 
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.right?.color, actual = Markers.RED)
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.left?.color, actual = Markers.RED)

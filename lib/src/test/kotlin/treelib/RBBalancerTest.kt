@@ -8,7 +8,7 @@ import org.junit.jupiter.api.assertAll
 import treelib.rbTree.RBBalancer
 import treelib.rbTree.RBNode
 import treelib.rbTree.RBStateContainer
-import treelib.singleObjects.Markers
+import treelib.rbTree.Markers
 
 class RBBalancerTest {
 
@@ -18,6 +18,7 @@ class RBBalancerTest {
     @DisplayName("Tests to check the operation of the balancer after removal")
     @Nested
     inner class RemovalTests {
+
         @Test
         fun `init test`() {
             val firstBalancer = RBBalancer<Int>(null)
@@ -350,6 +351,7 @@ class RBBalancerTest {
     @DisplayName("Tests to check the operation of the balancer after insertion")
     @Nested
     inner class InsertionTests {
+
         @Test
         fun `insertion root`() {
             val root = RBNode(18, null, null, null, Markers.RED)
@@ -483,5 +485,4 @@ class RBBalancerTest {
             )
         }
     }
-
 }

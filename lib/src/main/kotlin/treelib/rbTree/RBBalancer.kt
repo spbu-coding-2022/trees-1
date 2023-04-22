@@ -1,9 +1,8 @@
 package treelib.rbTree
 
 import treelib.abstractTree.balanced.BalancerParent
-import treelib.singleObjects.Markers
-import treelib.singleObjects.exceptions.IllegalBaseNodeException
-import treelib.singleObjects.exceptions.IllegalNodeStateException
+import treelib.commonObjects.exceptions.IllegalBaseNodeException
+import treelib.commonObjects.exceptions.IllegalNodeStateException
 
 class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
     BalancerParent<Pack, RBNode<Pack>, RBStateContainer<Pack>>() {

@@ -3,7 +3,7 @@ package treelib
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import treelib.avlTree.*
-import treelib.singleObjects.Container
+import treelib.commonObjects.Container
 import utils.TreeStructWrapper
 import utils.TreeWrapper
 import kotlin.test.assertEquals
@@ -25,7 +25,7 @@ class AVLTreeTest {
         for (i in numbers) {
             num.add(Pair(i, 1))
         }
-        tree.putItems(num)
+        tree.putItem(num)
 
         numbers.sort()
         val root = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key
@@ -75,7 +75,7 @@ class AVLTreeTest {
         for (i in numbers) {
             num.add(Pair(i, 1))
         }
-        tree.putItems(num)
+        tree.putItem(num)
         tree.deleteItem(numbers[0])
 
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = null)

@@ -1,8 +1,8 @@
 package utils
 
 import treelib.rbTree.RBNode
-import treelib.singleObjects.Markers
-import treelib.singleObjects.exceptions.BugInImplementException
+import treelib.rbTree.Markers
+import treelib.commonObjects.exceptions.BugInImplementException
 
 class RBAnalyzer<Pack : Comparable<Pack>>(
     override val assertMethod: (input: String) -> Unit = {

@@ -4,7 +4,7 @@ import treelib.abstractTree.Node
 import treelib.abstractTree.StateContainer
 import treelib.abstractTree.TreeStruct
 import treelib.abstractTree.Vertex
-import treelib.singleObjects.exceptions.*
+import treelib.commonObjects.exceptions.*
 import utils.Analyzer
 import utils.TreeStructWrapper
 import java.io.File
@@ -122,5 +122,4 @@ abstract class TreeStructFuzzer<
             file.appendText("${baseInput[index]} \n")
         }
     }
-
 }
