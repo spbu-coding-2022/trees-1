@@ -3,11 +3,10 @@ package databaseManage
 import com.google.gson.reflect.TypeToken
 import databaseSave.jsonFormat.DrawableBINVertex
 import databaseSave.jsonFormat.JsonRepository
-import treelib.binTree.BINStruct
 import treelib.commonObjects.Container
 import java.io.File
 
-class BINTreeManager {
+class BINTreeManager : TreeManager<Container<Int, String>, DrawableBINVertex<Container<Int, String>>> {
 
     /*** using json format files ***/
 
@@ -15,27 +14,33 @@ class BINTreeManager {
 
     private val jsonRep = JsonRepository(dirPath)
 
-    fun initTree(treeName: String): BINStruct<Container<Int, String>> {
+    override fun getTree(treeName: String): Pair<List<DrawableBINVertex<Container<Int, String>>>, List<DrawableBINVertex<Container<Int, String>>>> {
         val typeToken = object : TypeToken<Array<DrawableBINVertex<Container<Int, String>>>>() {}
-        val preOrder = jsonRep.exportTree(treeName, typeToken)
-        val BINtree = BINStruct<Container<Int, String>>()
-        BINtree.restoreStruct(preOrder.toList())
+        val preOrder = jsonRep.exportTree(treeName, typeToken).toList()
 
-        return BINtree
+        return Pair(preOrder, listOf())
     }
 
-    fun <Pack : Comparable<Pack>> saveTree(preOrder: Array<DrawableBINVertex<Pack>>, treeName: String) {
+    override fun saveTree(
+        preOrder: Array<DrawableBINVertex<Container<Int, String>>>,
+        inOrder: Array<DrawableBINVertex<Container<Int, String>>>,
+        treeName: String
+    ) {
 
         jsonRep.saveChanges(preOrder, treeName)
 
     }
 
-    fun deleteTree(treeName: String) = jsonRep.removeTree(treeName)
+    override fun deleteTree(treeName: String) = jsonRep.removeTree(treeName)
 
-    fun getNamesTrees(): List<String>? {
+    override fun getSavedTreesNames(): List<String> {
         val filesNames = File(dirPath).list()?.map { it.replace(".json", "") }
 
-        return filesNames?.subList(0, 3)
+        return filesNames?.subList(0, 3) ?: listOf()
+    }
+
+    override fun isTreeExist(): Boolean {
+        TODO()
     }
 
     fun cleanDB() = jsonRep.clean()

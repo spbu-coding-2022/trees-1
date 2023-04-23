@@ -3,9 +3,8 @@ package databaseManage
 import databaseSave.neo4j.DrawableRBVertex
 import databaseSave.neo4j.Neo4jRepository
 import treelib.commonObjects.Container
-import treelib.rbTree.RBStruct
 
-class RBTreeManager {
+class RBTreeManager : TreeManager<Container<Int, String>, DrawableRBVertex<Container<Int, String>>> {
 
     /*** using neo4j ***/
 
@@ -15,21 +14,18 @@ class RBTreeManager {
         neo4jDB.open("bolt://localhost:7687", "neo4j", "password")
     }
 
-    fun initTree(treeName: String): RBStruct<Container<Int, String>> {
+    override fun getTree(treeName: String): Pair<List<DrawableRBVertex<Container<Int, String>>>, List<DrawableRBVertex<Container<Int, String>>>> {
         /***    orders.first = preOrder, orders.second = inOrder   ***/
         val orders: Pair<List<DrawableRBVertex<Container<Int, String>>>, List<DrawableRBVertex<Container<Int, String>>>> =
             neo4jDB.exportRBtree(treeName)
-
-        val RBtree = RBStruct<Container<Int, String>>()
-        RBtree.restoreStruct(orders.first, orders.second)
         neo4jDB.close()
 
-        return RBtree
+        return orders
     }
 
-    fun <Pack : Comparable<Pack>> saveTree(
-        preOrder: Array<DrawableRBVertex<Pack>>,
-        inOrder: Array<DrawableRBVertex<Pack>>,
+    override fun saveTree(
+        preOrder: Array<DrawableRBVertex<Container<Int, String>>>,
+        inOrder: Array<DrawableRBVertex<Container<Int, String>>>,
         treeName: String
     ) {
 
@@ -37,16 +33,20 @@ class RBTreeManager {
         neo4jDB.close()
     }
 
-    fun deleteTree(treeName: String) {
+    override fun deleteTree(treeName: String) {
 
         neo4jDB.removeTree(treeName)
         neo4jDB.close()
 
     }
 
-    fun getNamesTrees(): List<String>? {
+    override fun getSavedTreesNames(): List<String> {
         val treesNames = neo4jDB.findNamesTrees()
-        return treesNames?.subList(0, 3)
+        return treesNames?.subList(0, 3) ?: listOf()
+    }
+
+    override fun isTreeExist(): Boolean {
+        TODO()
     }
 
     fun cleanDB() {

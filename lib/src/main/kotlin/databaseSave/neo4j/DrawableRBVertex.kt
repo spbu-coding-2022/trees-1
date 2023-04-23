@@ -1,11 +1,12 @@
 package databaseSave.neo4j
 
-import treelib.rbTree.RBVertex
+import databaseSave.DrawableVertex
 import treelib.rbTree.Markers
+import treelib.rbTree.RBVertex
 
 class DrawableRBVertex<Pack : Comparable<Pack>>(
     value: Pack,
     color: Markers,
-    val x: Double = 0.0,
-    val y: Double = 0.0
-) : RBVertex<Pack>(value, color)
+    override val x: Double = 0.0,
+    override val y: Double = 0.0
+) : RBVertex<Pack>(value, color), DrawableVertex<Pack>
