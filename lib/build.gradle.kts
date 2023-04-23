@@ -1,4 +1,3 @@
-val sqliteJdbcVersion: String by project
 plugins {
     java
     kotlin("jvm") version "1.8.10"
@@ -32,7 +31,14 @@ dependencies {
     implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
 
     // JDBC Sqlite
+    val sqliteJdbcVersion: String by project
     implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
+
+    // JetBrains Exposed
+    val exposedVersion: String by project
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
@@ -52,9 +58,9 @@ tasks.test {
     val failedTests = mutableListOf<TestDescriptor>()
     val skippedTests = mutableListOf<TestDescriptor>()
 
-    addTestListener (object: TestListener {
-        override fun beforeSuite(suite: TestDescriptor?) { }
-        override fun beforeTest(testDescriptor: TestDescriptor?) { }
+    addTestListener(object : TestListener {
+        override fun beforeSuite(suite: TestDescriptor?) {}
+        override fun beforeTest(testDescriptor: TestDescriptor?) {}
         override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {
             when (result.resultType) {
                 TestResult.ResultType.FAILURE -> failedTests.add(testDescriptor)
@@ -62,6 +68,7 @@ tasks.test {
                 else -> {}
             }
         }
+
         override fun afterSuite(suite: TestDescriptor, result: TestResult) {
             if (suite.parent == null) { // root suite
                 logger.lifecycle("####################################################################################")
@@ -91,10 +98,18 @@ tasks.jacocoTestReport {
 }
 
 tasks.jacocoTestCoverageVerification {
-    classDirectories.setFrom( classDirectories.files.flatMap { fileTree(it) {
-        include("**/treelib/**")
-        exclude("**/singleObjects/**", "**/RBVertex.class", "**/AVLVertex.class", "**/BINVertex.class", "**/Vertex.class")
-    } })
+    classDirectories.setFrom(classDirectories.files.flatMap {
+        fileTree(it) {
+            include("**/treelib/**")
+            exclude(
+                "**/singleObjects/**",
+                "**/RBVertex.class",
+                "**/AVLVertex.class",
+                "**/BINVertex.class",
+                "**/Vertex.class"
+            )
+        }
+    })
     dependsOn(tasks.jacocoTestReport)
     violationRules {
         rule {
