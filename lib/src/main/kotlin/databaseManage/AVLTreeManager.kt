@@ -1,7 +1,7 @@
 package databaseManage
 
 import databaseSave.sqlite.DrawAVLVertex
-import databaseSave.sqlite.SQLiteRepository
+import databaseSave.sqlite.SQLiteRepositoryJDBC
 import treelib.avlTree.AVLStruct
 import treelib.avlTree.AVLVertex
 import java.io.Closeable
@@ -12,7 +12,7 @@ class AVLTreeManager<Pack : Comparable<Pack>>(
     private val serializeData: (input: Pack) -> String,
     private val deSerializeData: (input: String) -> Pack,
 ) : Closeable {
-    private val db = SQLiteRepository(dbPath, serializeData, deSerializeData)
+    private val db = SQLiteRepositoryJDBC(dbPath, serializeData, deSerializeData)
     private var avlTree = AVLStruct<Pack>()
 
 

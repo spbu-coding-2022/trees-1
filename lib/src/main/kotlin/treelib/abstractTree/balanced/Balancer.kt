@@ -9,9 +9,5 @@ interface Balancer<
         State : StateContainer<Pack, NodeType>,
         > {
 
-    fun rightRotate(currentNode: NodeType): NodeType
-
-    fun leftRotate(currentNode: NodeType): NodeType
-
     fun balance(state: State): NodeType
 }

@@ -1,16 +1,16 @@
 package treelib.commonObjects.exceptions
 
-class IllegalBaseNodeException : Exception {
+open class VauleNotFound : Exception {
     constructor() : super(
-        "A non-existent node (null) was passed to the method"
+        "Value doesn't exist in the tree"
     )
 
     constructor(message: String) : super(
-        "A non-existent node (null) was passed to the method: $message",
+        "Value doesn't exist in the tree $message",
     )
 
     constructor(message: String, cause: Throwable) : super(
-        "A non-existent node (null) was passed to the method: $message",
+        "Value doesn't exist in the tree -> $message",
         cause,
     )
 

@@ -1,4 +1,3 @@
-val sqliteJdbcVersion: String by project
 plugins {
     java
     kotlin("jvm") version "1.8.10"
@@ -34,7 +33,14 @@ dependencies {
     implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
 
     // JDBC Sqlite
+    val sqliteJdbcVersion: String by project
     implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
+
+    // JetBrains Exposed
+    val exposedVersion: String by project
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 
     implementation(kotlin("stdlib-jdk8"))
     implementation(compose.desktop.currentOs)
@@ -44,6 +50,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    implementation(kotlin("stdlib-jdk8"))
 
 }
 

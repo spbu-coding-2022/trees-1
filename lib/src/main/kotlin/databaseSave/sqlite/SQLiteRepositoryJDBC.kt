@@ -4,7 +4,7 @@ import java.io.Closeable
 import java.sql.DriverManager
 import java.sql.SQLException
 
-class SQLiteRepository<Pack : Comparable<Pack>>(
+class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
     private val dbPath: String,
     private val serializeData: (input: Pack) -> String,
     private val deSerializeData: (input: String) -> Pack,
