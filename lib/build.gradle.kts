@@ -7,6 +7,7 @@ plugins {
     `maven-publish`
     kotlin("plugin.serialization") version "1.5.0"
     // checkstyle
+    id("org.jetbrains.compose") version "1.4.0"
 }
 
 java {
@@ -17,6 +18,7 @@ java {
 
 repositories {
     mavenLocal()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     mavenCentral()
 }
 
@@ -34,12 +36,21 @@ dependencies {
     // JDBC Sqlite
     implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
 
+    implementation(kotlin("stdlib-jdk8"))
+    implementation(compose.desktop.currentOs)
+    implementation(compose.material3)
+
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    implementation(kotlin("stdlib-jdk8"))
 
+}
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+    }
 }
 
 tasks.test {
