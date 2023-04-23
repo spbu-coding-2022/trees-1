@@ -2,8 +2,8 @@ package databaseManage
 
 import databaseSave.neo4j.DrawableRBVertex
 import databaseSave.neo4j.Neo4jRepository
-import treelib.rbTree.RBStruct
 import treelib.commonObjects.Container
+import treelib.rbTree.RBStruct
 
 class RBTreeManager {
 
@@ -27,7 +27,11 @@ class RBTreeManager {
         return RBtree
     }
 
-    fun <Pack : Comparable<Pack>> saveTree(preOrder: Array<DrawableRBVertex<Pack>>, inOrder: Array<DrawableRBVertex<Pack>>, treeName: String) {
+    fun <Pack : Comparable<Pack>> saveTree(
+        preOrder: Array<DrawableRBVertex<Pack>>,
+        inOrder: Array<DrawableRBVertex<Pack>>,
+        treeName: String
+    ) {
 
         neo4jDB.saveChanges(preOrder, inOrder, treeName)
         neo4jDB.close()
@@ -38,6 +42,11 @@ class RBTreeManager {
         neo4jDB.removeTree(treeName)
         neo4jDB.close()
 
+    }
+
+    fun getNamesTrees(): List<String>? {
+        val treesNames = neo4jDB.findNamesTrees()
+        return treesNames?.subList(0, 3)
     }
 
     fun cleanDB() {

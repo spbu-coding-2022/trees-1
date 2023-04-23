@@ -10,7 +10,7 @@ class JsonRepository(private val dirPath: String) {
         File(dirPath).mkdirs()
     }
 
-    fun <Pack: Comparable<Pack>>saveChanges(
+    fun <Pack : Comparable<Pack>> saveChanges(
         preOrder: Array<DrawableBINVertex<Pack>>,
         fileName: String
     ) {
@@ -25,7 +25,10 @@ class JsonRepository(private val dirPath: String) {
 
     }
 
-    fun <Pack: Comparable<Pack>>exportTree(fileName: String, typeToken: TypeToken<Array<DrawableBINVertex<Pack>>>): Array<DrawableBINVertex<Pack>> {
+    fun <Pack : Comparable<Pack>> exportTree(
+        fileName: String,
+        typeToken: TypeToken<Array<DrawableBINVertex<Pack>>>
+    ): Array<DrawableBINVertex<Pack>> {
         val gson = GsonBuilder().setPrettyPrinting().create()
         val json = File(dirPath, fileName).readText()
 
@@ -39,7 +42,7 @@ class JsonRepository(private val dirPath: String) {
     }
 
     fun clean() {
-        //Runtime.getRuntime().exec(arrayOf("echo ${dirPath} > 1.txt"))
+
         File(dirPath).deleteRecursively()
     }
 

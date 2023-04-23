@@ -5,12 +5,15 @@ import databaseSave.jsonFormat.DrawableBINVertex
 import databaseSave.jsonFormat.JsonRepository
 import treelib.binTree.BINStruct
 import treelib.commonObjects.Container
+import java.io.File
 
-class BINTreeManager: TreeManager() {
+class BINTreeManager {
 
     /*** using json format files ***/
 
-    private val jsonRep = JsonRepository(System.getProperty("user.dir") + "/jsonFormatFiles")
+    private val dirPath = System.getProperty("user.dir") + "/jsonFormatFiles"
+
+    private val jsonRep = JsonRepository(dirPath)
 
     fun initTree(treeName: String): BINStruct<Container<Int, String>> {
         val typeToken = object : TypeToken<Array<DrawableBINVertex<Container<Int, String>>>>() {}
@@ -21,13 +24,19 @@ class BINTreeManager: TreeManager() {
         return BINtree
     }
 
-    fun <Pack: Comparable<Pack>> saveTree(preOrder: Array<DrawableBINVertex<Pack>>, treeName: String) {
+    fun <Pack : Comparable<Pack>> saveTree(preOrder: Array<DrawableBINVertex<Pack>>, treeName: String) {
 
         jsonRep.saveChanges(preOrder, treeName)
 
     }
 
     fun deleteTree(treeName: String) = jsonRep.removeTree(treeName)
+
+    fun getNamesTrees(): List<String>? {
+        val filesNames = File(dirPath).list()?.map { it.replace(".json", "") }
+
+        return filesNames?.subList(0, 3)
+    }
 
     fun cleanDB() = jsonRep.clean()
 
