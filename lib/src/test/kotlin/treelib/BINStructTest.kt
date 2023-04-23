@@ -1,13 +1,11 @@
 package treelib
 
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
+import org.junit.jupiter.api.*
 import treelib.binTree.BINNode
 import treelib.binTree.BINStateContainer
 import treelib.binTree.BINStruct
 import treelib.binTree.BINVertex
+import treelib.commonObjects.exceptions.VauleNotFound
 import utils.BINAnalyzer
 import utils.TreeStructWrapper
 import kotlin.test.assertEquals
@@ -491,5 +489,38 @@ class BINStructTest {
 
         val root = treeW.getPrivateNode(treeStruct)
         root?.let { analyzer.checkTree(root) } ?: Exception("CHzh")
+    }
+
+    @Test
+    fun `test delete a node that is not in tree`() {
+        Assertions.assertThrows(VauleNotFound::class.java) {
+            for (i in (0..10000).shuffled()) {
+                treeStruct.insert(i)
+            }
+            treeStruct.delete(100001)
+        }
+    }
+
+    @Test
+    fun `test add and delete 10000 arg`() {
+        for (i in (0..10000).shuffled()) {
+            treeStruct.insert(i)
+        }
+        for (i in (0..10000).shuffled()) {
+            treeStruct.delete(i)
+        }
+
+        val root = treeW.getPrivateNode(treeStruct)?.value
+        assertEquals(expected = root, actual = null)
+    }
+
+    @Test
+    fun `test delete a node that is not in tree with message`() {
+        Assertions.assertThrows(VauleNotFound(". Repeat again.")::class.java) {
+            for (i in (0..10000).shuffled()) {
+                treeStruct.insert(i)
+            }
+            treeStruct.delete(100001)
+        }
     }
 }

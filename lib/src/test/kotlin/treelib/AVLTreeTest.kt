@@ -1,5 +1,6 @@
 package treelib
 
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import treelib.avlTree.*
@@ -79,5 +80,14 @@ class AVLTreeTest {
         tree.deleteItem(numbers[0])
 
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.value?.key, actual = null)
+    }
+
+    @Test
+    fun `test get arg`(){
+        for (i in (1..10000).shuffled()) {
+            tree.putItem(Pair(i, i))
+        }
+
+        assertEquals(expected = tree.get(542), actual = 542)
     }
 }
