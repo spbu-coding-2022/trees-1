@@ -28,6 +28,7 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.8.5")
 
+    // Neo4j
     val neo4jCore = "4.0.5"
     implementation("org.neo4j", "neo4j-ogm-core", neo4jCore)
     implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
@@ -70,9 +71,9 @@ tasks.test {
     val failedTests = mutableListOf<TestDescriptor>()
     val skippedTests = mutableListOf<TestDescriptor>()
 
-    addTestListener (object: TestListener {
-        override fun beforeSuite(suite: TestDescriptor?) { }
-        override fun beforeTest(testDescriptor: TestDescriptor?) { }
+    addTestListener(object : TestListener {
+        override fun beforeSuite(suite: TestDescriptor?) {}
+        override fun beforeTest(testDescriptor: TestDescriptor?) {}
         override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {
             when (result.resultType) {
                 TestResult.ResultType.FAILURE -> failedTests.add(testDescriptor)
@@ -80,6 +81,7 @@ tasks.test {
                 else -> {}
             }
         }
+
         override fun afterSuite(suite: TestDescriptor, result: TestResult) {
             if (suite.parent == null) { // root suite
                 logger.lifecycle("####################################################################################")
@@ -109,10 +111,18 @@ tasks.jacocoTestReport {
 }
 
 tasks.jacocoTestCoverageVerification {
-    classDirectories.setFrom( classDirectories.files.flatMap { fileTree(it) {
-        include("**/treelib/**")
-        exclude("**/singleObjects/**", "**/RBVertex.class", "**/AVLVertex.class", "**/BINVertex.class", "**/Vertex.class")
-    } })
+    classDirectories.setFrom(classDirectories.files.flatMap {
+        fileTree(it) {
+            include("**/treelib/**")
+            exclude(
+                "**/commonObjects/**",
+                "**/RBVertex.class",
+                "**/AVLVertex.class",
+                "**/BINVertex.class",
+                "**/Vertex.class"
+            )
+        }
+    })
     dependsOn(tasks.jacocoTestReport)
     violationRules {
         rule {

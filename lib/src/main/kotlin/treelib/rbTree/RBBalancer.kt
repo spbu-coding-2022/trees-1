@@ -40,8 +40,8 @@ class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
         return node.right == null && node.left == null
     }
 
-    override fun balance(stateContainer: RBStateContainer<Pack>): RBNode<Pack> {
-        val node = stateContainer.contentNode
+    override fun balance(state: RBStateContainer<Pack>): RBNode<Pack> {
+        val node = state.contentNode
             ?: throw InternalError()
         val uncle = getUncle(node)
         when {
