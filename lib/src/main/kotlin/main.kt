@@ -21,7 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.MenuBar
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
+import controller.Controller
 import java.awt.Dimension
+import javax.swing.JFileChooser
 
 // я передумал, будет три маленьких кнопки где-нибудь
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -32,28 +34,58 @@ fun main() = application {
         title = "LESOK",
     ) {
         this.window.minimumSize = Dimension(800, 600)
-        val treeNames = listOf("RED BLACK TREE", "AVL TREE", "BINARY TREE")
+        val treeNames = listOf("Red black tree", "AVL tree", "Binary tree")
+
+        val dirPath = System.getProperty("user.dir")
+        val dirFiles = listOf("$dirPath/neo4jDB/neo4jFormatFiles", dirPath, "$dirPath/jsonFormatFiles")
+
+        val controller = Controller()
+        val showFiles = controller.showFiles()
+
         MenuBar {
-            Menu(text = "File", mnemonic = 'T') {
-                Menu(text = "Open") {
-                    Item("Red Black tree", onClick = {})
-                    Item("AVL tree", onClick = {})
-                    Item("Binary tree", onClick = {})
-                }
-                Menu(text = "Create") {
-                    Item("Red Black tree", onClick = {})
-                    Item("AVL tree", onClick = {})
-                    Item("Binary tree", onClick = {})
+            Menu(text = "Open") {
+                repeat(3) { indexTree ->
+                    Menu(treeNames[indexTree]) {
+                        // поле для самостоятельного ввода имени
+                        Item("Search") {
+                            val fd = JFileChooser(dirFiles[indexTree])
+                            fd.isMultiSelectionEnabled = false
+                            fd.fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
+                            fd.isFileHidingEnabled = false
+                            if (fd.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                                val name = fd.selectedFile
+                            }
+
+
+                        }
+                        repeat(showFiles[indexTree].size) { index ->
+                            Item(
+                                showFiles[indexTree][index],
+                                onClick = { }) // контроллер создает новое дерево и начинает работу с ним
+                        }
+                    }
                 }
             }
+            Menu(text = " Create") {
+                Item("Red Black tree", onClick = {}) // контроллер создает новое дерево и начинает работу с ним
+                Item("AVL tree", onClick = {})
+                Item("Binary tree", onClick = {})
+            }
+
+            Menu(text = "Save & delete") {
+                Item("Save as", onClick = {})
+                Item("Delete", onClick = {})
+            }
         }
+
         Box(modifier = Modifier.background(Color(234, 231, 220)).fillMaxSize()) {
-            Column(verticalArrangement = Arrangement.Center,
+            Column(
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth(0.2f).fillMaxHeight(0.3f)
             ) {
                 val options = listOf("INSERT", "DELETE", "FIND")
-                repeat(3) {index ->
+                repeat(3) { index ->
                     Row(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.weight(1f)
@@ -86,6 +118,7 @@ fun main() = application {
                                             true
                                             // вот тут походу отправляем запрос в контроллер
                                         }
+
                                         else -> false
                                     }
                                 }
@@ -101,5 +134,13 @@ fun main() = application {
         }
     }
 }
-
 // .wrapContentSize()
+
+/*
+val fd = FileDialog(this@Window.window, "Open", FileDialog.LOAD)
+fd.isVisible = true
+fd.file = dirFiles[indexTree] ?: dirPath
+val fileName = fd.file ?: ""
+if (fileName != "")
+    controller.foo(fileName)
+*/
