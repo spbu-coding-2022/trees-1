@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,6 +16,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,7 +28,6 @@ import controller.Controller
 import java.awt.Dimension
 import javax.swing.JFileChooser
 
-// я передумал, будет три маленьких кнопки где-нибудь
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 fun main() = application {
 
@@ -36,23 +38,27 @@ fun main() = application {
         this.window.minimumSize = Dimension(800, 600)
         val treeNames = listOf("Red black tree", "AVL tree", "Binary tree")
 
-        val dirPath = System.getProperty("user.dir")
-        val dirFiles = listOf("$dirPath/neo4jDB/neo4jFormatFiles", dirPath, "$dirPath/jsonFormatFiles")
+        val dirPath = System.getProperty("user.dir") + "/saved-trees"
+        val dirFiles = listOf("$dirPath/RB-trees", "$dirPath/AVL-trees", "$dirPath/BIN-trees")
 
         val controller = Controller()
         val showFiles = controller.showFiles()
+
+        var numTree = 0
 
         MenuBar {
             Menu(text = "Open") {
                 repeat(3) { indexTree ->
                     Menu(treeNames[indexTree]) {
                         // поле для самостоятельного ввода имени
-                        Item("Search") {
+                        val icon = Icons.Outlined.Search
+                        Item("Search", rememberVectorPainter(icon)) {
                             val fd = JFileChooser(dirFiles[indexTree])
                             fd.isMultiSelectionEnabled = false
-                            fd.fileSelectionMode = JFileChooser.FILES_AND_DIRECTORIES
+                            fd.fileSelectionMode = JFileChooser.FILES_ONLY
                             fd.isFileHidingEnabled = false
                             if (fd.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                                numTree = indexTree // убедиться, что user сделал "корректный" выбор
                                 val name = fd.selectedFile
                             }
 
@@ -61,20 +67,38 @@ fun main() = application {
                         repeat(showFiles[indexTree].size) { index ->
                             Item(
                                 showFiles[indexTree][index],
-                                onClick = { }) // контроллер создает новое дерево и начинает работу с ним
+                                onClick = {
+                                    numTree = index
+                                }) // контроллер создает новое дерево и начинает работу с ним
                         }
                     }
                 }
             }
             Menu(text = " Create") {
-                Item("Red Black tree", onClick = {}) // контроллер создает новое дерево и начинает работу с ним
-                Item("AVL tree", onClick = {})
-                Item("Binary tree", onClick = {})
+                Item("Red Black tree", onClick = {
+                    numTree = 0
+                }) // контроллер создает новое дерево и начинает работу с ним
+                Item("AVL tree", onClick = {
+                    numTree = 1
+                })
+                Item("Binary tree", onClick = {
+                    numTree = 2
+                })
             }
 
             Menu(text = "Save & delete") {
-                Item("Save as", onClick = {})
-                Item("Delete", onClick = {})
+                // надо как-то узнавать с каким деревом работаем
+                Item("Save as") {
+                    val fd = JFileChooser(dirFiles[numTree])
+                    fd.fileSelectionMode = JFileChooser.FILES_ONLY
+
+                    if (fd.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                        val path = fd.selectedFile.name
+                    }
+                    // отправить name в балансер
+
+                }
+                Item("Delete", onClick = { /* тут запрос в балансер на удаление и предоставление нового дерева*/})
             }
         }
 
@@ -135,12 +159,3 @@ fun main() = application {
     }
 }
 // .wrapContentSize()
-
-/*
-val fd = FileDialog(this@Window.window, "Open", FileDialog.LOAD)
-fd.isVisible = true
-fd.file = dirFiles[indexTree] ?: dirPath
-val fileName = fd.file ?: ""
-if (fileName != "")
-    controller.foo(fileName)
-*/

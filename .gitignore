@@ -5,5 +5,5 @@
 /lib/TEST_TEST/
 /gradle/
 /neo4jDB/
-/jsonFormat/
-/jsonFormatFiles/
+/saved-trees/
+/sqliteDB/

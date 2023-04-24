@@ -1,16 +1,18 @@
 package controller
 
+import databaseManage.AVLTreeManager
 import databaseManage.BINTreeManager
 import databaseManage.RBTreeManager
 import java.io.IOException
 
 class Controller {
-    //val avlManager = AVLTreeManager<Pack>()
+    private val avlManager = AVLTreeManager()
     private val rbManager = RBTreeManager()
     private val binManager = BINTreeManager()
 
     fun showFiles(): List<List<String>> {
-        return listOf(rbManager.getSavedTreesNames(), listOf(), binManager.getSavedTreesNames())
+        avlManager.initDatabase("DBname")
+        return listOf(rbManager.getSavedTreesNames(), avlManager.getSavedTreesNames(), binManager.getSavedTreesNames())
     }
 
     fun foo(fileName: String) {
