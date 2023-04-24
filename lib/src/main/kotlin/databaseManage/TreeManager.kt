@@ -7,13 +7,13 @@ interface TreeManager<Pack: Container<Int, String>, DrawableVertexType : Drawabl
 
     val currentTreeName: String
 
-    fun initTree(treeName: String): MutableList<DrawableVertexType>
+    fun initTree(treeName: String): List<DrawableVertexType>
 
-    fun getVertexesForDrawFromTree(): MutableList<DrawableVertexType>
+    fun getVertexesForDrawFromTree(): List<DrawableVertexType>
 
-    fun getVertexesForDrawFromDB(): MutableList<DrawableVertexType>
+    fun getVertexesForDrawFromDB(): List<DrawableVertexType>
 
-    fun saveTree(vertexes: MutableList<DrawableVertexType>, inOrder: MutableList<DrawableVertexType>)
+    fun saveTree(preOrder: List<DrawableVertexType>, inOrder: List<DrawableVertexType>)
 
     fun deleteTree()
 

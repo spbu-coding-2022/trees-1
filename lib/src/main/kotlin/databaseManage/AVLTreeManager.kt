@@ -1,6 +1,6 @@
 package databaseManage
 
-import databaseSave.sqlite.DrawAVLVertex
+import databaseSave.sqlite.DrawableAVLVertex
 import databaseSave.sqlite.SQLiteRepositoryExposed
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -8,31 +8,32 @@ import kotlinx.serialization.json.Json
 import treelib.avlTree.AVLStruct
 import treelib.avlTree.AVLVertex
 import treelib.commonObjects.Container
+import java.io.File
 
 const val AVL_DEFAULT_NAME = "NewTreeAVL"
 const val DB_DEFAULT_NAME = "avlDB.db"
 
-class AVLTreeManager: TreeManager<Container<Int, String>, DrawAVLVertex<Container<Int, String>>> {
+class AVLTreeManager: TreeManager<Container<Int, String>, DrawableAVLVertex<Container<Int, String>>> {
     private val db = SQLiteRepositoryExposed()
     private var avlTree = AVLStruct<Container<Int, String>>()
 
     override var currentTreeName = AVL_DEFAULT_NAME
         private set
 
-    var dataBaseName = DB_DEFAULT_NAME
+    private var dataBaseName = DB_DEFAULT_NAME
         private set
 
-    private fun drawVertexToVertex(drawVertex: MutableList<DrawAVLVertex<Container<Int, String>>>): MutableList<AVLVertex<Container<Int, String>>> {
+    private fun drawVertexToVertex(drawVertex: MutableList<DrawableAVLVertex<Container<Int, String>>>): MutableList<AVLVertex<Container<Int, String>>> {
         //TODO: Rewrite while working on GUI
         val ans = mutableListOf<AVLVertex<Container<Int, String>>>()
         for (el in drawVertex) ans.add(AVLVertex(value = el.value, height = el.height.toUInt()))
         return ans
     }
 
-    private fun vertexToDrawVertex(drawVertex: List<AVLVertex<Container<Int, String>>>): MutableList<DrawAVLVertex<Container<Int, String>>> {
+    private fun vertexToDrawVertex(drawVertex: List<AVLVertex<Container<Int, String>>>): MutableList<DrawableAVLVertex<Container<Int, String>>> {
         //TODO: Rewrite while working on GUI
-        val ans = mutableListOf<DrawAVLVertex<Container<Int, String>>>()
-        for (el in drawVertex) ans.add(DrawAVLVertex(value = el.value, height = el.height.toInt(), x = -0.0, y = -0.0))
+        val ans = mutableListOf<DrawableAVLVertex<Container<Int, String>>>()
+        for (el in drawVertex) ans.add(DrawableAVLVertex(value = el.value, height = el.height.toInt(), x = -0.0, y = -0.0))
         return ans
     }
 
@@ -46,7 +47,7 @@ class AVLTreeManager: TreeManager<Container<Int, String>, DrawAVLVertex<Containe
         dataBaseName = dbName
     }
 
-    override fun initTree(treeName: String): MutableList<DrawAVLVertex<Container<Int, String>>> {
+    override fun initTree(treeName: String): MutableList<DrawableAVLVertex<Container<Int, String>>> {
         avlTree = AVLStruct()
         currentTreeName = treeName
 
@@ -58,27 +59,40 @@ class AVLTreeManager: TreeManager<Container<Int, String>, DrawAVLVertex<Containe
         return mutableListOf()
     }
 
-    override fun getVertexesForDrawFromTree(): MutableList<DrawAVLVertex<Container<Int, String>>> {
+    override fun getVertexesForDrawFromTree(): MutableList<DrawableAVLVertex<Container<Int, String>>> {
         return vertexToDrawVertex(avlTree.preOrder())
     }
 
-    override fun getVertexesForDrawFromDB(): MutableList<DrawAVLVertex<Container<Int, String>>> {
+    override fun getVertexesForDrawFromDB(): MutableList<DrawableAVLVertex<Container<Int, String>>> {
         return db.getTree(currentTreeName, ::deserialization)
     }
 
     override fun saveTree(
-        vertexes: MutableList<DrawAVLVertex<Container<Int, String>>>,
-        inOrder: MutableList<DrawAVLVertex<Container<Int, String>>>
+        preOrder: List<DrawableAVLVertex<Container<Int, String>>>,
+        inOrder: List<DrawableAVLVertex<Container<Int, String>>>
     ) {
         db.deleteTree(currentTreeName)
-        db.saveTree(currentTreeName, vertexes, ::serialization)
+        db.saveTree(currentTreeName, preOrder.toMutableList(), ::serialization)
     }
 
     override fun deleteTree() {
         db.deleteTree(currentTreeName)
     }
 
-    override fun getSavedTreesNames() = db.getAllSavedTrees()
+    override fun getSavedTreesNames(): List<String> {
+        val treesNames = db.getAllSavedTrees()
+        val dirPath = System.getProperty("user.dir") + "/saved-trees/AVL-trees"
+        File(dirPath).mkdirs()
+        if (treesNames.isNotEmpty()) {
+            for (name in treesNames) {
+                File(dirPath, name).run {
+                    createNewFile()
+                }
+            }
+        }
+
+        return treesNames.subList(0, treesNames.size)
+    }
 
     override fun insert(item: Container<Int, String>) = avlTree.insert(item)
 

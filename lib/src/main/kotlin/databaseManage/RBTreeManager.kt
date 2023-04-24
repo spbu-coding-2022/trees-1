@@ -3,48 +3,56 @@ package databaseManage
 import databaseSave.neo4j.DrawableRBVertex
 import databaseSave.neo4j.Neo4jRepository
 import treelib.commonObjects.Container
+import treelib.rbTree.RBStruct
 import java.io.File
 
 class RBTreeManager : TreeManager<Container<Int, String>, DrawableRBVertex<Container<Int, String>>> {
 
-    /*** using neo4j ***/
+    override var currentTreeName = RB_DEFAULT_NAME
+        private set
 
     private val neo4jDB = Neo4jRepository()
+    private var rbTree = RBStruct<Container<Int, String>>()
 
     init {
         neo4jDB.open("bolt://localhost:7687", "neo4j", "password")
     }
 
-    // добавить проверку на существование дерева
-    override fun getTree(treeName: String): Pair<List<DrawableRBVertex<Container<Int, String>>>, List<DrawableRBVertex<Container<Int, String>>>> {
+    override fun initTree(treeName: String): List<DrawableRBVertex<Container<Int, String>>> {
         /***    orders.first = preOrder, orders.second = inOrder   ***/
-        val orders: Pair<List<DrawableRBVertex<Container<Int, String>>>, List<DrawableRBVertex<Container<Int, String>>>> =
-            neo4jDB.exportRBtree(treeName)
-        neo4jDB.close()
+        rbTree = RBStruct()
+        currentTreeName = treeName
 
-        return orders
+        if (this.isTreeExist(treeName)) {
+            val orders: Pair<List<DrawableRBVertex<Container<Int, String>>>, List<DrawableRBVertex<Container<Int, String>>>> =
+                neo4jDB.exportRBtree(treeName)
+            rbTree.restoreStruct(orders.first, orders.second)
+            neo4jDB.close()
+            return orders.first
+        }
+
+        return listOf()
     }
 
     override fun saveTree(
-        preOrder: Array<DrawableRBVertex<Container<Int, String>>>,
-        inOrder: Array<DrawableRBVertex<Container<Int, String>>>,
-        treeName: String
+        preOrder: List<DrawableRBVertex<Container<Int, String>>>,
+        inOrder: List<DrawableRBVertex<Container<Int, String>>>
     ) {
 
-        neo4jDB.saveChanges(preOrder, inOrder, treeName)
+        neo4jDB.saveChanges(preOrder.toTypedArray(), inOrder.toTypedArray(), currentTreeName)
         neo4jDB.close()
     }
 
-    override fun deleteTree(treeName: String) {
+    override fun deleteTree() {
 
-        neo4jDB.removeTree(treeName)
+        neo4jDB.removeTree(currentTreeName)
         neo4jDB.close()
 
     }
 
     override fun getSavedTreesNames(): List<String> {
         val treesNames = neo4jDB.findNamesTrees()
-        val dirPath = System.getProperty("user.dir") + "/neo4jDB/neo4jFormatFiles"
+        val dirPath = System.getProperty("user.dir") + "/saved-trees/RB-trees"
         File(dirPath).mkdirs()
         if (treesNames != null) {
             for (name in treesNames) {
@@ -53,14 +61,28 @@ class RBTreeManager : TreeManager<Container<Int, String>, DrawableRBVertex<Conta
                 }
             }
         }
-        return treesNames?.subList(0, 3) ?: listOf()
+        return treesNames?.subList(0, treesNames.size) ?: listOf()
     }
 
-    override fun isTreeExist(): Boolean {
-        TODO()
+    override fun delete(item: Container<Int, String>) = rbTree.insert(item)
+
+    override fun insert(item: Container<Int, String>) {
+        if (rbTree.find(item) != null)
+            rbTree.delete(item)
+
     }
 
-    fun isTreeExist(treeName: String): Boolean {
+    override fun getVertexesForDrawFromDB(): List<DrawableRBVertex<Container<Int, String>>> {
+        return neo4jDB.exportRBtree(currentTreeName).first.map { DrawableRBVertex(it.value, it.color) }
+    }
+
+    override fun getVertexesForDrawFromTree(): List<DrawableRBVertex<Container<Int, String>>> {
+        return rbTree.preOrder().map { DrawableRBVertex(it.value, it.color) }
+    }
+
+
+
+    private fun isTreeExist(treeName: String): Boolean {
         return neo4jDB.findTree(treeName)
     }
 
@@ -68,6 +90,10 @@ class RBTreeManager : TreeManager<Container<Int, String>, DrawableRBVertex<Conta
 
         neo4jDB.clean()
         neo4jDB.close()
+    }
+
+    companion object {
+        private const val RB_DEFAULT_NAME = "NewTreeRB"
     }
 
 }
