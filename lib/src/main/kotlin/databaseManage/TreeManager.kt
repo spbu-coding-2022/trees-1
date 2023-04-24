@@ -3,15 +3,23 @@ package databaseManage
 import databaseSave.DrawableVertex
 import treelib.commonObjects.Container
 
-interface TreeManager<Pack : Container<Int, String>, DrawableVertexType : DrawableVertex<Pack>> {
+interface TreeManager<Pack: Container<Int, String>, DrawableVertexType : DrawableVertex<Pack>> {
 
-    fun getTree(treeName: String): Pair<List<DrawableVertexType>, List<DrawableVertexType>>
+    val currentTreeName: String
 
-    fun saveTree(preOrder: Array<DrawableVertexType>, inOrder: Array<DrawableVertexType>, treeName: String)
+    fun initTree(treeName: String): MutableList<DrawableVertexType>
 
-    fun deleteTree(treeName: String)
+    fun getVertexesForDrawFromTree(): MutableList<DrawableVertexType>
+
+    fun getVertexesForDrawFromDB(): MutableList<DrawableVertexType>
+
+    fun saveTree(vertexes: MutableList<DrawableVertexType>, inOrder: MutableList<DrawableVertexType>)
+
+    fun deleteTree()
 
     fun getSavedTreesNames(): List<String>
 
-    fun isTreeExist(): Boolean
+    fun insert(item: Container<Int, String>)
+
+    fun delete(item: Container<Int, String>)
 }
