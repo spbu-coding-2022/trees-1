@@ -149,7 +149,7 @@ class Neo4jRepository : Closeable {
         var treesNames: List<String>? = null
         session.executeRead { tx ->
             treesNames = tx.run("MATCH (n: Node) WHERE NOT(:Node)-->(n) RETURN n.treeName")
-                .list().map { it.toString() }.filter { it != "null" }
+                .list().map { it.values()[0].toString().replace("\"", "") }.filter { it != "null" }
         }
 
         return treesNames
@@ -238,6 +238,17 @@ class Neo4jRepository : Closeable {
                 "name" to treeName
             )
         )
+    }
+
+    fun findTree(treeName: String): Boolean {
+        val session = driver?.session() ?: throw IOException()
+        var name: String = "NULL"
+
+        session.executeRead { tx ->
+            name = tx.run("MATCH (n: Node {treeName: \$treeName}) WHERE NOT (:Node)-->(n) RETURN n.treeName").list()[0].values()[0].toString().replace("\"", "")
+        }
+         return name == treeName
+
     }
 
     override fun close() {

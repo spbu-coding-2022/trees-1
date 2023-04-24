@@ -36,11 +36,15 @@ class BINTreeManager : TreeManager<Container<Int, String>, DrawableBINVertex<Con
     override fun getSavedTreesNames(): List<String> {
         val filesNames = File(dirPath).list()?.map { it.replace(".json", "") }
 
-        return filesNames?.subList(0, 3) ?: listOf()
+        return if ((filesNames?.size ?: 0) > 3) filesNames?.subList(0, 3) ?: listOf() else filesNames ?: listOf()
     }
 
     override fun isTreeExist(): Boolean {
-        TODO()
+        TODO("Not yet implemented")
+    }
+
+    fun isTreeExist(treeName: String): Boolean {
+        return File(dirPath, treeName).exists()
     }
 
     fun cleanDB() = jsonRep.clean()
