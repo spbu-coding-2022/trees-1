@@ -9,14 +9,19 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.sql.SQLException
 
-class SQLiteRepositoryExposed(
-    private val dbPath: String = "exposed_database.db"
-) {
-    val db = Database.connect("jdbc:sqlite:$dbPath", driver = "org.sqlite.JDBC")
+class SQLiteRepositoryExposed {
+    private var db: Database? = null
+    var dbName: String? = null
+        private set
 
-    init {
+    fun initDataBase(name: String) {
+        if ((dbName != null) && (dbName == name)) return
+
+        db = Database.connect("jdbc:sqlite:$name", driver = "org.sqlite.JDBC")
+
         if (!isEmptyDB()) createTables()
     }
+
 
     private fun createTables() {
         transaction(db) {
@@ -33,7 +38,21 @@ class SQLiteRepositoryExposed(
         }
     }
 
-    fun <Pack : Comparable<Pack>> save(
+    private fun interIsTreeExist(name: String): Int? {
+        val id = TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.id ?: return null
+        return id.value
+    }
+
+    private fun interDelete(name: String) {
+        val treeId = TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.id ?: return
+        TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.delete()
+
+        VertexTableEntity.find(VertexTable.tree eq treeId.value).firstOrNull() ?: return
+        VertexTable.deleteWhere { tree eq treeId.value }
+        return
+    }
+
+    fun <Pack : Comparable<Pack>> saveTree(
         treeName: String,
         vertexes: MutableList<DrawAVLVertex<Pack>>,
         serializeData: (input: Pack) -> String,
@@ -78,7 +97,7 @@ class SQLiteRepositoryExposed(
         return@transaction ans
     }
 
-    fun delete(name: String): Boolean =
+    fun deleteTree(name: String): Boolean =
         transaction(db) {
             val treeId = TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.id ?: return@transaction false
             TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.delete()
@@ -95,19 +114,5 @@ class SQLiteRepositoryExposed(
 
     fun isTreeExist(name: String): Boolean = transaction(db) {
         return@transaction TreeTableEntity.find(TreesTable.name eq name).firstOrNull() != null
-    }
-
-    private fun interIsTreeExist(name: String): Int? {
-        val id = TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.id ?: return null
-        return id.value
-    }
-
-    private fun interDelete(name: String) {
-        val treeId = TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.id ?: return
-        TreeTableEntity.find(TreesTable.name eq name).firstOrNull()?.delete()
-
-        VertexTableEntity.find(VertexTable.tree eq treeId.value).firstOrNull() ?: return
-        VertexTable.deleteWhere { tree eq treeId.value }
-        return
     }
 }
