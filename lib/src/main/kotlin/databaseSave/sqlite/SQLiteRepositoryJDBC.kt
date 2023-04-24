@@ -124,7 +124,7 @@ class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
         else throw SQLException("Impossible case")
     }
 
-    fun addVertex(avlDVertex: DrawAVLVertex<Pack>, treeName: String) {
+    fun addVertex(avlDVertex: DrawableAVLVertex<Pack>, treeName: String) {
         val isInDB = getVertexId(avlDVertex, treeName)
         if (isInDB != 0) {
             deleteVertex(isInDB, treeName)
@@ -147,7 +147,7 @@ class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
 
     }
 
-    fun addVertexes(list: MutableList<DrawAVLVertex<Pack>>, treeName: String) {
+    fun addVertexes(list: MutableList<DrawableAVLVertex<Pack>>, treeName: String) {
         for (el in list) addVertex(el, treeName)
     }
 
@@ -163,15 +163,15 @@ class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
         }
     }
 
-    fun getAllVertexes(treeName: String): MutableList<DrawAVLVertex<Pack>> {
-        val info = mutableListOf<DrawAVLVertex<Pack>>()
+    fun getAllVertexes(treeName: String): MutableList<DrawableAVLVertex<Pack>> {
+        val info = mutableListOf<DrawableAVLVertex<Pack>>()
         connection.createStatement().also { stmt ->
             try {
                 val result =
                     stmt.executeQuery("SELECT $treeName.$value as $value, $treeName.$height as $height, $treeName.$xCord as $xCord, $treeName.$yCord as $yCord FROM $treeName;")
                 while (result.next()) {
                     info.add(
-                        DrawAVLVertex(
+                        DrawableAVLVertex(
                             value = deSerializeData(result.getString(value)),
                             height = result.getInt(height),
                             x = result.getDouble(xCord),
@@ -189,7 +189,7 @@ class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
         }
     }
 
-    private fun getVertexId(vertex: DrawAVLVertex<Pack>, tableName: String): Int {
+    private fun getVertexId(vertex: DrawableAVLVertex<Pack>, tableName: String): Int {
         var id: Int? = null
         try {
             val stmt =

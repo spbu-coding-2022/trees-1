@@ -1,12 +1,13 @@
 package databaseSave.sqlite
 
-import databaseSave.sqlite.vertexEntities.VertexTableEntity
-import databaseSave.sqlite.vertexEntities.VertexTable
 import databaseSave.sqlite.treeEntities.TreeTableEntity
 import databaseSave.sqlite.treeEntities.TreesTable
+import databaseSave.sqlite.vertexEntities.VertexTable
+import databaseSave.sqlite.vertexEntities.VertexTableEntity
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.io.File
 import java.sql.SQLException
 
 class SQLiteRepositoryExposed {
@@ -17,7 +18,9 @@ class SQLiteRepositoryExposed {
     fun initDataBase(name: String) {
         if ((dbName != null) && (dbName == name)) return
 
-        db = Database.connect("jdbc:sqlite:$name", driver = "org.sqlite.JDBC")
+        File(System.getProperty("user.dir") + "/sqliteDB").mkdirs()
+
+        db = Database.connect("jdbc:sqlite:sqliteDB/$name", driver = "org.sqlite.JDBC")
 
         if (!isEmptyDB()) createTables()
     }
@@ -54,7 +57,7 @@ class SQLiteRepositoryExposed {
 
     fun <Pack : Comparable<Pack>> saveTree(
         treeName: String,
-        vertexes: MutableList<DrawAVLVertex<Pack>>,
+        vertexes: MutableList<DrawableAVLVertex<Pack>>,
         serializeData: (input: Pack) -> String,
     ): Unit = transaction(db) {
         interDelete(treeName)
@@ -74,19 +77,19 @@ class SQLiteRepositoryExposed {
     }
 
     fun getAllSavedTrees(): List<String> = transaction(db) {
-        return@transaction TreeTableEntity.all().map<TreeTableEntity, String> { el -> el.name }
+        return@transaction TreeTableEntity.all().map { el -> el.name }
     }
 
     fun <Pack : Comparable<Pack>> getTree(
         name: String,
         deSerializeData: (input: String) -> Pack,
-        ): MutableList<DrawAVLVertex<Pack>> = transaction(db) {
-        val ans = mutableListOf<DrawAVLVertex<Pack>>()
+        ): MutableList<DrawableAVLVertex<Pack>> = transaction(db) {
+        val ans = mutableListOf<DrawableAVLVertex<Pack>>()
         val treeId = interIsTreeExist(name) ?: throw SQLException("Tree doesn't exist")
 
         for (el in VertexTableEntity.find(VertexTable.tree eq treeId).orderBy(VertexTable.order to SortOrder.ASC)){
             ans.add(
-                DrawAVLVertex(
+                DrawableAVLVertex(
                     value = deSerializeData(el.value),
                     height = el.height,
                     x = el.x,
