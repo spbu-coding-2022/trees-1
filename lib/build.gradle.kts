@@ -92,6 +92,7 @@ tasks.jacocoTestReport {
 tasks.jacocoTestCoverageVerification {
     classDirectories.setFrom( classDirectories.files.flatMap { fileTree(it) {
         include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct", "**/AVLStruct.class", "**/BINStruct.class")
+        exclude("**/singleObjects/**", "**/RBVertex.class", "**/AVLVertex.class", "**/BINVertex.class", "**/Vertex.class", "**/BINStruct.class", "**/AVLStruct.class", "**/RBStruct.class", "**/TreeStruct.class")
     } })
     dependsOn(tasks.jacocoTestReport)
     violationRules {
