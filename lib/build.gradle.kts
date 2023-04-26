@@ -17,8 +17,8 @@ java {
 
 repositories {
     mavenLocal()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 dependencies {
