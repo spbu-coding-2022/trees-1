@@ -9,7 +9,7 @@ class AVLTree<K : Comparable<K>, V> :
 
     override val treeStruct = AVLStruct<Container<K, V?>>()
 
-    operator fun AVLTree<K, V>.get(key: K): V? = getItem(key)
+    operator fun set(key: K, value: V) = putItem(key to value)
 
-    operator fun AVLTree<K, V>.set(key: K, value: V) = putItem(key to value)
+    operator fun get(key: K) = getItem(key)
 }

@@ -86,4 +86,30 @@ class BINTreeTest {
             actual = numbers[index + 1]
         )
     }
+
+    @Test
+    fun `test get set methods`() {
+        for (i in 1..3) {
+            tree[i] = i
+        }
+
+        assertEquals(expected = tree[1], actual = 1)
+        assertEquals(expected = tree[2], actual = 2)
+        assertEquals(expected = tree[3], actual = 3)
+    }
+
+
+    @Test
+    fun `test preorders and inorder`() {
+        val num = mutableListOf(5, 4, 6, 3, 7)
+        for (i in num) {
+            tree.putItem(Pair(i, i))
+        }
+
+        val listPreorder = tree.preOrder()
+        val listInorder = tree.inOrder()
+
+        assertEquals(listPreorder[0], Pair(5, 5))
+        assertEquals(listInorder[0], Pair(3, 3))
+    }
 }
