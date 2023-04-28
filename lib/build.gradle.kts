@@ -29,6 +29,7 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.0")
 
     // Neo4j
     val neo4jCore = "4.0.5"

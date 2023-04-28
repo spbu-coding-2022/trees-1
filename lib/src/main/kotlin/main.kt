@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import controller.Controller
+import java.awt.Dimension
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun main() = application {
@@ -27,6 +28,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication
     ) {
+        this.window.minimumSize = Dimension(800, 600)
         Scaffold(
             topBar = {
                 myTopAppBar()
@@ -39,10 +41,13 @@ fun main() = application {
     }
 }
 
-private val lightColors = lightColorScheme(
-    primary = Color(255, 255, 255),
-    secondary = Color(34, 35, 41),
-    onSecondary = Color(148, 150, 166)
+val lightColors = lightColorScheme(
+    background = Color(255, 255, 255),
+    primary = Color(34, 35, 41),
+    secondary = Color(47, 105, 215),
+    onSecondary = Color(148, 150, 166), // 208, 223, 252
+    tertiary = Color(208, 223, 252)
+
 )
 
 private val myTypography = Typography(
@@ -71,8 +76,8 @@ fun myTopAppBar() {
         TopAppBar(
             title = { Text("") },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                navigationIconContentColor = MaterialTheme.colorScheme.primary
+                containerColor = MaterialTheme.colorScheme.primary,
+                navigationIconContentColor = MaterialTheme.colorScheme.background
             ),
             navigationIcon = {
                 IconButton(
@@ -80,8 +85,8 @@ fun myTopAppBar() {
                         expanded.value = !expanded.value
                     },
                     colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        contentColor = MaterialTheme.colorScheme.primary
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.background
                     ),
                     enabled = true,
                 ) {
@@ -217,7 +222,7 @@ fun openNestedMenu(
                     expandedTreesNames[index],
                     expandedNested,
                     showFiles[index],
-                    offsetTreesNames, a
+                    offsetTreesNames, a, index  // remove a !!!!
                 )
                 expandedMainMenu.value = expandedNested.value
             }
@@ -234,8 +239,16 @@ fun treesNames(
     expandedOpenNested: MutableState<Boolean>,
     showFiles: List<String>,
     offset: Dp,
-    a: MutableState<Boolean>
+    a: MutableState<Boolean>,
+    index: Int
 ) {
+
+    val dirPath = System.getProperty("user.dir") + "/saved-trees"
+    val dirFiles = listOf("$dirPath/RB-trees", "$dirPath/AVL-trees", "$dirPath/BIN-trees")
+
+    val chooseSearch = remember { mutableStateOf(false) }
+
+    val selectedTree = remember { mutableStateOf("null") }
 
     AnimatedVisibility(
         visible = expandedNested.value
@@ -248,13 +261,7 @@ fun treesNames(
                 expandedNested.value = false
             }
         ) {
-            DropdownMenuItem(
-                leadingIcon = { searchIcon() },
-                text = { Text("Search") },
-                onClick = {
-                    expandedOpenNested.value = false
-                }
-            )
+            searchItem(dirFiles[index], expandedOpenNested, selectedTree)
             repeat(showFiles.size) { index ->
                 DropdownMenuItem(
                     text = { Text(showFiles[index]) },
