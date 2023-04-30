@@ -16,37 +16,15 @@ abstract class DrawableTree<
         State : StateContainer<Container<Int, String>, NodeType>,
         VertexType : Vertex<Container<Int, String>>,
         StructType : TreeStruct<Container<Int, String>, NodeType, State, VertexType>
-        > {
-    /**How you should it use:
-     *
-     * <Work without DB (recommend, bd did not test)>
-     *
-     * OUTSIDE A COMPOSABLE CONTEXT {
-     * * val manager = TreeManager()
-     * * val tree = DrawableTree("name", manager)
-     * * tree.insert
-     * * tree.delete
-     * * ...
-     * * tree.update <- (means moving information: TreeStruct.root -> DrawableTree.root)
-     * * tree.repositisonTree <- (set "beautiful" coordinates without display)
-     *
-     * }
-     *
-     * IN A COMPOSABLE CONTEXT {
-     * * TreeDrawingUtils.displayTree(tree)
-     *
-     * }
-     * **/
-    abstract val name: String
-    internal abstract var root: DNodeType?
+        >: DrawTree<DNodeType> {
+
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
     protected abstract val treeStruct: StructType
-    abstract val designNode: NodeDesign
 
-    val yShiftBetweenNodes = 10f
+    override var yShiftBetweenNodes = 10f
 
-    fun initTree() {
+    override fun initTree() {
         val binVertexes = treeManager.initTree(name, treeStruct)
         drawablePreOrder = binVertexes.map { drawableVertexToNode(it) }
 
@@ -57,7 +35,7 @@ abstract class DrawableTree<
         }
     }
 
-    fun updateTree() {
+    override fun updateTree() {
         root = null
         val ded = treeStruct.preOrder()
         for (el in vertexesToNodes(ded)) {
@@ -65,9 +43,9 @@ abstract class DrawableTree<
         }
     }
 
-    fun deleteTree() = treeManager.deleteTreeFromDB(name)
+    override fun deleteTree() = treeManager.deleteTreeFromDB(name)
 
-    fun saveTree() {
+    override fun saveTree() {
         if (root != null) {
             treeManager.saveTreeToDB(name, preOrder().map { nodeToDrawableVertex(it) }.toList(), listOf())
         } else {
@@ -75,15 +53,16 @@ abstract class DrawableTree<
         }
     }
 
-    fun insert(item: Container<Int, String>) = treeStruct.insert(item)
+    override fun insert(item: Container<Int, String>) = treeStruct.insert(item)
 
-    fun delete(item: Container<Int, String>) {
+    override fun delete(item: Container<Int, String>) {
         if (treeStruct.find(item) != null) treeStruct.delete(item)
     }
 
-    fun find(item: Container<Int, String>): Container<Int, String>? = treeStruct.find(item)
+    override fun find(item: Container<Int, String>): Container<Int, String>? = treeStruct.find(item)
 
-    fun repositisonTree(xBase: Float = 0f, yBase: Float = 0f) {
+    override fun repositisonTree(xBase: Float, yBase: Float) {
+        /*xBase: Float = 0f, yBase: Float = 0f*/
         root?.let {
             createCordsState1(it, xBase, yBase)
             createCordsState2(it)
