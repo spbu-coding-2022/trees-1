@@ -1,4 +1,4 @@
-
+package ui
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
+import topAppIconButton
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -41,7 +42,7 @@ fun saveDialog(
             onCloseRequest = { clickButtonState.value = false }, undecorated = true,
             state = rememberDialogState(
                 position = WindowPosition(Alignment.Center), // поменять ??
-                size = DpSize(300.dp, 200.dp)
+                size = DpSize(300.dp, 180.dp)
             ),
             resizable = false
         )
@@ -57,18 +58,17 @@ fun saveDialog(
                 )
             ) {
 
-                Column(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
 
                     Column(modifier = Modifier.height(50.dp)) {
                         tittleAndButton("Save tree", clickButtonState)
+                        Divider(modifier = Modifier.height(1.dp).fillMaxWidth())
                     }
 
-                    Divider(modifier = Modifier.height(1.dp).fillMaxWidth())
-
                     Column(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp, vertical = 5.dp),
+                        modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp, top = 5.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
+                        verticalArrangement = Arrangement.Bottom
                     ) {
                         TextField(
                             value = fileName.value,
@@ -114,7 +114,7 @@ fun saveDialog(
                             fontSize = 12.sp
                         )
 
-                        Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom) {
                             BottomButtons(
                                 clickButtonState,
                                 saveButtonState,

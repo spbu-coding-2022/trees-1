@@ -1,56 +1,109 @@
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import androidx.compose.ui.unit.*
+import androidx.compose.ui.window.*
 import controller.Controller
+import ui.*
+import ui.State
 import java.awt.Dimension
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 fun main() = application {
 
-    Window(
-        onCloseRequest = ::exitApplication
-    ) {
-        this.window.minimumSize = Dimension(800, 600)
-        Scaffold(
-            topBar = {
-                myTopAppBar()
-            },
-            content = {
+    val clickButtonsState = List(7) { remember { mutableStateOf(false) } }
 
-            }
-        )
+    val windowState = rememberWindowState(placement = WindowPlacement.Maximized)
 
+    val controller = Controller()
+
+    var state = remember { State() }
+
+    if (!clickButtonsState[6].value) {
+        Window(
+            onCloseRequest = ::exitApplication,
+            undecorated = true,
+            state = windowState
+        ) {
+
+                this.window.minimumSize = Dimension(800, 600)
+                Scaffold(
+                    topBar = {
+                        WindowDraggableArea {
+                            myTopAppBar(clickButtonsState, windowState)
+                        }
+                    },
+                    content = {
+                        MaterialTheme(
+                            colorScheme = lightColors,
+                            typography = myTypography
+                        ) {
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(MaterialTheme.colorScheme.background)
+                                    .offset(0.dp, 50.dp)
+                                    .verticalScroll(rememberScrollState())
+                                    .horizontalScroll(rememberScrollState())
+                                    .pointerInput(Unit) {
+                                        detectDragGestures { change, dragAmount ->
+                                            change.consume()
+                                            state.handleScreenDrag(dragAmount)
+
+                                        }
+                                    }
+
+                            ) {
+                                controlFields(controller)
+
+                            }
+
+                        }
+
+                    }
+                )
+
+
+        }
     }
+
 }
 
 val lightColors = lightColorScheme(
     background = Color(255, 255, 255),
     primary = Color(34, 35, 41),
     secondary = Color(47, 105, 215),
-    onSecondary = Color(148, 150, 166), // 208, 223, 252
-    tertiary = Color(208, 223, 252)
+    onSecondary = Color(148, 150, 166),
+    tertiary = Color(208, 223, 252),
+    onTertiary = Color(51, 51, 51),
+    onPrimary = Color(53, 55, 63)
 
 )
 
-private val myTypography = Typography(
+val myTypography = Typography(
     headlineMedium = TextStyle(
         fontFamily = FontFamily.Monospace,
         fontWeight = FontWeight.Bold,
@@ -58,221 +111,31 @@ private val myTypography = Typography(
     )
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun myTopAppBar() {
+fun topAppIconButton(
+    painter: Painter,
+    buttonsState: List<MutableState<Boolean>>,
+    index: Int,
+    color: Color,
+    disabledColor: Color,
+    iconColor: Color,
+    clickButtonState: MutableState<Boolean>,
+) {
 
-    val controller = Controller()
-    val showFiles = controller.showFiles()
-
-    MaterialTheme(
-        colorScheme = lightColors,
-        typography = myTypography
-    ) {
-        val expanded = remember { mutableStateOf(false) }
-        val expandedCreateNested = remember { mutableStateOf(false) }
-        val expandedOpenNested = remember { mutableStateOf(false) }
-        var mainMenuWidth by remember { mutableStateOf(0.dp) }
-        TopAppBar(
-            title = { Text("") },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                navigationIconContentColor = MaterialTheme.colorScheme.background
-            ),
-            navigationIcon = {
-                IconButton(
-                    onClick = {
-                        expanded.value = !expanded.value
-                    },
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.background
-                    ),
-                    enabled = true,
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.Menu,
-                        contentDescription = "Localized description",
-                    )
-                }
-
-                DropdownMenu(
-                    expanded = expanded.value,
-                    onDismissRequest = { expanded.value = false },
-                    focusable = false,
-                ) {
-                    DropdownMenuItem(
-                        text = { Text("Create") },
-                        trailingIcon = { arrowIcon() },
-                        onClick = {
-                            expandedCreateNested.value = !expandedCreateNested.value // !!!
-                            expandedOpenNested.value = false
-                            // main.value = true
-                        },
-                        modifier = Modifier.onGloballyPositioned {
-                            mainMenuWidth = it.size.width.dp - 40.dp
-                        }
-                    )
-                    createNestedMenu(expandedCreateNested, expanded, mainMenuWidth)
-
-                    DropdownMenuItem(
-                        text = { Text("Open") },
-                        trailingIcon = { arrowIcon() },
-                        onClick = {
-                            expandedOpenNested.value = !expandedOpenNested.value
-                            //showFiles = controller.showFiles()
-                            // main.value
-                        }
-                    )
-                    openNestedMenu(expandedOpenNested, expanded, mainMenuWidth, showFiles)
-
-                    DropdownMenuItem(text = { Text("Save") }, onClick = {})
-
-                    DropdownMenuItem(leadingIcon = { deleteIcon() }, text = { Text("Delete") }, onClick = {})
-                }
-            }
+    IconButton(onClick = {
+        clickButtonState.value = !clickButtonState.value
+    }, modifier = Modifier.fillMaxHeight().width(50.dp).clip(RectangleShape)
+        .onPointerEvent(PointerEventType.Enter) { buttonsState[index].value = true }
+        .onPointerEvent(PointerEventType.Exit) { buttonsState[index].value = false },
+        colors = IconButtonDefaults.iconButtonColors(
+            contentColor = if (buttonsState[index].value) MaterialTheme.colorScheme.background else iconColor,
+            containerColor = if (buttonsState[index].value) color else disabledColor
         )
-    }
-
-}
-
-@Composable
-fun deleteIcon() = Icon(
-    imageVector = Icons.Outlined.Delete,
-    contentDescription = null
-)
-
-@Composable
-fun arrowIcon() = Icon(
-    imageVector = Icons.Outlined.KeyboardArrowRight,
-    contentDescription = null
-)
-
-@Composable
-fun createNestedMenu(
-    expandedNested: MutableState<Boolean>,
-    expandedMainMenu: MutableState<Boolean>,
-    mainMenuWidth: Dp,
-) {
-    val treesNames = listOf("Red black tree", "AVL tree", "Binary tree")
-    AnimatedVisibility(
-        visible = expandedNested.value
     ) {
-        DropdownMenu(
-            expanded = expandedNested.value,
-            offset = DpOffset(mainMenuWidth, 0.dp),
-            onDismissRequest = {
-                expandedNested.value = false
-                expandedMainMenu.value = false
-            }
-        ) {
-
-            repeat(3) { index ->
-                DropdownMenuItem(
-                    text = { Text(treesNames[index]) },
-                    onClick = {
-                        expandedNested.value = false
-                        expandedMainMenu.value = false
-                    }
-                )
-            }
-
-        }
-
-    }
-}
-
-@Composable
-fun openNestedMenu(
-    expandedNested: MutableState<Boolean>,
-    expandedMainMenu: MutableState<Boolean>,
-    mainMenuWidth: Dp,
-    showFiles: List<List<String>>,
-) {
-    val treesNames = listOf("Red black tree", "AVL tree", "Binary tree")
-    val a = remember { mutableStateOf(true) } // поменять на лист из 3??
-    val expandedTreesNames = listOf(remember { mutableStateOf(false) },
-        remember { mutableStateOf(false) },
-        remember { mutableStateOf(false) })
-    var offsetTreesNames by remember { mutableStateOf(0.dp) }
-
-    AnimatedVisibility(
-        visible = expandedNested.value
-    ) {
-        DropdownMenu(
-            expanded = expandedNested.value,
-            offset = DpOffset(mainMenuWidth, 0.dp),
-            onDismissRequest = {
-                expandedNested.value = false
-            },
-            modifier = Modifier.onGloballyPositioned {
-                offsetTreesNames = it.size.width.dp - 40.dp
-            }
-        ) {
-            repeat(3) { index ->
-                DropdownMenuItem(
-                    text = { Text(treesNames[index]) },
-                    onClick = {
-                        expandedTreesNames[index].value = a.value
-                        a.value = true
-                    },
-                    trailingIcon = { arrowIcon() }
-                )
-                treesNames(
-                    expandedTreesNames[index],
-                    expandedNested,
-                    showFiles[index],
-                    offsetTreesNames, a, index  // remove a !!!!
-                )
-                expandedMainMenu.value = expandedNested.value
-            }
-
-        }
-
-    }
-
-}
-
-@Composable
-fun treesNames(
-    expandedNested: MutableState<Boolean>,
-    expandedOpenNested: MutableState<Boolean>,
-    showFiles: List<String>,
-    offset: Dp,
-    a: MutableState<Boolean>,
-    index: Int
-) {
-
-    val dirPath = System.getProperty("user.dir") + "/saved-trees"
-    val dirFiles = listOf("$dirPath/RB-trees", "$dirPath/AVL-trees", "$dirPath/BIN-trees")
-
-    val chooseSearch = remember { mutableStateOf(false) }
-
-    val selectedTree = remember { mutableStateOf("null") }
-
-    AnimatedVisibility(
-        visible = expandedNested.value
-    ) {
-        DropdownMenu(
-            expanded = expandedNested.value,
-            offset = DpOffset(offset, 0.dp),
-            onDismissRequest = {
-                a.value = !expandedNested.value
-                expandedNested.value = false
-            }
-        ) {
-            searchItem(dirFiles[index], expandedOpenNested, selectedTree)
-            repeat(showFiles.size) { index ->
-                DropdownMenuItem(
-                    text = { Text(showFiles[index]) },
-                    onClick = {
-                        expandedOpenNested.value = false
-                    }
-                )
-            }
-
-        }
-
+        Icon(painter, contentDescription = null)
     }
 
 }
@@ -282,3 +145,15 @@ fun searchIcon() = Icon(
     imageVector = Icons.Outlined.Search,
     contentDescription = null
 )
+
+@Composable
+fun arrowIcon() = Icon(
+    imageVector = Icons.Outlined.KeyboardArrowRight,
+    contentDescription = null,
+    modifier = Modifier.size(16.dp)
+)
+
+@Composable
+fun menuItemBackgroundColor(state: MutableState<Boolean>): Color {
+    return if (state.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.background
+}
