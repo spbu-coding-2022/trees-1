@@ -1,10 +1,6 @@
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -19,7 +15,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -27,7 +22,6 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import controller.Controller
 import ui.*
-import ui.State
 import java.awt.Dimension
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -38,8 +32,6 @@ fun main() = application {
     val windowState = rememberWindowState(placement = WindowPlacement.Maximized)
 
     val controller = Controller()
-
-    var state = remember { State() }
 
     if (!clickButtonsState[6].value) {
         Window(
@@ -66,15 +58,6 @@ fun main() = application {
                                     .fillMaxSize()
                                     .background(MaterialTheme.colorScheme.background)
                                     .offset(0.dp, 50.dp)
-                                    .verticalScroll(rememberScrollState())
-                                    .horizontalScroll(rememberScrollState())
-                                    .pointerInput(Unit) {
-                                        detectDragGestures { change, dragAmount ->
-                                            change.consume()
-                                            state.handleScreenDrag(dragAmount)
-
-                                        }
-                                    }
 
                             ) {
                                 controlFields(controller)
