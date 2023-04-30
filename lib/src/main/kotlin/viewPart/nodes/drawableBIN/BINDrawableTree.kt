@@ -41,6 +41,7 @@ class BINDrawableTree(
     }
 
     override fun updateTree() {
+        root = null
         for (el in vertexesToNodes(treeStruct.preOrder())) {
             restoreInsert(el)
         }
@@ -68,7 +69,7 @@ class BINDrawableTree(
         yState = mutableStateOf(vertex.y.toFloat()),
     )
 
-    private fun nodeToDrawableVertex(node: BINDrawableNode<Container<Int, String>>) = DrawableBINVertex<Container<Int, String>>(
+    private fun nodeToDrawableVertex(node: BINDrawableNode<Container<Int, String>>) = DrawableBINVertex(
         value = node.value,
         x = node.xState.value.toDouble(),
         y = node.yState.value.toDouble(),

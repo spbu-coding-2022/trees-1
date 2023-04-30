@@ -7,7 +7,6 @@ import treelib.rbTree.RBNode
 import treelib.rbTree.RBStateContainer
 import treelib.rbTree.RBStruct
 import treelib.rbTree.RBVertex
-import java.io.File
 
 class RBTreeManager : TreeManager<
         Container<Int, String>,
@@ -58,19 +57,20 @@ class RBTreeManager : TreeManager<
 
     }
 
-    override fun getSavedTreesNames(): List<String> {
-        val treesNames = neo4jDB.findNamesTrees()
-        val dirPath = System.getProperty("user.dir") + "/saved-trees/RB-trees"
-        File(dirPath).mkdirs()
-        if (treesNames != null) {
-            for (name in treesNames) {
-                File(dirPath, name).run {
-                    createNewFile()
-                }
-            }
-        }
-        return treesNames?.subList(0, treesNames.size) ?: listOf()
-    }
+    override fun getSavedTreesNames(): List<String> = neo4jDB.findNamesTrees()
+    //{
+    //    val treesNames = neo4jDB.findNamesTrees()
+    //    val dirPath = System.getProperty("user.dir") + "/saved-trees/RB-trees"
+    //    File(dirPath).mkdirs()
+    //    if (treesNames.isNotEmpty()) {
+    //        for (name in treesNames) {
+    //            File(dirPath, name).run {
+     //               createNewFile()
+    //            }
+    //        }
+    //    }
+    //    return treesNames.subList(0, treesNames.size)
+    //}
 /*
 
     override fun delete(item: Container<Int, String>) = rbTree.insert(item)

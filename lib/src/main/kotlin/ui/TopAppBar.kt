@@ -32,9 +32,9 @@ import myTypography
 import topAppIconButton
 
 @Composable
-fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: WindowState) {
+fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: WindowState, controller: Controller) {
 
-    val controller = Controller()
+    //val controller = Controller()
     val showFiles = controller.showFiles()
 
     val fileName = remember { mutableStateOf("") } // имя файла в диалоге save
@@ -89,7 +89,7 @@ fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: Win
                         MaterialTheme.colorScheme.background,
                         clickButtonsState[3]
                     )
-                    createMenu(clickButtonsState[3])
+                    createMenu(clickButtonsState[3], controller)
 
                 }
 
@@ -159,7 +159,7 @@ private fun maximizeWindow(state: WindowState) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun createMenu(expandedNested: MutableState<Boolean>) {
+fun createMenu(expandedNested: MutableState<Boolean>, controller: Controller) {
     val treesNames = listOf("Red black tree", "AVL tree", "Binary tree")
 
     val backgroundColorState = List(3) { remember { mutableStateOf(false) } }
@@ -174,8 +174,9 @@ fun createMenu(expandedNested: MutableState<Boolean>) {
         repeat(3) { index ->
             DropdownMenuItem(text = { Text(treesNames[index]) },
                 onClick = {
-                    //expandedNested.value = false
-                    // вызываю контроллер на создание
+                    // тут определяем тип дерева и передаем в контроллер
+                    controller.createTree("baseName.json")
+                    expandedNested.value = false
                 },
                 modifier = Modifier.onPointerEvent(PointerEventType.Enter) { backgroundColorState[index].value = true }
                     .onPointerEvent(PointerEventType.Exit) { backgroundColorState[index].value = false }

@@ -1,7 +1,7 @@
 package viewPart.nodes.drawableAVL
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import viewPart.nodes.drawableTree.DrawableNode
 
 class AVLDrawableNode<Pack>(
@@ -11,4 +11,6 @@ class AVLDrawableNode<Pack>(
     val height: Int,
     override val xState: MutableState<Float>,
     override val yState: MutableState<Float>,
-) : DrawableNode<Pack, AVLDrawableNode<Pack>>()
+) : DrawableNode<Pack, AVLDrawableNode<Pack>>() {
+    override val clickState = mutableStateOf(false)
+}

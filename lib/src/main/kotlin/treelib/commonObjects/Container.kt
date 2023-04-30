@@ -25,6 +25,6 @@ data class Container<K : Comparable<K>, V>(val pair: Pair<K, V?>) : Comparable<C
     }
 
     override fun toString(): String {
-        return "$key \n $value"
+        return "$key"
     }
 }

@@ -9,6 +9,7 @@ import treelib.abstractTree.Vertex
 import treelib.commonObjects.Container
 import treelib.commonObjects.exceptions.ImpossibleCaseException
 
+
 abstract class DrawableTree<
         DNodeType : DrawableNode<Container<Int, String>, DNodeType>,
         DVertexType : DrawableVertex<Container<Int, String>>,
@@ -17,26 +18,7 @@ abstract class DrawableTree<
         VertexType : Vertex<Container<Int, String>>,
         StructType : TreeStruct<Container<Int, String>, NodeType, State, VertexType>
         > {
-    /**How you should it use:
-     *
-     * <Work without DB (recommend, bd did not test)>
-     *
-     * OUTSIDE A COMPOSABLE CONTEXT {
-     * * val manager = TreeManager()
-     * * val tree = DrawableTree("name", manager)
-     * * tree.insert
-     * * tree.delete
-     * * ...
-     * * tree.update <- (means moving information: TreeStruct.root -> DrawableTree.root)
-     * * tree.repositisonTree <- (set "beautiful" coordinates without display)
-     *
-     * }
-     *
-     * IN A COMPOSABLE CONTEXT {
-     * * TreeDrawingUtils.displayTree(tree)
-     *
-     * }
-     * **/
+
     abstract val name: String
     internal abstract var root: DNodeType?
     protected abstract var drawablePreOrder: List<DNodeType>?
@@ -58,7 +40,24 @@ abstract class DrawableTree<
         if (treeStruct.find(item) != null) treeStruct.delete(item)
     }
 
-    fun find(item: Container<Int, String>): Container<Int, String>? = treeStruct.find(item)
+    //fun find(item: Container<Int, String>): Container<Int, String>? = treeStruct.find(item)
+    fun find(item: Int): Container<Int, String>? {
+        var currentNode = root
+        if (root == null)
+            return null
+        while(true) {
+            if (item == currentNode?.value?.key) {
+                currentNode.clickState.value = true
+                return Container(Pair(item, currentNode.value.value))
+            }
+            currentNode?.let {
+                if (item > it.value.key) currentNode = it.rightChild
+                else currentNode = it.leftChild
+            }
+            if (currentNode == null) return null
+        }
+
+    }
 
     fun repositisonTree(xBase: Float = 0f, yBase: Float = 0f) {
         root?.let {

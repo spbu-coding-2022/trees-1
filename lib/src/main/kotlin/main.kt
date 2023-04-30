@@ -24,7 +24,7 @@ import controller.Controller
 import ui.*
 import java.awt.Dimension
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 fun main() = application {
 
     val clickButtonsState = List(7) { remember { mutableStateOf(false) } }
@@ -44,7 +44,7 @@ fun main() = application {
                 Scaffold(
                     topBar = {
                         WindowDraggableArea {
-                            myTopAppBar(clickButtonsState, windowState)
+                            myTopAppBar(clickButtonsState, windowState, controller)
                         }
                     },
                     content = {
@@ -61,6 +61,7 @@ fun main() = application {
 
                             ) {
                                 controlFields(controller)
+
 
                             }
 

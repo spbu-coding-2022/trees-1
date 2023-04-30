@@ -11,6 +11,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import controller.Controller
+import databaseManage.BINTreeManager
+import viewPart.nodes.displayTree
+import viewPart.nodes.drawableBIN.BINDrawableTree
 
 @Composable
 fun controlFields(controller: Controller) {
@@ -19,38 +22,51 @@ fun controlFields(controller: Controller) {
     val findFieldState = remember { mutableStateOf(false) }
     val deleteFieldState = remember { mutableStateOf(false) }
 
+    // скорее всего использовать by remember
+
+    val value = remember { mutableStateOf("") }
+
     Column(modifier = Modifier.offset(0.dp, 0.dp).padding(horizontal = 10.dp)) {
         // add
-        controlField("Add", addFieldState)
+        controlField("Add", addFieldState, value)
         Spacer(modifier = Modifier.height(2.dp))
 
         // find
-        controlField("Find", findFieldState)
+        controlField("Find", findFieldState, value)
         Spacer(modifier = Modifier.height(2.dp))
 
         // delete
-        controlField("Delete", deleteFieldState)
+        controlField("Delete", deleteFieldState, value)
 
     }
 
+    var tree by remember { mutableStateOf(BINDrawableTree("a", BINTreeManager())) }
+
+    if (!addFieldState.value && !findFieldState.value && !deleteFieldState.value) {
+        displayTree(tree)
+        addFieldState.value = false
+    }
+
+    // тут мы наверное можем быть уверены, что тип дерева не поменялся
     if (addFieldState.value) {
-        // запрос на вставку
+        tree = controller.insert(value.value)
         addFieldState.value = false
     }
     if (findFieldState.value) {
-        // запрос на поиск
+        tree = controller.find(value.value)
         findFieldState.value = false
     }
     if (deleteFieldState.value) {
-        // запрос на удаление
+        tree = controller.delete(value.value)
         deleteFieldState.value = false
     }
 
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun controlField(buttonName: String, buttonState: MutableState<Boolean>) {
+fun controlField(buttonName: String, buttonState: MutableState<Boolean>, value: MutableState<String>) {
 
     var text by remember { mutableStateOf("") }
 
@@ -80,6 +96,7 @@ fun controlField(buttonName: String, buttonState: MutableState<Boolean>) {
             }.onPreviewKeyEvent {
                 when {
                     (!it.isShiftPressed && it.key == Key.Enter && it.type == KeyEventType.KeyUp) -> {
+                        value.value = text // change !!!
                         buttonState.value = true
                         text = ""
                         true

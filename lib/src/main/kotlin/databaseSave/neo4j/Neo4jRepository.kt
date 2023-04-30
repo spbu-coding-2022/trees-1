@@ -144,9 +144,9 @@ class Neo4jRepository : Closeable {
 
     }
 
-    fun findNamesTrees(): List<String>? {
+    fun findNamesTrees(): List<String> {
         val session = driver?.session() ?: throw IOException()
-        var treesNames: List<String>? = null
+        var treesNames: List<String> = listOf()
         session.executeRead { tx ->
             treesNames = tx.run("MATCH (n: Node) WHERE NOT(:Node)-->(n) RETURN n.treeName")
                 .list().map { it.values()[0].toString().replace("\"", "") }.filter { it != "null" }

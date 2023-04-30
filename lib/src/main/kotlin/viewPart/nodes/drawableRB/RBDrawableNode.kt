@@ -1,8 +1,7 @@
 package viewPart.nodes.drawableRB
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.mutableStateOf
 import treelib.rbTree.Markers
 import viewPart.nodes.drawableTree.DrawableNode
 
@@ -13,4 +12,6 @@ class RBDrawableNode<Pack>(
     val color: Markers,
     override val xState: MutableState<Float>,
     override val yState: MutableState<Float>,
-) : DrawableNode<Pack, RBDrawableNode<Pack>>()
+) : DrawableNode<Pack, RBDrawableNode<Pack>>() {
+    override val clickState = mutableStateOf(false)
+}
