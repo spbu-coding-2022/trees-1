@@ -1,28 +1,35 @@
 package viewPart.nodes.drawableAVL
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import viewPart.nodes.drawableTree.NodeDesign
 
-object AVLNodeDesign: NodeDesign {
-    // TODO: Реализовать, как BINNodeDesign
-    override var nodeSize: Float
-        get() = TODO("Not yet implemented")
-        set(value) {}
-    override var shape: Shape
-        get() = TODO("Not yet implemented")
-        set(value) {}
-    override var lineStrokeWidth: Float
-        get() = TODO("Not yet implemented")
-        set(value) {}
-    override var lineColor: Color
-        get() = TODO("Not yet implemented")
-        set(value) {}
+object AVLNodeDesign : NodeDesign {
+    override var lineColor = Color.Black
+    override var nodeSize = 100f
+    override var shape: Shape = CircleShape
+    override var lineStrokeWidth = 15f
 
     @Composable
     override fun infoView(information: String, modifier: Modifier) {
-        TODO("Not yet implemented")
+        Box(
+            modifier = modifier,
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = information,
+                fontSize = 30.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }

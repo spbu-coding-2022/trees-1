@@ -37,7 +37,7 @@ class AVLTreeManager : TreeManager<
         for (el in drawVertex) ans.add(
             DrawableAVLVertex(
                 value = el.value,
-                height = el.height.toInt(),
+                height = el.height,
                 x = -0.0,
                 y = -0.0
             )

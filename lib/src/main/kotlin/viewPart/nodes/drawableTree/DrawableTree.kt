@@ -9,7 +9,6 @@ import treelib.abstractTree.Vertex
 import treelib.commonObjects.Container
 import treelib.commonObjects.exceptions.ImpossibleCaseException
 
-
 abstract class DrawableTree<
         DNodeType : DrawableNode<Container<Int, String>, DNodeType>,
         DVertexType : DrawableVertex<Container<Int, String>>,
@@ -17,52 +16,104 @@ abstract class DrawableTree<
         State : StateContainer<Container<Int, String>, NodeType>,
         VertexType : Vertex<Container<Int, String>>,
         StructType : TreeStruct<Container<Int, String>, NodeType, State, VertexType>
-        > {
+        >: DrawTree<DNodeType> {
 
-    abstract val name: String
-    internal abstract var root: DNodeType?
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
     protected abstract val treeStruct: StructType
-    abstract val designNode: NodeDesign
 
-    val yShiftBetweenNodes = 10f
+    override var yShiftBetweenNodes = 10f
 
-    abstract fun initTree()
-    abstract fun deleteTree()
-    abstract fun saveTree()
+    override fun initTree() {
+        val binVertexes = treeManager.initTree(name, treeStruct)
+        drawablePreOrder = binVertexes.map { drawableVertexToNode(it) }
 
-    abstract fun updateTree()
+        drawablePreOrder?.let {
+            if (it.isNotEmpty()) {
+                restoreTree(it)
+            }
+        }
+    }
 
-    fun insert(item: Container<Int, String>) = treeStruct.insert(item)
+    override fun updateTree() {
+        root = null
+        val ded = treeStruct.preOrder()
+        for (el in vertexesToNodes(ded)) {
+            restoreInsert(el)
+        }
+    }
 
-    fun delete(item: Container<Int, String>) {
+    override fun deleteTree() = treeManager.deleteTreeFromDB(name)
+
+    override fun saveTree() {
+        if (root != null) {
+            treeManager.saveTreeToDB(name, preOrder().map { nodeToDrawableVertex(it) }.toList(), listOf())
+        } else {
+            treeManager.saveTreeToDB(name, treeStruct)
+        }
+    }
+
+    override fun insert(item: Container<Int, String>) = treeStruct.insert(item)
+
+    override fun delete(item: Container<Int, String>) {
         if (treeStruct.find(item) != null) treeStruct.delete(item)
     }
 
-    //fun find(item: Container<Int, String>): Container<Int, String>? = treeStruct.find(item)
-    fun find(item: Int): Container<Int, String>? {
-        var currentNode = root
-        if (root == null)
-            return null
-        while(true) {
-            if (item == currentNode?.value?.key) {
-                currentNode.clickState.value = true
-                return Container(Pair(item, currentNode.value.value))
-            }
-            currentNode?.let {
-                if (item > it.value.key) currentNode = it.rightChild
-                else currentNode = it.leftChild
-            }
-            if (currentNode == null) return null
-        }
+    override fun find(item: Container<Int, String>): Container<Int, String>? = treeStruct.find(item)
 
-    }
-
-    fun repositisonTree(xBase: Float = 0f, yBase: Float = 0f) {
+    override fun repositisonTree(xBase: Float, yBase: Float) {
+        /*xBase: Float = 0f, yBase: Float = 0f*/
         root?.let {
             createCordsState1(it, xBase, yBase)
             createCordsState2(it)
+        }
+    }
+
+    protected abstract fun vertexToNode(vertex: VertexType): DNodeType
+
+    protected abstract fun nodeToDrawableVertex(node: DNodeType): DVertexType
+
+    protected abstract fun drawableVertexToNode(vertex: DVertexType): DNodeType
+
+    private fun restoreTree(preOrder: List<DNodeType>) {
+        root = null
+        for (el in preOrder) {
+            restoreInsert(el)
+        }
+    }
+
+    private fun restoreInsert(preOrderNode: DNodeType) {
+        if (root == null) {
+            root = preOrderNode
+            return
+        }
+        var currentParent = root
+        while (currentParent != null) {
+            currentParent?.let {
+                when {
+                    it.value < preOrderNode.value -> {
+                        if (it.rightChild == null) {
+                            it.rightChild = preOrderNode
+                            return@restoreInsert
+                        }
+                        else currentParent = it.rightChild
+                    }
+
+                    it.value > preOrderNode.value -> {
+                        if (it.leftChild == null) {
+                            it.leftChild = preOrderNode
+                            return@restoreInsert
+                        }
+                        else currentParent = it.leftChild
+                    }
+
+                    else -> {
+                        println(currentParent!!.value)
+                        println(preOrderNode.value)
+                        throw InternalError("Can't restore tree from preOrder :(")
+                    }
+                }
+            }
         }
     }
 
@@ -99,7 +150,7 @@ abstract class DrawableTree<
         return n
     }
 
-    protected fun preOrder() = sequence{
+    private fun preOrder() = sequence{
         var current: DNodeType
         val queue = ArrayDeque<DNodeType>()
 
@@ -118,6 +169,14 @@ abstract class DrawableTree<
                         queue.add(it)
                     } ?: throw ImpossibleCaseException()
             }
+        }
+    }
+
+    private fun vertexesToNodes(preOrder: List<VertexType>) = sequence {
+        for (el in preOrder) {
+            yield(
+                vertexToNode(el)
+            )
         }
     }
 }

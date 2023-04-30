@@ -8,3 +8,4 @@ class DrawableBINVertex<Pack : Comparable<Pack>>(
     override val x: Double = 0.0,
     override val y: Double = 0.0
 ) : BINVertex<Pack>(value), DrawableVertex<Pack>
+
