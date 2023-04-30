@@ -82,7 +82,7 @@ class AVLTreeManager : TreeManager<
         db.saveTree(name, info.toMutableList(), ::serialization)
     }
 
-    override fun deleteTreeFormDB(name: String) {
+    override fun deleteTreeFromDB(name: String) {
         if (db.isTreeExist(name)) db.deleteTree(name)
     }
 

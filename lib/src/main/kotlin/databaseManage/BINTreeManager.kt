@@ -73,7 +73,7 @@ class BINTreeManager : TreeManager<
         return ans
     }
 
-    override fun deleteTreeFormDB(name: String) = jsonRep.removeTree(name)
+    override fun deleteTreeFromDB(name: String) = jsonRep.removeTree(name)
 
     override fun getSavedTreesNames(): List<String> {
         val filesNames = File(dirPath).list()?.map { it.replace(".json", "") }

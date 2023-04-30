@@ -26,7 +26,7 @@ interface TreeManager<
 
     fun saveTreeToDB(name: String, tree: StructType)
 
-    fun deleteTreeFormDB(name: String)
+    fun deleteTreeFromDB(name: String)
 
     fun getSavedTreesNames(): List<String>
 

@@ -51,7 +51,7 @@ class RBTreeManager : TreeManager<
     }
 
 
-    override fun deleteTreeFormDB(name: String) {
+    override fun deleteTreeFromDB(name: String) {
 
         neo4jDB.removeTree(name)
         neo4jDB.close()
