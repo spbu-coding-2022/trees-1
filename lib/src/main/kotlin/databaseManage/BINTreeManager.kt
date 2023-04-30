@@ -3,31 +3,38 @@ package databaseManage
 import com.google.gson.reflect.TypeToken
 import databaseSave.jsonFormat.DrawableBINVertex
 import databaseSave.jsonFormat.JsonRepository
+import treelib.avlTree.AVLStruct
+import treelib.binTree.BINNode
+import treelib.binTree.BINStateContainer
 import treelib.binTree.BINStruct
+import treelib.binTree.BINVertex
 import treelib.commonObjects.Container
 import java.io.File
 
-class BINTreeManager : TreeManager<Container<Int, String>, DrawableBINVertex<Container<Int, String>>> {
+class BINTreeManager : TreeManager<
+        Container<Int, String>,
+        DrawableBINVertex<Container<Int, String>>,
+        BINNode<Container<Int, String>>,
+        BINStateContainer<Container<Int, String>>,
+        BINVertex<Container<Int, String>>,
+        BINStruct<Container<Int, String>>
+        > {
 
     /*** using json format files ***/
 
-    override var currentTreeName = BIN_DEFAULT_NAME
-        private set
-
     private val dirPath = System.getProperty("user.dir") + "/saved-trees/BIN-trees"
 
-    private val jsonRep = JsonRepository(dirPath)
-    private var binTree = BINStruct<Container<Int, String>>()
+    private val jsonRep = JsonRepository(BIN_DB_DEFAULT_NAME)
 
-    override fun initTree(treeName: String): List<DrawableBINVertex<Container<Int, String>>> {
-        binTree = BINStruct()
-        currentTreeName = treeName
-
-        if (this.isTreeExist(treeName)) {
+    override fun initTree(
+        name: String,
+        tree: BINStruct<Container<Int, String>>
+    ): List<DrawableBINVertex<Container<Int, String>>> {
+        if (this.isTreeExist(name)) {
             val typeToken = object : TypeToken<Array<DrawableBINVertex<Container<Int, String>>>>() {}
-            val preOrder = jsonRep.exportTree(treeName, typeToken).toList()
+            val preOrder = jsonRep.exportTree(name, typeToken).toList()
 
-            binTree.restoreStruct(preOrder.toList())
+            tree.restoreStruct(preOrder.toList())
 
             return preOrder
         }
@@ -35,16 +42,38 @@ class BINTreeManager : TreeManager<Container<Int, String>, DrawableBINVertex<Con
         return listOf()
     }
 
-    override fun saveTree(
+    override fun saveTreeToDB(
+        name: String,
         preOrder: List<DrawableBINVertex<Container<Int, String>>>,
         inOrder: List<DrawableBINVertex<Container<Int, String>>>
     ) {
-
-        jsonRep.saveChanges(preOrder.toTypedArray(), currentTreeName)
-
+        jsonRep.saveChanges(preOrder.toTypedArray(), name)
     }
 
-    override fun deleteTree() = jsonRep.removeTree(currentTreeName)
+    override fun saveTreeToDB(name: String, tree: BINStruct<Container<Int, String>>) {
+        val info = vertexToDrawVertex(tree.preOrder())
+        jsonRep.saveChanges(info.toTypedArray(), name)
+    }
+
+    private fun drawVertexToVertex(drawVertex: MutableList<DrawableBINVertex<Container<Int, String>>>): MutableList<BINVertex<Container<Int, String>>> {
+        val ans = mutableListOf<BINVertex<Container<Int, String>>>()
+        for (el in drawVertex) ans.add(BINVertex(value = el.value))
+        return ans
+    }
+
+    private fun vertexToDrawVertex(drawVertex: List<BINVertex<Container<Int, String>>>): MutableList<DrawableBINVertex<Container<Int, String>>> {
+        val ans = mutableListOf<DrawableBINVertex<Container<Int, String>>>()
+        for (el in drawVertex) ans.add(
+            DrawableBINVertex(
+                value = el.value,
+                x = -0.0,
+                y = -0.0
+            )
+        )
+        return ans
+    }
+
+    override fun deleteTreeFromDB(name: String) = jsonRep.removeTree(name)
 
     override fun getSavedTreesNames(): List<String> {
         val filesNames = File(dirPath).list()?.map { it.replace(".json", "") }
@@ -56,24 +85,23 @@ class BINTreeManager : TreeManager<Container<Int, String>, DrawableBINVertex<Con
         return File(dirPath, treeName).exists()
     }
 
-    override fun delete(item: Container<Int, String>) {
-        if (binTree.find(item) != null)
-            binTree.delete(item)
-    }
+    /*    override fun delete(item: Container<Int, String>) {
+            if (binTree.find(item) != null)
+                binTree.delete(item)
+        }
 
-    override fun insert(item: Container<Int, String>) = binTree.insert(item)
+        override fun insert(item: Container<Int, String>) = binTree.insert(item)*/
 
-    override fun getVertexesForDrawFromDB(): List<DrawableBINVertex<Container<Int, String>>> {
+    override fun getVertexesForDrawFromDB(name: String): List<DrawableBINVertex<Container<Int, String>>> {
         TODO("Not yet implemented")
     }
 
-    override fun getVertexesForDrawFromTree(): List<DrawableBINVertex<Container<Int, String>>> =
-        binTree.preOrder().map { DrawableBINVertex(it.value) }
+    override fun getVertexesForDrawFromTree(tree: BINStruct<Container<Int, String>>): List<DrawableBINVertex<Container<Int, String>>> =
+        tree.preOrder().map { DrawableBINVertex(it.value) }
 
     fun cleanDB() = jsonRep.clean()
 
     companion object {
-        private const val BIN_DEFAULT_NAME = "NewTreeBIN"
+        const val BIN_DB_DEFAULT_NAME = "binDB"
     }
-
 }

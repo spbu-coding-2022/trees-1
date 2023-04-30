@@ -11,7 +11,7 @@ class Controller {
     private val binManager = BINTreeManager()
 
     fun showFiles(): List<List<String>> {
-        avlManager.initDatabase("DBname")
+//        avlManager.initDataBase("DBname")
         return listOf(rbManager.getSavedTreesNames(), avlManager.getSavedTreesNames(), binManager.getSavedTreesNames())
     }
 

@@ -1,25 +1,36 @@
 package databaseManage
 
 import databaseSave.DrawableVertex
+import treelib.abstractTree.Node
+import treelib.abstractTree.StateContainer
+import treelib.abstractTree.TreeStruct
+import treelib.abstractTree.Vertex
 import treelib.commonObjects.Container
 
-interface TreeManager<Pack: Container<Int, String>, DrawableVertexType : DrawableVertex<Pack>> {
+interface TreeManager<
+        Pack: Container<Int, String>,
+        DVertexType : DrawableVertex<Pack>,
+        NodeType : Node<Pack, NodeType>,
+        State : StateContainer<Pack, NodeType>,
+        VertexType : Vertex<Pack>,
+        StructType: TreeStruct<Pack, NodeType, State, VertexType>
+        > {
 
-    val currentTreeName: String
+    fun initTree(name: String, tree: StructType): List<DVertexType>
 
-    fun initTree(treeName: String): List<DrawableVertexType>
+    fun getVertexesForDrawFromTree(tree: StructType): List<DVertexType>
 
-    fun getVertexesForDrawFromTree(): List<DrawableVertexType>
+    fun getVertexesForDrawFromDB(name: String): List<DVertexType>
 
-    fun getVertexesForDrawFromDB(): List<DrawableVertexType>
+    fun saveTreeToDB(name: String, preOrder: List<DVertexType>, inOrder: List<DVertexType>)
 
-    fun saveTree(preOrder: List<DrawableVertexType>, inOrder: List<DrawableVertexType>)
+    fun saveTreeToDB(name: String, tree: StructType)
 
-    fun deleteTree()
+    fun deleteTreeFromDB(name: String)
 
     fun getSavedTreesNames(): List<String>
 
-    fun insert(item: Container<Int, String>)
-
-    fun delete(item: Container<Int, String>)
+//    fun insert(item: Container<Int, String>)
+//
+//    fun delete(item: Container<Int, String>)
 }

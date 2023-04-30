@@ -19,7 +19,6 @@ repositories {
     mavenLocal()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     mavenCentral()
-    google()
 }
 
 dependencies {
@@ -28,8 +27,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
     implementation("com.google.code.gson:gson:2.10.1")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.6.0")
 
     // Neo4j
     val neo4jCore = "4.0.5"
@@ -50,6 +47,7 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
 
+    testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
