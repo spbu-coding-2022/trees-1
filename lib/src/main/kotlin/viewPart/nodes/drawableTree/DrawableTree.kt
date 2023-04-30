@@ -46,11 +46,34 @@ abstract class DrawableTree<
 
     val yShiftBetweenNodes = 10f
 
-    abstract fun initTree()
-    abstract fun deleteTree()
-    abstract fun saveTree()
+    fun initTree() {
+        val binVertexes = treeManager.initTree(name, treeStruct)
+        drawablePreOrder = binVertexes.map { drawableVertexToNode(it) }
 
-    abstract fun updateTree()
+        drawablePreOrder?.let {
+            if (it.isNotEmpty()) {
+                restoreTree(it)
+            }
+        }
+    }
+
+    fun updateTree() {
+        root = null
+        val ded = treeStruct.preOrder()
+        for (el in vertexesToNodes(ded)) {
+            restoreInsert(el)
+        }
+    }
+
+    fun deleteTree() = treeManager.deleteTreeFromDB(name)
+
+    fun saveTree() {
+        if (root != null) {
+            treeManager.saveTreeToDB(name, preOrder().map { nodeToDrawableVertex(it) }.toList(), listOf())
+        } else {
+            treeManager.saveTreeToDB(name, treeStruct)
+        }
+    }
 
     fun insert(item: Container<Int, String>) = treeStruct.insert(item)
 
@@ -64,6 +87,54 @@ abstract class DrawableTree<
         root?.let {
             createCordsState1(it, xBase, yBase)
             createCordsState2(it)
+        }
+    }
+
+    protected abstract fun vertexToNode(vertex: VertexType): DNodeType
+
+    protected abstract fun nodeToDrawableVertex(node: DNodeType): DVertexType
+
+    protected abstract fun drawableVertexToNode(vertex: DVertexType): DNodeType
+
+    private fun restoreTree(preOrder: List<DNodeType>) {
+        root = null
+        for (el in preOrder) {
+            restoreInsert(el)
+        }
+    }
+
+    private fun restoreInsert(preOrderNode: DNodeType) {
+        if (root == null) {
+            root = preOrderNode
+            return
+        }
+        var currentParent = root
+        while (currentParent != null) {
+            currentParent?.let {
+                when {
+                    it.value < preOrderNode.value -> {
+                        if (it.rightChild == null) {
+                            it.rightChild = preOrderNode
+                            return@restoreInsert
+                        }
+                        else currentParent = it.rightChild
+                    }
+
+                    it.value > preOrderNode.value -> {
+                        if (it.leftChild == null) {
+                            it.leftChild = preOrderNode
+                            return@restoreInsert
+                        }
+                        else currentParent = it.leftChild
+                    }
+
+                    else -> {
+                        println(currentParent!!.value)
+                        println(preOrderNode.value)
+                        throw InternalError("Can't restore tree from preOrder :(")
+                    }
+                }
+            }
         }
     }
 
@@ -100,7 +171,7 @@ abstract class DrawableTree<
         return n
     }
 
-    protected fun preOrder() = sequence{
+    private fun preOrder() = sequence{
         var current: DNodeType
         val queue = ArrayDeque<DNodeType>()
 
@@ -119,6 +190,14 @@ abstract class DrawableTree<
                         queue.add(it)
                     } ?: throw ImpossibleCaseException()
             }
+        }
+    }
+
+    private fun vertexesToNodes(preOrder: List<VertexType>) = sequence {
+        for (el in preOrder) {
+            yield(
+                vertexToNode(el)
+            )
         }
     }
 }

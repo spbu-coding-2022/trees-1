@@ -135,7 +135,7 @@ class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
             val stmt = connection.prepareStatement("INSERT INTO $treeName (value, height, x, y) VALUES (?, ?, ?, ?);")
             val info = serializeData(avlDVertex.value)
             stmt.setString(1, info)
-            stmt.setInt(2, avlDVertex.height)
+            stmt.setInt(2, avlDVertex.height.toInt())
             stmt.setDouble(3, avlDVertex.x)
             stmt.setDouble(4, avlDVertex.y)
             stmt.execute()
@@ -173,7 +173,7 @@ class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
                     info.add(
                         DrawableAVLVertex(
                             value = deSerializeData(result.getString(value)),
-                            height = result.getInt(height),
+                            height = result.getInt(height).toUInt(),
                             x = result.getDouble(xCord),
                             y = result.getDouble(yCord),
                         )
@@ -195,7 +195,7 @@ class SQLiteRepositoryJDBC<Pack : Comparable<Pack>>(
             val stmt =
                 connection.prepareStatement("SELECT id FROM $tableName WHERE value=? AND height=? AND x=? AND y=?;")
             stmt.setString(1, serializeData(vertex.value))
-            stmt.setInt(2, vertex.height)
+            stmt.setInt(2, vertex.height.toInt())
             stmt.setDouble(3, vertex.x)
             stmt.setDouble(4, vertex.y)
             id = stmt.executeQuery().getInt(1)

@@ -1,5 +1,6 @@
 package viewPart.nodes.drawableRB
 
+import androidx.compose.runtime.mutableStateOf
 import databaseManage.TreeManager
 import databaseSave.neo4j.DrawableRBVertex
 import treelib.commonObjects.Container
@@ -25,19 +26,24 @@ class RBDrawableTree(
     override val treeStruct: RBStruct<Container<Int, String>> = RBStruct()
     override val designNode = RBNodeDesign
 
-    override fun initTree() {
-        TODO("Not yet implemented")
-    }
+    override fun drawableVertexToNode(vertex: DrawableRBVertex<Container<Int, String>>) = RBDrawableNode(
+        value = vertex.value,
+        xState = mutableStateOf(0f),
+        yState = mutableStateOf(0f),
+        color = vertex.color,
+    )
 
-    override fun deleteTree() {
-        TODO("Not yet implemented")
-    }
+    override fun vertexToNode(vertex: RBVertex<Container<Int, String>>) = RBDrawableNode(
+        value = vertex.value,
+        xState = mutableStateOf(0f),
+        yState = mutableStateOf(0f),
+        color = vertex.color,
+    )
 
-    override fun saveTree() {
-        TODO("Not yet implemented")
-    }
-
-    override fun updateTree() {
-        TODO("Not yet implemented")
-    }
+    override fun nodeToDrawableVertex(node: RBDrawableNode<Container<Int, String>>) = DrawableRBVertex(
+        value = node.value,
+        x = node.xState.value.toDouble(),
+        y = node.yState.value.toDouble(),
+        color = node.color,
+    )
 }

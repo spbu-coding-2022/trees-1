@@ -1,8 +1,6 @@
 package viewPart.nodes.drawableRB
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.Modifier
 import treelib.rbTree.Markers
 import viewPart.nodes.drawableTree.DrawableNode
 

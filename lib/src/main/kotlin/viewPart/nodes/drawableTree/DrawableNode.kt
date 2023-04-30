@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
@@ -22,6 +19,7 @@ abstract class DrawableNode<Pack, NodeType : DrawableNode<Pack, NodeType>> {
     abstract var rightChild: NodeType?
     abstract val xState: MutableState<Float>
     abstract val yState: MutableState<Float>
+
     var modifier = Modifier
             .offset {
                 IntOffset(

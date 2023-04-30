@@ -67,7 +67,7 @@ class SQLiteRepositoryExposed {
         }
 
         for (index in vertexes.indices) VertexTableEntity.new {
-            height = vertexes[index].height
+            height = vertexes[index].height.toInt()
             value = serializeData(vertexes[index].value)
             order = index
             x = vertexes[index].x
@@ -91,7 +91,7 @@ class SQLiteRepositoryExposed {
             ans.add(
                 DrawableAVLVertex(
                     value = deSerializeData(el.value),
-                    height = el.height,
+                    height = el.height.toUInt(),
                     x = el.x,
                     y = el.y
                 )
