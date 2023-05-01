@@ -1,5 +1,6 @@
 package viewPart.nodes.drawableTree
 
+import androidx.compose.runtime.Composable
 import treelib.commonObjects.Container
 
 interface DrawTree<DNodeType : DrawableNode<Container<Int, String>, DNodeType>> {
@@ -7,6 +8,9 @@ interface DrawTree<DNodeType : DrawableNode<Container<Int, String>, DNodeType>> 
     var root: DNodeType?
     val designNode: NodeDesign
     var yShiftBetweenNodes: Float
+
+    @Composable
+    fun displayTree()
 
     fun initTree()
     fun updateTree()

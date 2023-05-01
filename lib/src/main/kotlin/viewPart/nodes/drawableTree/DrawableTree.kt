@@ -1,5 +1,6 @@
 package viewPart.nodes.drawableTree
 
+import androidx.compose.runtime.Composable
 import databaseManage.TreeManager
 import databaseSave.DrawableVertex
 import treelib.abstractTree.Node
@@ -8,6 +9,8 @@ import treelib.abstractTree.TreeStruct
 import treelib.abstractTree.Vertex
 import treelib.commonObjects.Container
 import treelib.commonObjects.exceptions.ImpossibleCaseException
+import viewPart.nodes.displayNode
+import viewPart.nodes.drawableBIN.BINNodeDesign
 
 abstract class DrawableTree<
         DNodeType : DrawableNode<Container<Int, String>, DNodeType>,
@@ -16,13 +19,20 @@ abstract class DrawableTree<
         State : StateContainer<Container<Int, String>, NodeType>,
         VertexType : Vertex<Container<Int, String>>,
         StructType : TreeStruct<Container<Int, String>, NodeType, State, VertexType>
-        >: DrawTree<DNodeType> {
+        > : DrawTree<DNodeType> {
 
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
     protected abstract val treeStruct: StructType
 
     override var yShiftBetweenNodes = 10f
+
+    @Composable
+    override fun displayTree() {
+        root?.let {
+            displayNode(it, designNode)
+        }
+    }
 
     override fun initTree() {
         val binVertexes = treeManager.initTree(name, treeStruct)
@@ -95,16 +105,14 @@ abstract class DrawableTree<
                         if (it.rightChild == null) {
                             it.rightChild = preOrderNode
                             return@restoreInsert
-                        }
-                        else currentParent = it.rightChild
+                        } else currentParent = it.rightChild
                     }
 
                     it.value > preOrderNode.value -> {
                         if (it.leftChild == null) {
                             it.leftChild = preOrderNode
                             return@restoreInsert
-                        }
-                        else currentParent = it.leftChild
+                        } else currentParent = it.leftChild
                     }
 
                     else -> {
@@ -150,7 +158,7 @@ abstract class DrawableTree<
         return n
     }
 
-    private fun preOrder() = sequence{
+    private fun preOrder() = sequence {
         var current: DNodeType
         val queue = ArrayDeque<DNodeType>()
 
