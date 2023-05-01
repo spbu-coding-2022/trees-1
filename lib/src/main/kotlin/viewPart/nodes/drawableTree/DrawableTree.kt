@@ -18,7 +18,7 @@ abstract class DrawableTree<
         State : StateContainer<Container<Int, String>, NodeType>,
         VertexType : Vertex<Container<Int, String>>,
         StructType : TreeStruct<Container<Int, String>, NodeType, State, VertexType>
-        >: DrawTree {
+        > : DrawTree {
 
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
@@ -121,16 +121,14 @@ abstract class DrawableTree<
                         if (it.rightChild == null) {
                             it.rightChild = preOrderNode
                             return@restoreInsert
-                        }
-                        else currentParent = it.rightChild
+                        } else currentParent = it.rightChild
                     }
 
                     it.value > preOrderNode.value -> {
                         if (it.leftChild == null) {
                             it.leftChild = preOrderNode
                             return@restoreInsert
-                        }
-                        else currentParent = it.leftChild
+                        } else currentParent = it.leftChild
                     }
 
                     else -> {
@@ -176,7 +174,7 @@ abstract class DrawableTree<
         return n
     }
 
-    private fun preOrder() = sequence{
+    protected fun preOrder() = sequence {
         var current: DNodeType
         val queue = ArrayDeque<DNodeType>()
 
@@ -194,6 +192,36 @@ abstract class DrawableTree<
                     current.leftChild?.let {
                         queue.add(it)
                     } ?: throw ImpossibleCaseException()
+            }
+        }
+    }
+
+    protected fun inOrder() = sequence {
+        var flagVisited = 0
+        var current = root
+        val parents = ArrayDeque<DNodeType>()
+
+        while (current != null) {
+            if (flagVisited == 0) {
+                while (true) {
+                    current?.let {
+                        if (it.leftChild == null) return@let null
+                        parents.add(it)
+                        current = it.leftChild
+                        return@let current
+                    } ?: break
+                }
+            }
+            current?.let {
+                yield(it)
+                if (it.rightChild != null) {
+                    flagVisited = 0
+                    current = it.rightChild
+                } else {
+                    if (parents.isEmpty()) return@sequence
+                    flagVisited = 1
+                    current = parents.removeLast()
+                }
             }
         }
     }
