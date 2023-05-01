@@ -48,9 +48,10 @@ fun controlFields(
             deleteTreeState.value = false
         }
         if (openTreeState.value) {
-            tree = controller.tree  // ??
+            tree = controller.tree
         }
         tree?.displayTree()
+
         addFieldState.value = false
     }
 

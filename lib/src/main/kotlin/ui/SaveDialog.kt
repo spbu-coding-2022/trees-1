@@ -137,14 +137,16 @@ fun saveDialog(
                         }
 
                         if (saveButtonState.value && activeTree.value) {
-
-                            controller.saveTree(fileName.value)
                             validateInputState = validate(fileName.value)
                             if (validateInputState) {
                                 successDialogState = true
                             } else {
                                 warningDialogState = true
                             }
+                        }
+
+                        if (successDialogState) {
+                            controller.saveTree(fileName.value)
                         }
 
                     }

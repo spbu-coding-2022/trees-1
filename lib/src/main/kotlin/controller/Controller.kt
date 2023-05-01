@@ -65,6 +65,7 @@ class Controller {
             1 -> tree = AVLDrawableTree(treeName, avlManager)
             2 -> tree = BINDrawableTree(treeName, binManager)
         }
+
         tree?.initTree()
 
         return tree ?: throw NullPointerException()

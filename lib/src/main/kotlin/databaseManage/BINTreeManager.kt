@@ -21,8 +21,8 @@ class BINTreeManager : TreeManager<
 
     /*** using json format files ***/
 
-//    private val dirPath = System.getProperty("user.dir") + "/saved-trees/BIN-trees"
-    private val dirPath = BIN_DB_DEFAULT_NAME
+    private val dirPath = System.getProperty("user.dir") + "/saved-trees/BIN-trees"
+    //private val dirPath = BIN_DB_DEFAULT_NAME
 
     private val jsonRep = JsonRepository(dirPath)
 

@@ -30,7 +30,4 @@ interface TreeManager<
 
     fun getSavedTreesNames(): List<String>
 
-//    fun insert(item: Container<Int, String>)
-//
-//    fun delete(item: Container<Int, String>)
 }

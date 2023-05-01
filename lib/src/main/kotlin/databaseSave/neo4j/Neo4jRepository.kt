@@ -102,8 +102,8 @@ class Neo4jRepository : Closeable {
             ).list()
                 .map {
                     DrawableRBVertex(
-                        value = Container(Pair(it.values()[1].toString().toInt(), it.values()[0].toString())),
-                        color = if (it.values()[2].toString() == """RED""") Markers.RED else Markers.BLACK,
+                        value = Container(Pair(it.values()[1].toString().toInt(), it.values()[0].toString().replace("\"", ""))),
+                        color = if (it.values()[2].toString().replace("\"", "") == "RED") Markers.RED else Markers.BLACK,
                         x = it.values()[3].toString().toDouble(),
                         y = it.values()[4].toString().toDouble()
                     )

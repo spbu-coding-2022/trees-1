@@ -210,6 +210,8 @@ fun openMenu(
 
     val selectedTree = remember { mutableStateOf("") } // дерево, которое выбрал юзер (очев)
 
+    val treeID = remember { mutableStateOf(0) }
+
     DropdownMenu(
         expanded = expandedNested.value,
         onDismissRequest = { expandedNested.value = !expandedNested.value },
@@ -228,6 +230,7 @@ fun openMenu(
                 },
                 onClick = {
                     expandedTreesNames[index].value = !expandedTreesNames[index].value
+                    treeID.value = index
                 },
                 trailingIcon = { arrowIcon() },
                 modifier = Modifier.onPointerEvent(PointerEventType.Enter) { backgroundColorState[index].value = true }
@@ -239,7 +242,7 @@ fun openMenu(
                 expandedTreesNames[index],
                 expandedNested,
                 showFiles[index],
-                index,
+                treeID,
                 150.dp,
                 selectedTree,
                 activeTree,
@@ -258,7 +261,7 @@ fun treesNames(
     expandedNested: MutableState<Boolean>,
     expandedOpenNested: MutableState<Boolean>,
     showFiles: List<String>,
-    treeID: Int,
+    treeID: MutableState<Int>,
     offset: Dp,
     selectedTree: MutableState<String>,
     activeTree: MutableState<Boolean>,
@@ -278,11 +281,11 @@ fun treesNames(
             offset = DpOffset(offset, (-50).dp),
             modifier = Modifier.background(MaterialTheme.colorScheme.background)
         ) {
-            searchItem(dirFiles[treeID], expandedNested, selectedTree, expandedOpenNested)
+            searchItem(dirFiles[treeID.value], expandedNested, selectedTree, expandedOpenNested)
 
             repeat(showFiles.size) { index ->
                 DropdownMenuItem(onClick = {
-                    selectedTree.value = showFiles[index]
+                    selectedTree.value = if (treeID.value == 2) showFiles[index] + ".json" else showFiles[index]
                 },
                     text = { Text(showFiles[index]) },
                     modifier = Modifier
@@ -295,7 +298,7 @@ fun treesNames(
     }
 
     if (selectedTree.value.isNotEmpty()) {
-        controller.createTree(selectedTree.value, treeID)
+        controller.createTree(selectedTree.value, treeID.value)
         openTreeState.value = true
         activeTree.value = true
         expandedNested.value = false
