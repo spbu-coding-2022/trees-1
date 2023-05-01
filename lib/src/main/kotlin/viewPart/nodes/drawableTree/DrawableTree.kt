@@ -23,7 +23,7 @@ abstract class DrawableTree<
 
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
-    protected abstract val treeStruct: StructType
+    protected abstract var treeStruct: StructType
 
     override var yShiftBetweenNodes = 10f
 
@@ -53,9 +53,9 @@ abstract class DrawableTree<
         }
     }
 
-    override fun deleteTree() = treeManager.deleteTreeFromDB(name)
+    override fun deleteTreeFromBD() = treeManager.deleteTreeFromDB(name)
 
-    override fun saveTree() {
+    override fun saveTreeToDB() {
         if (root != null) {
             treeManager.saveTreeToDB(name, preOrder().map { nodeToDrawableVertex(it) }.toList(), listOf())
         } else {

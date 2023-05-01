@@ -11,7 +11,7 @@ import treelib.rbTree.RBVertex
 import viewPart.nodes.drawableTree.DrawableTree
 
 class RBDrawableTree(
-    override val name: String,
+    override var name: String,
     override val treeManager: TreeManager<Container<Int, String>, DrawableRBVertex<Container<Int, String>>, RBNode<Container<Int, String>>, RBStateContainer<Container<Int, String>>, RBVertex<Container<Int, String>>, RBStruct<Container<Int, String>>>,
 ) : DrawableTree<
         RBDrawableNode<Container<Int, String>>,
@@ -23,8 +23,13 @@ class RBDrawableTree(
         >() {
     override var root:  RBDrawableNode<Container<Int, String>>? = null
     override var drawablePreOrder: List<RBDrawableNode<Container<Int, String>>>? = null
-    override val treeStruct: RBStruct<Container<Int, String>> = RBStruct()
+    override var treeStruct = RBStruct<Container<Int, String>>()
     override val designNode = RBNodeDesign
+
+    override fun deleteTree() {
+        root = null
+        treeStruct = RBStruct()
+    }
 
     override fun drawableVertexToNode(vertex: DrawableRBVertex<Container<Int, String>>) = RBDrawableNode(
         value = vertex.value,
