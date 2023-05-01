@@ -9,7 +9,7 @@ class RBTree<K : Comparable<K>, V> :
 
     override val treeStruct = RBStruct<Container<K, V?>>()
 
-    operator fun RBTree<K, V>.get(key: K): V? = getItem(key)
+    operator fun set(key: K, value: V) = putItem(key to value)
 
-    operator fun RBTree<K, V>.set(key: K, value: V) = putItem(key to value)
+    operator fun get(key: K) = getItem(key)
 }

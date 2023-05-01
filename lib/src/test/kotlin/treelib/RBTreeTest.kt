@@ -1,5 +1,6 @@
 package treelib
 
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import treelib.rbTree.*
@@ -51,5 +52,16 @@ class RBTreeTest {
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.right?.color, actual = Markers.RED)
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.left?.color, actual = Markers.RED)
         assertEquals(expected = treeSW.getPrivateNode(treeW.getPrivateNode(tree))?.color, actual = Markers.BLACK)
+    }
+
+    @Test
+    fun `test set method`() {
+        for (i in (1..3)) {
+            tree.putItem(Pair(i, i))
+        }
+
+        assertEquals(expected = tree[3], actual = 3)
+        assertEquals(expected = tree[2], actual = 2)
+        assertEquals(expected = tree[1], actual = 1)
     }
 }

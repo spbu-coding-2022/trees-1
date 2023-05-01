@@ -8,7 +8,7 @@ class BINTree<K : Comparable<K>, V>
 
     override val treeStruct = BINStruct<Container<K, V?>>()
 
-    operator fun BINTree<K, V>.get(key: K): V? = getItem(key)
+    operator fun set(key: K, value: V) = putItem(key to value)
 
-    operator fun BINTree<K, V>.set(key: K, value: V) = putItem(key to value)
+    operator fun get(key: K) = getItem(key)
 }

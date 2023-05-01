@@ -86,4 +86,10 @@ class BINTreeTest {
             actual = numbers[index + 1]
         )
     }
+
+    @Test
+    fun `test get set methods`() {
+        for (i in 1..3) {
+            tree.putItem(Pair(i, i))
+        }
 }

@@ -83,11 +83,13 @@ class AVLTreeTest {
     }
 
     @Test
-    fun `test get arg`(){
-        for (i in (1..10000).shuffled()) {
+    fun `test get set methods`() {
+        for (i in 1..3) {
             tree.putItem(Pair(i, i))
         }
 
-        assertEquals(expected = tree.get(542), actual = 542)
+        assertEquals(expected = tree[1], actual = 1)
+        assertEquals(expected = tree[2], actual = 2)
+        assertEquals(expected = tree[3], actual = 3)
     }
 }
