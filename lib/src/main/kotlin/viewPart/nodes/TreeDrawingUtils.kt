@@ -59,7 +59,7 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
                     node.yState.value.roundToInt()
                 )
             }
-            .background(color = Color(206, 211, 216))
+            .background(color = Color(206, 211, 216), shape = AbsoluteRoundedCornerShape(5.dp))
             .border(2.dp, MaterialTheme.colorScheme.primary, AbsoluteRoundedCornerShape(5.dp))
             .padding(horizontal = 4.dp, vertical = 2.dp)
             .zIndex(1f)

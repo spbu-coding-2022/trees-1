@@ -21,12 +21,6 @@ object BINNodeDesign: NodeDesign {
             modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
-            //Text(
-            //    text = information,
-            //    fontSize = 30.sp,
-            //    color = Color.White,
-            //    fontWeight = FontWeight.Bold
-            //)
         }
     }
 }
