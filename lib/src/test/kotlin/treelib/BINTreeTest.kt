@@ -92,4 +92,10 @@ class BINTreeTest {
         for (i in 1..3) {
             tree.putItem(Pair(i, i))
         }
+
+        assertEquals(expected = tree[1], actual = 1)
+        assertEquals(expected = tree[2], actual = 2)
+        assertEquals(expected = tree[3], actual = 3)
+
+    }
 }

@@ -29,7 +29,7 @@ abstract class Tree<
 
     fun getItem(key: K): V? = treeStruct.find(wrapForFind(key))?.value
 
-    operator fun get(key: K): V? = treeStruct.find(wrapForFind(key))?.value
+    open operator fun get(key: K): V? = treeStruct.find(wrapForFind(key))?.value
 
     fun deleteItem(key: K) {
         if (treeStruct.find(wrapForFind(key)) == null) throw VauleNotFound()

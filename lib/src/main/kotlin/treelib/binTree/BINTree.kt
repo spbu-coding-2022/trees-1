@@ -10,5 +10,5 @@ class BINTree<K : Comparable<K>, V>
 
     operator fun set(key: K, value: V) = putItem(key to value)
 
-    operator fun get(key: K) = getItem(key)
+    override operator fun get(key: K) = getItem(key)
 }
