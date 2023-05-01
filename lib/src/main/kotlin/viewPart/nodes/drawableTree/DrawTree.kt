@@ -4,16 +4,18 @@ import androidx.compose.runtime.Composable
 import treelib.commonObjects.Container
 
 interface DrawTree {
-    val name: String
+    var name: String
     val designNode: NodeDesign
     var yShiftBetweenNodes: Float
 
     @Composable
     fun displayTree()
+
     fun initTree()
     fun updateTree()
     fun deleteTree()
-    fun saveTree()
+    fun deleteTreeFromBD()
+    fun saveTreeToDB()
     fun insert(item: Container<Int, String>)
     fun delete(item: Container<Int, String>)
     fun find(item: Int)

@@ -11,13 +11,18 @@ import treelib.commonObjects.Container
 import viewPart.nodes.drawableTree.DrawableTree
 
 class AVLDrawableTree(
-    override val name: String,
+    override var name: String,
     override val treeManager: TreeManager<Container<Int, String>, DrawableAVLVertex<Container<Int, String>>, AVLNode<Container<Int, String>>, AVLStateContainer<Container<Int, String>>, AVLVertex<Container<Int, String>>, AVLStruct<Container<Int, String>>>,
 ) : DrawableTree<AVLDrawableNode<Container<Int, String>>, DrawableAVLVertex<Container<Int, String>>, AVLNode<Container<Int, String>>, AVLStateContainer<Container<Int, String>>, AVLVertex<Container<Int, String>>, AVLStruct<Container<Int, String>>>() {
     override var root: AVLDrawableNode<Container<Int, String>>? = null
     override var drawablePreOrder: List<AVLDrawableNode<Container<Int, String>>>? = null
-    override val treeStruct: AVLStruct<Container<Int, String>> = AVLStruct()
+    override var treeStruct = AVLStruct<Container<Int, String>>()
     override val designNode = AVLNodeDesign
+
+    override fun deleteTree() {
+        root = null
+        treeStruct = AVLStruct()
+    }
 
     override fun drawableVertexToNode(vertex: DrawableAVLVertex<Container<Int, String>>) = AVLDrawableNode(
         value = vertex.value,

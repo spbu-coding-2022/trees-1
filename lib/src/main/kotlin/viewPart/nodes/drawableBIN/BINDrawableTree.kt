@@ -11,7 +11,7 @@ import treelib.commonObjects.Container
 import viewPart.nodes.drawableTree.DrawableTree
 
 class BINDrawableTree(
-    override val name: String,
+    override var name: String,
     override val treeManager: BINTreeManager,
 ) :
     DrawableTree<
@@ -24,9 +24,15 @@ class BINDrawableTree(
             >() {
 
     override var root: BINDrawableNode<Container<Int, String>>? = null
-    override val treeStruct = BINStruct<Container<Int, String>>()
+    override var treeStruct = BINStruct<Container<Int, String>>()
     override var drawablePreOrder: List<BINDrawableNode<Container<Int, String>>>? = null
     override val designNode = BINNodeDesign
+
+    override fun deleteTree() {
+        root = null
+        treeStruct = BINStruct()
+    }
+
     override fun drawableVertexToNode(vertex: DrawableBINVertex<Container<Int, String>>) = BINDrawableNode(
         value = vertex.value,
         xState = mutableStateOf(0f),
