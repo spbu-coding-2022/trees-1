@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Shape
 import viewPart.nodes.drawableTree.NodeDesign
 
 object BINNodeDesign: NodeDesign {
-    var colorNode = Color(208, 223, 252)
+    override var colorNode = Color(208, 223, 252)
     override var lineColor = Color(34, 35, 41)
     override var nodeSize = 60f
     override var shape: Shape = CircleShape

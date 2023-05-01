@@ -9,13 +9,13 @@ import androidx.compose.foundation.onClick
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import viewPart.nodes.drawableBIN.BINNodeDesign
 import kotlin.math.roundToInt
 
-abstract class DrawableNode<Pack, NodeType : DrawableNode<Pack, NodeType>> {
+abstract class DrawableNode<Pack, NodeType : DrawableNode<Pack, NodeType>>(design : NodeDesign, color : Color) {
     abstract val value: Pack
     abstract var leftChild: NodeType?
     abstract var rightChild: NodeType?
@@ -36,9 +36,9 @@ abstract class DrawableNode<Pack, NodeType : DrawableNode<Pack, NodeType>> {
                     yState.value += dragAmount.y
                 }
             }
-            .size(BINNodeDesign.nodeSize.dp)
-            .clip(BINNodeDesign.shape)
-            .background(BINNodeDesign.colorNode)
+            .size(design.nodeSize.dp)
+            .clip(design.shape)
+            .background(color)
             .onClick { clickState.value = !clickState.value }
 
 }

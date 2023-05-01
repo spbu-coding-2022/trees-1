@@ -12,6 +12,6 @@ class RBDrawableNode<Pack>(
     val color: Markers,
     override val xState: MutableState<Float>,
     override val yState: MutableState<Float>,
-) : DrawableNode<Pack, RBDrawableNode<Pack>>() {
+) : DrawableNode<Pack, RBDrawableNode<Pack>>(RBNodeDesign, if (color == Markers.BLACK) RBNodeDesign.blackMarker else RBNodeDesign.redMarker) {
     override val clickState = mutableStateOf(false)
 }

@@ -1,4 +1,5 @@
 package ui
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
+import controller.Controller
 import topAppIconButton
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -27,15 +29,15 @@ import topAppIconButton
 fun saveDialog(
     buttonState: List<MutableState<Boolean>>,
     clickButtonState: MutableState<Boolean>,
-    fileName: MutableState<String>
+    fileName: MutableState<String>,
+    controller: Controller,
+    activeTree: MutableState<Boolean>
 ) {
 
     var validateInputState by remember { mutableStateOf(true) }
     var successDialogState by remember { mutableStateOf(false) }
     var warningDialogState by remember { mutableStateOf(false) }
     val saveButtonState = remember { mutableStateOf(false) }
-
-
 
     if (clickButtonState.value) {
         Dialog(
@@ -71,6 +73,7 @@ fun saveDialog(
                         verticalArrangement = Arrangement.Bottom
                     ) {
                         TextField(
+                            enabled = activeTree.value,
                             value = fileName.value,
                             singleLine = true,
                             shape = RoundedCornerShape(4.dp),
@@ -87,6 +90,7 @@ fun saveDialog(
                                             }
                                             true
                                         }
+
                                         else -> {
                                             warningDialogState = false
                                             successDialogState = false
@@ -101,7 +105,12 @@ fun saveDialog(
                                 else Color(232, 169, 169)
                             ),
                             isError = !validateInputState,
-                            placeholder = { Text(text = "Enter a filename", color = Color.Gray) },
+                            placeholder = {
+                                Text(
+                                    text = if (activeTree.value) "Enter a filename" else "Nothing to save",
+                                    color = Color.Gray
+                                )
+                            },
                         )
                         Text(
                             text = when {
@@ -114,7 +123,11 @@ fun saveDialog(
                             fontSize = 12.sp
                         )
 
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
                             BottomButtons(
                                 clickButtonState,
                                 saveButtonState,
@@ -123,7 +136,9 @@ fun saveDialog(
                             )
                         }
 
-                        if (saveButtonState.value) {
+                        if (saveButtonState.value && activeTree.value) {
+
+                            controller.saveTree(fileName.value)
                             validateInputState = validate(fileName.value)
                             if (validateInputState) {
                                 successDialogState = true

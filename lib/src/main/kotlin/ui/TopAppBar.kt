@@ -32,10 +32,14 @@ import myTypography
 import topAppIconButton
 
 @Composable
-fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: WindowState, controller: Controller) {
+fun myTopAppBar(
+    clickButtonsState: List<MutableState<Boolean>>,
+    windowState: WindowState,
+    controller: Controller,
+    activeTree: MutableState<Boolean>
+) {
 
-    //val controller = Controller()
-    val showFiles = controller.showFiles()
+    val showFiles = controller.showFiles() // показывает <=3 деревьев каждого вида в диалоге open
 
     val fileName = remember { mutableStateOf("") } // имя файла в диалоге save
 
@@ -59,14 +63,14 @@ fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: Win
                 Row {
 
                     deleteDialog(
-                        "A",
                         buttonState,
-                        clickButtonsState[0]
-                    ) // будем иметь имя текущего дерево и передавать его сюды
+                        clickButtonsState[0],
+                        controller,
+                        activeTree
+                    )
 
-                    saveDialog(buttonState, clickButtonsState[1], fileName)
-                    // после работы в контролере опять поменять filename на ""
 
+                    saveDialog(buttonState, clickButtonsState[1], fileName, controller, activeTree)
 
                     topAppIconButton(
                         painterResource("/drawable/dir.png"),
@@ -77,7 +81,7 @@ fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: Win
                         MaterialTheme.colorScheme.background,
                         clickButtonsState[2]
                     )
-                    openMenu(clickButtonsState[2], showFiles)
+                    openMenu(clickButtonsState[2], showFiles, controller, activeTree)
 
 
                     topAppIconButton(
@@ -89,7 +93,7 @@ fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: Win
                         MaterialTheme.colorScheme.background,
                         clickButtonsState[3]
                     )
-                    createMenu(clickButtonsState[3], controller)
+                    createMenu(clickButtonsState[3], controller, activeTree)
 
                 }
 
@@ -137,7 +141,6 @@ fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: Win
 
             }
 
-
         }
 
     }
@@ -145,7 +148,7 @@ fun myTopAppBar(clickButtonsState: List<MutableState<Boolean>>, windowState: Win
 
 @Composable
 private fun minimizeWindow(state: WindowState) {
-    state.placement = WindowPlacement.Floating
+    state.isMinimized = !state.isMinimized
 }
 
 @Composable
@@ -159,8 +162,10 @@ private fun maximizeWindow(state: WindowState) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun createMenu(expandedNested: MutableState<Boolean>, controller: Controller) {
-    val treesNames = listOf("Red black tree", "AVL tree", "Binary tree")
+fun createMenu(expandedNested: MutableState<Boolean>, controller: Controller, activeTree: MutableState<Boolean>) {
+    val trees = listOf("Red black tree", "AVL tree", "Binary tree")
+
+    val treesNames = listOf("rbTree", "avlTree", "binTree.json")
 
     val backgroundColorState = List(3) { remember { mutableStateOf(false) } }
 
@@ -172,10 +177,10 @@ fun createMenu(expandedNested: MutableState<Boolean>, controller: Controller) {
     ) {
 
         repeat(3) { index ->
-            DropdownMenuItem(text = { Text(treesNames[index]) },
+            DropdownMenuItem(text = { Text(trees[index]) },
                 onClick = {
-                    // тут определяем тип дерева и передаем в контроллер
-                    controller.createTree("baseName.json")
+                    controller.createTree(treesNames[index], index)
+                    activeTree.value = true
                     expandedNested.value = false
                 },
                 modifier = Modifier.onPointerEvent(PointerEventType.Enter) { backgroundColorState[index].value = true }
@@ -187,12 +192,19 @@ fun createMenu(expandedNested: MutableState<Boolean>, controller: Controller) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun openMenu(expandedNested: MutableState<Boolean>, showFiles: List<List<String>>) {
-    val treesNames = listOf("Red black tree", "AVL tree", "Binary tree")
+fun openMenu(
+    expandedNested: MutableState<Boolean>,
+    showFiles: List<List<String>>,
+    controller: Controller,
+    activeTree: MutableState<Boolean>
+) {
+    val trees = listOf("Red black tree", "AVL tree", "Binary tree")
 
     val expandedTreesNames = List(3) { remember { mutableStateOf(false) } }
 
     val backgroundColorState = List(3) { remember { mutableStateOf(false) } }
+
+    val selectedTree = remember { mutableStateOf("") } // дерево, которое выбрал юзер (очев)
 
     DropdownMenu(
         expanded = expandedNested.value,
@@ -204,7 +216,7 @@ fun openMenu(expandedNested: MutableState<Boolean>, showFiles: List<List<String>
             DropdownMenuItem(
                 text = {
                     Text(
-                        treesNames[index],
+                        trees[index],
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.height(50.dp),
                         maxLines = 1
@@ -218,7 +230,8 @@ fun openMenu(expandedNested: MutableState<Boolean>, showFiles: List<List<String>
                     .onPointerEvent(PointerEventType.Exit) { backgroundColorState[index].value = false }
                     .background(color = menuItemBackgroundColor(backgroundColorState[index])),
                 colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary))
-            treesNames(expandedTreesNames[index], expandedNested, showFiles[index], index, 150.dp)
+
+            treesNames(expandedTreesNames[index], expandedNested, showFiles[index], index, 150.dp, selectedTree)
         }
     }
 
@@ -231,13 +244,12 @@ fun treesNames(
     expandedOpenNested: MutableState<Boolean>,
     showFiles: List<String>,
     treeID: Int,
-    offset: Dp
+    offset: Dp,
+    selectedTree: MutableState<String>
 ) {
 
     val dirPath = System.getProperty("user.dir") + "/saved-trees"
     val dirFiles = listOf("$dirPath/RB-trees", "$dirPath/AVL-trees", "$dirPath/BIN-trees")
-
-    val selectedTree = remember { mutableStateOf("") }
 
     val backgroundColorState = List(showFiles.size) { remember { mutableStateOf(false) } }
 

@@ -1,5 +1,6 @@
 package viewPart.nodes.drawableTree
 
+import androidx.compose.runtime.Composable
 import databaseManage.TreeManager
 import databaseSave.DrawableVertex
 import treelib.abstractTree.Node
@@ -8,6 +9,7 @@ import treelib.abstractTree.TreeStruct
 import treelib.abstractTree.Vertex
 import treelib.commonObjects.Container
 import treelib.commonObjects.exceptions.ImpossibleCaseException
+import viewPart.nodes.displayNode
 
 abstract class DrawableTree<
         DNodeType : DrawableNode<Container<Int, String>, DNodeType>,
@@ -16,13 +18,21 @@ abstract class DrawableTree<
         State : StateContainer<Container<Int, String>, NodeType>,
         VertexType : Vertex<Container<Int, String>>,
         StructType : TreeStruct<Container<Int, String>, NodeType, State, VertexType>
-        >: DrawTree<DNodeType> {
+        >: DrawTree {
 
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
     protected abstract val treeStruct: StructType
+    protected abstract var root: DNodeType?
 
     override var yShiftBetweenNodes = 10f
+
+    @Composable
+    override fun displayTree() {
+        root?.let {
+            displayNode(it, designNode)
+        }
+    }
 
     override fun initTree() {
         val binVertexes = treeManager.initTree(name, treeStruct)
@@ -59,7 +69,23 @@ abstract class DrawableTree<
         if (treeStruct.find(item) != null) treeStruct.delete(item)
     }
 
-    override fun find(item: Container<Int, String>): Container<Int, String>? = treeStruct.find(item)
+    override fun find(item: Int) {
+        var currentNode = root
+        if (root == null)
+            return
+        while(true) {
+            if (item == currentNode?.value?.key) {
+                currentNode.clickState.value = true
+                return
+            }
+            currentNode?.let {
+                currentNode = if (item > it.value.key) it.rightChild
+                else it.leftChild
+            }
+            if (currentNode == null) return
+        }
+
+    }
 
     override fun repositisonTree(xBase: Float, yBase: Float) {
         /*xBase: Float = 0f, yBase: Float = 0f*/

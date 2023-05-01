@@ -1,4 +1,5 @@
 package ui
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,15 +15,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
+import controller.Controller
 import topAppIconButton
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun deleteDialog(
-    treeName: String,
     buttonState: List<MutableState<Boolean>>,
-    clickButtonsState: MutableState<Boolean>
+    clickButtonsState: MutableState<Boolean>,
+    controller: Controller,
+    activeTree: MutableState<Boolean>
 ) {
 
     val deleteDialogState = remember { mutableStateOf(true) }
@@ -30,21 +33,33 @@ fun deleteDialog(
     if (clickButtonsState.value) {
         AlertDialog(
             backgroundColor = MaterialTheme.colorScheme.background,
-            onDismissRequest = { clickButtonsState.value = false},
-            text = { Text(text = " Are you sure you want to delete $treeName ?", color = MaterialTheme.colorScheme.primary) },
+            onDismissRequest = { clickButtonsState.value = false },
+            text = {
+                Text(
+                    text = deleteDialogText(activeTree, controller.tree?.name ?: ""),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
             buttons = {
 
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.Bottom) {
-                    BottomButtons(deleteDialogState, clickButtonsState,"Cancel", "Delete")
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    BottomButtons(deleteDialogState, clickButtonsState, "Cancel", "Delete")
                 }
             }
         )
     }
 
-    if (!deleteDialogState.value) {
-        // отправляем запрос в контроллер на удаление
+    if (!deleteDialogState.value && activeTree.value) {
         deleteDialogState.value = true
-        clickButtonsState.value = false
+        clickButtonsState.value = false // ?
+
+        controller.deleteTree()
+
+        activeTree.value = false
     }
 
     topAppIconButton(
@@ -56,5 +71,15 @@ fun deleteDialog(
         MaterialTheme.colorScheme.background,
         clickButtonsState
     )
+
+}
+
+@Composable
+fun deleteDialogText(activeTree: MutableState<Boolean>, treeName: String): String {
+    return if (activeTree.value) {
+        "Are you sure you want to delete $treeName ?"
+    } else {
+        "Nothing to delete"
+    }
 
 }

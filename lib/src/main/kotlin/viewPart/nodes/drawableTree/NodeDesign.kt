@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 
 interface NodeDesign {
+    var colorNode: Color
     var nodeSize: Float
     var shape: Shape
     var lineStrokeWidth: Float

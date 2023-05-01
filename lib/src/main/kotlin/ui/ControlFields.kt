@@ -11,39 +11,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import controller.Controller
-import databaseManage.BINTreeManager
-import viewPart.nodes.displayTree
-import viewPart.nodes.drawableBIN.BINDrawableTree
+import viewPart.nodes.drawableTree.DrawTree
 
 @Composable
-fun controlFields(controller: Controller) {
+fun controlFields(controller: Controller, activeTree: MutableState<Boolean>) {
 
     val addFieldState = remember { mutableStateOf(false) }
     val findFieldState = remember { mutableStateOf(false) }
     val deleteFieldState = remember { mutableStateOf(false) }
 
-    // скорее всего использовать by remember
-
     val value = remember { mutableStateOf("") }
 
     Column(modifier = Modifier.offset(0.dp, 0.dp).padding(horizontal = 10.dp)) {
         // add
-        controlField("Add", addFieldState, value)
+        controlField("Add", addFieldState, value, activeTree)
         Spacer(modifier = Modifier.height(2.dp))
 
         // find
-        controlField("Find", findFieldState, value)
+        controlField("Find", findFieldState, value, activeTree)
         Spacer(modifier = Modifier.height(2.dp))
 
         // delete
-        controlField("Delete", deleteFieldState, value)
-
+        controlField("Delete", deleteFieldState, value, activeTree)
     }
 
-    var tree by remember { mutableStateOf(BINDrawableTree("a", BINTreeManager())) }
+    var id by remember { mutableStateOf(0) }
+
+    var tree by remember { mutableStateOf<DrawTree?>(null) }
 
     if (!addFieldState.value && !findFieldState.value && !deleteFieldState.value) {
-        displayTree(tree)
+        tree?.displayTree()
         addFieldState.value = false
     }
 
@@ -66,11 +63,16 @@ fun controlFields(controller: Controller) {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun controlField(buttonName: String, buttonState: MutableState<Boolean>, value: MutableState<String>) {
+fun controlField(
+    buttonName: String,
+    buttonState: MutableState<Boolean>,
+    value: MutableState<String>,
+    activeTree: MutableState<Boolean>
+) {
 
     var text by remember { mutableStateOf("") }
 
-    var containerColor by remember { mutableStateOf(Color(237, 232, 232)) }
+    var containerColor by remember { mutableStateOf(Color(206, 211, 216)) }
 
     OutlinedTextField(
         value = text,
@@ -84,6 +86,7 @@ fun controlField(buttonName: String, buttonState: MutableState<Boolean>, value: 
             focusedLabelColor = Color(99, 95, 95),
             unfocusedLabelColor = MaterialTheme.colorScheme.onTertiary,
         ),
+        enabled = activeTree.value,
         modifier = Modifier
             .padding(start = 3.dp)
             .width(150.dp)
@@ -91,7 +94,7 @@ fun controlField(buttonName: String, buttonState: MutableState<Boolean>, value: 
                 containerColor = if (it.isFocused) {
                     Color(255, 255, 255)
                 } else {
-                    Color(237, 232, 232)
+                    Color(206, 211, 216)
                 }
             }.onPreviewKeyEvent {
                 when {
@@ -115,3 +118,4 @@ fun controlField(buttonName: String, buttonState: MutableState<Boolean>, value: 
     )
 
 }
+

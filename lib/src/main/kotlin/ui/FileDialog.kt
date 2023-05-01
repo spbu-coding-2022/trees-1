@@ -64,7 +64,7 @@ fun searchItem(
                     dialogState.value = false
                     expandedOpenNested.value = false
                     selectedTree.value =
-                        if (enabledButtonIndex.value >= 0) files[enabledButtonIndex.value] else "null" // ""
+                        if (enabledButtonIndex.value >= 0) files[enabledButtonIndex.value] else ""
                 }, visible = dialogState.value,
                 content = {
                     WindowDraggableArea {
@@ -84,7 +84,7 @@ fun searchItem(
         expandedNested.value = false
         expandedOpenNested.value = false
         selectedTree.value =
-            if (enabledButtonIndex.value >= 0) files[enabledButtonIndex.value] else "" // ""
+            if (enabledButtonIndex.value >= 0) files[enabledButtonIndex.value] else ""
 
     }
 

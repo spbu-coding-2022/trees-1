@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -33,6 +32,8 @@ fun main() = application {
 
     val controller = Controller()
 
+    val activeTree = remember { mutableStateOf(false) }
+
     if (!clickButtonsState[6].value) {
         Window(
             onCloseRequest = ::exitApplication,
@@ -40,35 +41,35 @@ fun main() = application {
             state = windowState
         ) {
 
-                this.window.minimumSize = Dimension(800, 600)
-                Scaffold(
-                    topBar = {
-                        WindowDraggableArea {
-                            myTopAppBar(clickButtonsState, windowState, controller)
-                        }
-                    },
-                    content = {
-                        MaterialTheme(
-                            colorScheme = lightColors,
-                            typography = myTypography
+            this.window.minimumSize = Dimension(800, 600)
+            Scaffold(
+                topBar = {
+                    WindowDraggableArea {
+                        myTopAppBar(clickButtonsState, windowState, controller, activeTree)
+                    }
+                },
+                content = {
+                    MaterialTheme(
+                        colorScheme = lightColors,
+                        typography = myTypography
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.background)
+                                .offset(0.dp, 50.dp)
+
                         ) {
+                            controlFields(controller, activeTree)
 
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .background(MaterialTheme.colorScheme.background)
-                                    .offset(0.dp, 50.dp)
-
-                            ) {
-                                controlFields(controller)
-
-
-                            }
 
                         }
 
                     }
-                )
+
+                }
+            )
 
 
         }
@@ -94,7 +95,6 @@ val myTypography = Typography(
         fontSize = 96.sp
     )
 )
-
 
 
 @OptIn(ExperimentalComposeUiApi::class)

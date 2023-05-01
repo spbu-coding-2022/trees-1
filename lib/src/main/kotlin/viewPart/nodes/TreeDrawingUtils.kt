@@ -16,17 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import treelib.commonObjects.Container
 import viewPart.nodes.drawableAVL.AVLDrawableNode
-import viewPart.nodes.drawableAVL.AVLDrawableTree
-import viewPart.nodes.drawableAVL.AVLNodeDesign
-import viewPart.nodes.drawableBIN.BINDrawableTree
-import viewPart.nodes.drawableBIN.BINNodeDesign
+import viewPart.nodes.drawableBIN.BINDrawableNode
 import viewPart.nodes.drawableRB.RBDrawableNode
-import viewPart.nodes.drawableRB.RBDrawableTree
-import viewPart.nodes.drawableRB.RBNodeDesign
 import viewPart.nodes.drawableTree.DrawableNode
 import viewPart.nodes.drawableTree.NodeDesign
+import java.util.*
 import kotlin.math.roundToInt
-
+/*
 @Composable
 fun displayTree(tree: RBDrawableTree) {
     val root = tree.root
@@ -50,20 +46,20 @@ fun displayTree(tree: BINDrawableTree) {
         displayNode(it, BINNodeDesign)
     }
 }
-
+*/
 @Composable
 fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> displayNode(node: DNode, design: NodeD) {
 
     if (node.clickState.value) {
         Box(modifier = Modifier
-            .height(60.dp).width(80.dp)
+            .height(if (node is BINDrawableNode<*>) 60.dp else 90.dp).width(100.dp)
             .offset {
                 IntOffset(
                     node.xState.value.roundToInt() + 71,
                     node.yState.value.roundToInt()
                 )
             }
-            .background(color = Color(237, 232, 232))
+            .background(color = Color(206, 211, 216))
             .border(2.dp, MaterialTheme.colorScheme.primary, AbsoluteRoundedCornerShape(5.dp))
             .padding(horizontal = 4.dp, vertical = 2.dp)
             .zIndex(1f)
@@ -73,7 +69,7 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
                 Text(text = "value: ${node.value.value}")
                 when (node ) {
                     is AVLDrawableNode<*> -> Text(text = "height: ${node.height}")
-                    is RBDrawableNode<*> -> Text(text = "color: ${node.color}")
+                    is RBDrawableNode<*> -> Text(text = "color: ${node.color.toString().lowercase(Locale.getDefault())}")
                 }
 
             }
