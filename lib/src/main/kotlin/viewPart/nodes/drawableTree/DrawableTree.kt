@@ -10,7 +10,6 @@ import treelib.abstractTree.Vertex
 import treelib.commonObjects.Container
 import treelib.commonObjects.exceptions.ImpossibleCaseException
 import viewPart.nodes.displayNode
-import viewPart.nodes.drawableBIN.BINNodeDesign
 
 abstract class DrawableTree<
         DNodeType : DrawableNode<Container<Int, String>, DNodeType>,
@@ -19,11 +18,12 @@ abstract class DrawableTree<
         State : StateContainer<Container<Int, String>, NodeType>,
         VertexType : Vertex<Container<Int, String>>,
         StructType : TreeStruct<Container<Int, String>, NodeType, State, VertexType>
-        > : DrawTree<DNodeType> {
+        > : DrawTree {
 
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
     protected abstract var treeStruct: StructType
+    protected abstract var root: DNodeType?
 
     override var yShiftBetweenNodes = 10f
 

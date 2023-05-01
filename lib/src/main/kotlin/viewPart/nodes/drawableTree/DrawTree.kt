@@ -3,7 +3,7 @@ package viewPart.nodes.drawableTree
 import androidx.compose.runtime.Composable
 import treelib.commonObjects.Container
 
-interface DrawTree<DNodeType : DrawableNode<Container<Int, String>, DNodeType>> {
+interface DrawTree {
     /**How you should it use:
      *
      * <Work without DB (recommend, bd did not test)>
@@ -26,7 +26,6 @@ interface DrawTree<DNodeType : DrawableNode<Container<Int, String>, DNodeType>> 
      * **/
 
     var name: String
-    var root: DNodeType?
     val designNode: NodeDesign
     var yShiftBetweenNodes: Float
 
