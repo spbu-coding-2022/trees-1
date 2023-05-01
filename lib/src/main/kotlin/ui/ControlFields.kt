@@ -14,7 +14,12 @@ import controller.Controller
 import viewPart.nodes.drawableTree.DrawTree
 
 @Composable
-fun controlFields(controller: Controller, activeTree: MutableState<Boolean>) {
+fun controlFields(
+    controller: Controller,
+    activeTree: MutableState<Boolean>,
+    deleteTreeState: MutableState<Boolean>,
+    openTreeState: MutableState<Boolean>
+) {
 
     val addFieldState = remember { mutableStateOf(false) }
     val findFieldState = remember { mutableStateOf(false) }
@@ -35,16 +40,20 @@ fun controlFields(controller: Controller, activeTree: MutableState<Boolean>) {
         controlField("Delete", deleteFieldState, value, activeTree)
     }
 
-    var id by remember { mutableStateOf(0) }
-
     var tree by remember { mutableStateOf<DrawTree?>(null) }
 
     if (!addFieldState.value && !findFieldState.value && !deleteFieldState.value) {
+        if (deleteTreeState.value) {
+            tree = controller.deleteTree()
+            deleteTreeState.value = false
+        }
+        if (openTreeState.value) {
+            tree = controller.tree  // ??
+        }
         tree?.displayTree()
         addFieldState.value = false
     }
 
-    // тут мы наверное можем быть уверены, что тип дерева не поменялся
     if (addFieldState.value) {
         tree = controller.insert(value.value)
         addFieldState.value = false

@@ -3,7 +3,6 @@ package databaseManage
 import com.google.gson.reflect.TypeToken
 import databaseSave.jsonFormat.DrawableBINVertex
 import databaseSave.jsonFormat.JsonRepository
-import treelib.avlTree.AVLStruct
 import treelib.binTree.BINNode
 import treelib.binTree.BINStateContainer
 import treelib.binTree.BINStruct
@@ -24,7 +23,7 @@ class BINTreeManager : TreeManager<
 
     private val dirPath = System.getProperty("user.dir") + "/saved-trees/BIN-trees"
 
-    private val jsonRep = JsonRepository(BIN_DB_DEFAULT_NAME)
+    private val jsonRep = JsonRepository(dirPath)
 
     override fun initTree(
         name: String,
@@ -85,13 +84,6 @@ class BINTreeManager : TreeManager<
         return File(dirPath, treeName).exists()
     }
 
-    /*    override fun delete(item: Container<Int, String>) {
-            if (binTree.find(item) != null)
-                binTree.delete(item)
-        }
-
-        override fun insert(item: Container<Int, String>) = binTree.insert(item)*/
-
     override fun getVertexesForDrawFromDB(name: String): List<DrawableBINVertex<Container<Int, String>>> {
         TODO("Not yet implemented")
     }
@@ -101,7 +93,10 @@ class BINTreeManager : TreeManager<
 
     fun cleanDB() = jsonRep.clean()
 
+    /*
+
     companion object {
         const val BIN_DB_DEFAULT_NAME = "binDB"
     }
+     */
 }

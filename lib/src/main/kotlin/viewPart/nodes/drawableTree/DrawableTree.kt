@@ -53,8 +53,6 @@ abstract class DrawableTree<
         }
     }
 
-    override fun deleteTree() = treeManager.deleteTreeFromDB(name)
-
     override fun deleteTreeFromBD() = treeManager.deleteTreeFromDB(name)
 
     override fun saveTreeToDB() {

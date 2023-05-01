@@ -59,13 +59,15 @@ class Controller {
 
     }
 
-    fun createTree(treeName: String, id: Int) {
+    fun createTree(treeName: String, id: Int): DrawTree {
         when (id) {
             0 -> tree = RBDrawableTree(treeName, rbManager)
             1 -> tree = AVLDrawableTree(treeName, avlManager)
             2 -> tree = BINDrawableTree(treeName, binManager)
         }
+        tree?.initTree()
 
+        return tree ?: throw NullPointerException()
     }
 
     fun insert(value: String): DrawTree {
@@ -107,17 +109,20 @@ class Controller {
         }
     }
 
-    fun deleteTree() {
-        //tree.deleteTree()
-        tree = null
-        tree?.updateTree()
+    fun deleteTree(): DrawTree {
+        tree?.deleteTree()
+        return tree ?: throw Exception("Tree not initialized")
     }
 
     fun saveTree(fileName: String) {
-        //tree.name = fileName
-        tree?.saveTree() ?: throw Exception("Tree not initialized")
+        if (tree == null)
+            throw Exception("Tree not initialized")
+
+        tree?.name = fileName
+        tree?.saveTreeToDB() ?: throw Exception()
 
     }
+
 
 }
 

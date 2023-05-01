@@ -25,7 +25,8 @@ fun deleteDialog(
     buttonState: List<MutableState<Boolean>>,
     clickButtonsState: MutableState<Boolean>,
     controller: Controller,
-    activeTree: MutableState<Boolean>
+    activeTree: MutableState<Boolean>,
+    deleteTreeState: MutableState<Boolean>
 ) {
 
     val deleteDialogState = remember { mutableStateOf(true) }
@@ -54,11 +55,8 @@ fun deleteDialog(
     }
 
     if (!deleteDialogState.value && activeTree.value) {
+        deleteTreeState.value = true
         deleteDialogState.value = true
-        clickButtonsState.value = false // ?
-
-        controller.deleteTree()
-
         activeTree.value = false
     }
 

@@ -29,7 +29,7 @@ class RBTreeManager : TreeManager<
             val orders: Pair<List<DrawableRBVertex<Container<Int, String>>>, List<DrawableRBVertex<Container<Int, String>>>> =
                 neo4jDB.exportRBtree(name)
             tree.restoreStruct(orders.first, orders.second)
-            neo4jDB.close()
+            //neo4jDB.close()
             return orders.first
         }
 
@@ -42,7 +42,7 @@ class RBTreeManager : TreeManager<
         inOrder: List<DrawableRBVertex<Container<Int, String>>>
     ) {
         neo4jDB.saveChanges(preOrder.toTypedArray(), inOrder.toTypedArray(), name)
-        neo4jDB.close()
+        //neo4jDB.close()
     }
 
     override fun saveTreeToDB(name: String, tree: RBStruct<Container<Int, String>>) {
@@ -53,33 +53,11 @@ class RBTreeManager : TreeManager<
     override fun deleteTreeFromDB(name: String) {
 
         neo4jDB.removeTree(name)
-        neo4jDB.close()
+        //neo4jDB.close()
 
     }
 
     override fun getSavedTreesNames(): List<String> = neo4jDB.findNamesTrees()
-    //{
-    //    val treesNames = neo4jDB.findNamesTrees()
-    //    val dirPath = System.getProperty("user.dir") + "/saved-trees/RB-trees"
-    //    File(dirPath).mkdirs()
-    //    if (treesNames.isNotEmpty()) {
-    //        for (name in treesNames) {
-    //            File(dirPath, name).run {
-     //               createNewFile()
-    //            }
-    //        }
-    //    }
-    //    return treesNames.subList(0, treesNames.size)
-    //}
-/*
-
-    override fun delete(item: Container<Int, String>) = rbTree.insert(item)
-
-    override fun insert(item: Container<Int, String>) {
-        if (rbTree.find(item) != null)
-            rbTree.delete(item)
-    }
-*/
 
     override fun getVertexesForDrawFromDB(name: String): List<DrawableRBVertex<Container<Int, String>>> {
         return neo4jDB.exportRBtree(name).first.map { DrawableRBVertex(it.value, it.color) }

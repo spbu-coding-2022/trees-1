@@ -1,3 +1,4 @@
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -34,18 +36,23 @@ fun main() = application {
 
     val activeTree = remember { mutableStateOf(false) }
 
+    val deleteTreeState = remember { mutableStateOf(false) }
+
+    val openTreeState = remember { mutableStateOf(false) }
+
     if (!clickButtonsState[6].value) {
         Window(
             onCloseRequest = ::exitApplication,
             undecorated = true,
-            state = windowState
+            state = windowState,
+            icon = appIcon()
         ) {
 
             this.window.minimumSize = Dimension(800, 600)
             Scaffold(
                 topBar = {
                     WindowDraggableArea {
-                        myTopAppBar(clickButtonsState, windowState, controller, activeTree)
+                        myTopAppBar(clickButtonsState, windowState, controller, activeTree, deleteTreeState, openTreeState)
                     }
                 },
                 content = {
@@ -61,9 +68,7 @@ fun main() = application {
                                 .offset(0.dp, 50.dp)
 
                         ) {
-                            controlFields(controller, activeTree)
-
-
+                            controlFields(controller, activeTree, deleteTreeState, openTreeState)
                         }
 
                     }
@@ -140,4 +145,9 @@ fun arrowIcon() = Icon(
 @Composable
 fun menuItemBackgroundColor(state: MutableState<Boolean>): Color {
     return if (state.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.background
+}
+
+@Composable
+fun appIcon(): Painter {
+    return painterResource("appIcon.png")
 }

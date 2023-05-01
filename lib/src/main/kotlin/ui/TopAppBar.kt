@@ -36,7 +36,9 @@ fun myTopAppBar(
     clickButtonsState: List<MutableState<Boolean>>,
     windowState: WindowState,
     controller: Controller,
-    activeTree: MutableState<Boolean>
+    activeTree: MutableState<Boolean>,
+    deleteTreeState: MutableState<Boolean>,
+    openTreeState: MutableState<Boolean>
 ) {
 
     val showFiles = controller.showFiles() // показывает <=3 деревьев каждого вида в диалоге open
@@ -66,7 +68,8 @@ fun myTopAppBar(
                         buttonState,
                         clickButtonsState[0],
                         controller,
-                        activeTree
+                        activeTree,
+                        deleteTreeState
                     )
 
 
@@ -81,7 +84,7 @@ fun myTopAppBar(
                         MaterialTheme.colorScheme.background,
                         clickButtonsState[2]
                     )
-                    openMenu(clickButtonsState[2], showFiles, controller, activeTree)
+                    openMenu(clickButtonsState[2], showFiles, activeTree, openTreeState, controller)
 
 
                     topAppIconButton(
@@ -195,8 +198,9 @@ fun createMenu(expandedNested: MutableState<Boolean>, controller: Controller, ac
 fun openMenu(
     expandedNested: MutableState<Boolean>,
     showFiles: List<List<String>>,
-    controller: Controller,
-    activeTree: MutableState<Boolean>
+    activeTree: MutableState<Boolean>,
+    openTreeState: MutableState<Boolean>,
+    controller: Controller
 ) {
     val trees = listOf("Red black tree", "AVL tree", "Binary tree")
 
@@ -231,9 +235,20 @@ fun openMenu(
                     .background(color = menuItemBackgroundColor(backgroundColorState[index])),
                 colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary))
 
-            treesNames(expandedTreesNames[index], expandedNested, showFiles[index], index, 150.dp, selectedTree)
+            treesNames(
+                expandedTreesNames[index],
+                expandedNested,
+                showFiles[index],
+                index,
+                150.dp,
+                selectedTree,
+                activeTree,
+                openTreeState,
+                controller
+            )
         }
     }
+
 
 }
 
@@ -245,7 +260,10 @@ fun treesNames(
     showFiles: List<String>,
     treeID: Int,
     offset: Dp,
-    selectedTree: MutableState<String>
+    selectedTree: MutableState<String>,
+    activeTree: MutableState<Boolean>,
+    openTreeState: MutableState<Boolean>,
+    controller: Controller
 ) {
 
     val dirPath = System.getProperty("user.dir") + "/saved-trees"
@@ -263,7 +281,9 @@ fun treesNames(
             searchItem(dirFiles[treeID], expandedNested, selectedTree, expandedOpenNested)
 
             repeat(showFiles.size) { index ->
-                DropdownMenuItem(onClick = { /*expandedNested.value = false*/ },
+                DropdownMenuItem(onClick = {
+                    selectedTree.value = showFiles[index]
+                },
                     text = { Text(showFiles[index]) },
                     modifier = Modifier
                         .onPointerEvent(PointerEventType.Enter) { backgroundColorState[index].value = true }
@@ -271,8 +291,15 @@ fun treesNames(
                         .background(color = menuItemBackgroundColor(backgroundColorState[index])),
                     colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary))
             }
-
         }
+    }
+
+    if (selectedTree.value.isNotEmpty()) {
+        controller.createTree(selectedTree.value, treeID)
+        openTreeState.value = true
+        activeTree.value = true
+        expandedNested.value = false
+        selectedTree.value = ""
     }
 
 }

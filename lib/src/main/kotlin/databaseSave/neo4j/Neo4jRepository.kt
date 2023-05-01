@@ -242,12 +242,18 @@ class Neo4jRepository : Closeable {
 
     fun findTree(treeName: String): Boolean {
         val session = driver?.session() ?: throw IOException()
-        var name = "NULL"
+        var name = ""
 
         session.executeRead { tx ->
-            name = tx.run("MATCH (n: Node {treeName: \$treeName}) WHERE NOT (:Node)-->(n) RETURN n.treeName").list()[0].values()[0].toString().replace("\"", "")
+            name = tx.run(
+                "MATCH (n: Node {treeName: \$treeName}) WHERE NOT (:Node)-->(n) RETURN n.treeName",
+                mutableMapOf(
+                    "treeName" to treeName
+                ) as Map<String, Any>?
+            ).list().singleOrNull()?.values()?.get(0)?.toString()?.replace("\"", "") ?: ""
+
         }
-         return name == treeName
+        return name == treeName
 
     }
 
