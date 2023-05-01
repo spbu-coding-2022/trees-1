@@ -26,8 +26,8 @@ class AVLDrawableTree(
 
     override fun drawableVertexToNode(vertex: DrawableAVLVertex<Container<Int, String>>) = AVLDrawableNode(
         value = vertex.value,
-        xState = mutableStateOf(0f),
-        yState = mutableStateOf(0f),
+        xState = mutableStateOf(vertex.x.toFloat()),
+        yState = mutableStateOf(vertex.y.toFloat()),
         height = vertex.height.toInt()
     )
 

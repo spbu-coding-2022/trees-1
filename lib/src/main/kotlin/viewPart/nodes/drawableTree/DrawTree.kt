@@ -17,6 +17,8 @@ interface DrawTree {
      * * tree.update <- (means moving information: TreeStruct.root -> DrawableTree.root)
      * * tree.repositisonTree <- (set "beautiful" coordinates without display)
      *
+     * After tree.initTree() you should not write tree.updateTree() or tree.repositisonTree(...), otherwise coordinates from db would be missed
+     *
      * }
      *
      * IN A COMPOSABLE CONTEXT {

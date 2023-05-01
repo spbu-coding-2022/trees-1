@@ -33,10 +33,18 @@ class BINDrawableTree(
         treeStruct = BINStruct()
     }
 
+    override fun saveTreeToDB() {
+        if (root != null) {
+            treeManager.saveTreeToDB(name, preOrder().map { nodeToDrawableVertex(it) }.toList(), listOf())
+        } else {
+            treeManager.saveTreeToDB(name, treeStruct)
+        }
+    }
+
     override fun drawableVertexToNode(vertex: DrawableBINVertex<Container<Int, String>>) = BINDrawableNode(
         value = vertex.value,
-        xState = mutableStateOf(0f),
-        yState = mutableStateOf(0f),
+        xState = mutableStateOf(vertex.x.toFloat()),
+        yState = mutableStateOf(vertex.y.toFloat()),
     )
 
     override fun vertexToNode(vertex: BINVertex<Container<Int, String>>) = BINDrawableNode(

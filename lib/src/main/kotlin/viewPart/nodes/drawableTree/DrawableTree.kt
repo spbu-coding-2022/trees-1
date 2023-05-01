@@ -53,8 +53,6 @@ abstract class DrawableTree<
         }
     }
 
-    override fun deleteTreeFromBD() = treeManager.deleteTreeFromDB(name)
-
     override fun saveTreeToDB() {
         if (root != null) {
             treeManager.saveTreeToDB(name, preOrder().map { nodeToDrawableVertex(it) }.toList(), listOf())
@@ -62,6 +60,8 @@ abstract class DrawableTree<
             treeManager.saveTreeToDB(name, treeStruct)
         }
     }
+
+    override fun deleteTreeFromBD() = treeManager.deleteTreeFromDB(name)
 
     override fun insert(item: Container<Int, String>) = treeStruct.insert(item)
 
@@ -158,7 +158,7 @@ abstract class DrawableTree<
         return n
     }
 
-    private fun preOrder() = sequence {
+    protected fun preOrder() = sequence {
         var current: DNodeType
         val queue = ArrayDeque<DNodeType>()
 
@@ -176,6 +176,36 @@ abstract class DrawableTree<
                     current.leftChild?.let {
                         queue.add(it)
                     } ?: throw ImpossibleCaseException()
+            }
+        }
+    }
+
+    protected fun inOrder() = sequence {
+        var flagVisited = 0
+        var current = root
+        val parents = ArrayDeque<DNodeType>()
+
+        while (current != null) {
+            if (flagVisited == 0) {
+                while (true) {
+                    current?.let {
+                        if (it.leftChild == null) return@let null
+                        parents.add(it)
+                        current = it.leftChild
+                        return@let current
+                    } ?: break
+                }
+            }
+            current?.let {
+                yield(it)
+                if (it.rightChild != null) {
+                    flagVisited = 0
+                    current = it.rightChild
+                } else {
+                    if (parents.isEmpty()) return@sequence
+                    flagVisited = 1
+                    current = parents.removeLast()
+                }
             }
         }
     }

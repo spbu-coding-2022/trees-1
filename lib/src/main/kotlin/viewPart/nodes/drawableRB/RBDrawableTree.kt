@@ -21,7 +21,7 @@ class RBDrawableTree(
         RBVertex<Container<Int, String>>,
         RBStruct<Container<Int, String>>
         >() {
-    override var root:  RBDrawableNode<Container<Int, String>>? = null
+    override var root: RBDrawableNode<Container<Int, String>>? = null
     override var drawablePreOrder: List<RBDrawableNode<Container<Int, String>>>? = null
     override var treeStruct = RBStruct<Container<Int, String>>()
     override val designNode = RBNodeDesign
@@ -31,10 +31,18 @@ class RBDrawableTree(
         treeStruct = RBStruct()
     }
 
+    override fun saveTreeToDB() {
+        if (root != null) {
+            treeManager.saveTreeToDB(name, preOrder().map { nodeToDrawableVertex(it) }.toList(), inOrder().map { nodeToDrawableVertex(it) }.toList())
+        } else {
+            treeManager.saveTreeToDB(name, treeStruct)
+        }
+    }
+
     override fun drawableVertexToNode(vertex: DrawableRBVertex<Container<Int, String>>) = RBDrawableNode(
         value = vertex.value,
-        xState = mutableStateOf(0f),
-        yState = mutableStateOf(0f),
+        xState = mutableStateOf(vertex.x.toFloat()),
+        yState = mutableStateOf(vertex.y.toFloat()),
         color = vertex.color,
     )
 
