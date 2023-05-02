@@ -31,18 +31,19 @@ import viewPart.nodes.drawableTree.DrawTree
 import viewPart.nodes.drawableTree.DrawableNode
 import viewPart.nodes.drawableTree.NodeDesign
 import java.util.Locale
+import kotlin.math.min
 import kotlin.math.roundToInt
 
 @Composable
 fun displayTree(tree: DrawTree, state: MutableState<Boolean>){
     Box(modifier = Modifier.fillMaxSize()
-                .pointerInput(state) {
+                .pointerInput(state, tree) {
                     detectDragGestures { change, dragAmount ->
                         change.consume()
                         tree.addOffset(dragAmount.x, dragAmount.y)
                         state.value = false
                     }
-                }.zIndex(-1000f)
+                }.zIndex(-100f)
     ){
         when (tree) {
             is BINDrawableTree -> displayBIN(tree)
@@ -109,7 +110,7 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
         }
     }
 
-    design.infoView(node.modifier)
+    design.infoView(node.modifier, node.value.key.toString())
 
     node.leftChild?.let {
         edgeView(node, it, design)

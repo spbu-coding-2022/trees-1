@@ -38,9 +38,6 @@ fun main() = application {
 
     val dragState = remember { mutableStateOf(false) }
 
-    val xCenter = remember { mutableStateOf(0f) }
-    val yCenter = remember { mutableStateOf(0f) }
-
     if (!closeButton.value) {
         Window(
             onCloseRequest = ::exitApplication,
