@@ -1,5 +1,6 @@
 package controller
 
+import androidx.compose.ui.window.WindowState
 import databaseManage.AVLTreeManager
 import databaseManage.BINTreeManager
 import databaseManage.RBTreeManager
@@ -81,10 +82,18 @@ class Controller {
         return tree ?: throw NullPointerException()
     }
 
-    fun find(value: String): DrawTree {
+    fun find(value: String, windowState: WindowState): DrawTree {
         val key = if (isInt(value.trim())) value.toInt() else value.hashCode()
 
-        tree?.find(key) ?: throw NullPointerException()
+        val offset1 = tree?.find(key) ?: throw NullPointerException()
+        println(windowState.size.width.value / 2)
+        if (offset1.first >= 0){
+            tree?.addOffset(
+                windowState.size.width.value / 2 - offset1.first,
+                windowState.size.height.value / 2 - offset1.second,
+            )
+        }
+
 
         return tree ?: throw NullPointerException()
 

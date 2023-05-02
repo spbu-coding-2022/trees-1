@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.WindowState
 import controller.Controller
 import viewPart.nodes.displayTree
 import viewPart.nodes.drawableTree.DrawTree
@@ -35,6 +36,7 @@ fun ControlFields(
     openTreeState: MutableState<Boolean>,
     createTreeState: MutableState<Boolean>,
     dragState: MutableState<Boolean>,
+    windowState: WindowState,
 ) {
 
     val addFieldState = remember { mutableStateOf(false) }
@@ -100,7 +102,7 @@ fun ControlFields(
         addFieldState.value = false
     }
     if (findFieldState.value) {
-        tree = controller.find(value.value)
+        tree = controller.find(value.value, windowState)
         findFieldState.value = false
     }
     if (deleteFieldState.value) {
