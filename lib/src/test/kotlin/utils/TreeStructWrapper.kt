@@ -5,6 +5,7 @@ import treelib.abstractTree.StateContainer
 import treelib.abstractTree.TreeStruct
 import treelib.abstractTree.Vertex
 
+@Suppress("UNCHECKED_CAST")
 class TreeStructWrapper<V : Comparable<V>, NodeType : Node<V, NodeType>, VertexType : Vertex<V>, State : StateContainer<V, NodeType>, TStruct : TreeStruct<V, NodeType, State, VertexType>> {
 
     fun getPrivateNode(tree: TStruct, name: String = "root"): NodeType? {

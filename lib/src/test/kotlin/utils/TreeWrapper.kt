@@ -4,6 +4,7 @@ import treelib.abstractTree.*
 import treelib.commonObjects.Container
 
 
+@Suppress("UNCHECKED_CAST")
 class TreeWrapper<
         V : Comparable<V>,
         Value,

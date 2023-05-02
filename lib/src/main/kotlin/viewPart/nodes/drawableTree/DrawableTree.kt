@@ -1,6 +1,5 @@
 package viewPart.nodes.drawableTree
 
-import androidx.compose.runtime.Composable
 import databaseManage.TreeManager
 import databaseSave.DrawableVertex
 import treelib.abstractTree.Node
@@ -9,7 +8,6 @@ import treelib.abstractTree.TreeStruct
 import treelib.abstractTree.Vertex
 import treelib.commonObjects.Container
 import treelib.commonObjects.exceptions.ImpossibleCaseException
-import viewPart.nodes.displayNode
 
 abstract class DrawableTree<
         DNodeType : DrawableNode<Container<Int, String>, DNodeType>,
@@ -23,16 +21,9 @@ abstract class DrawableTree<
     protected abstract var drawablePreOrder: List<DNodeType>?
     protected abstract val treeManager: TreeManager<Container<Int, String>, DVertexType, NodeType, State, VertexType, StructType>
     protected abstract var treeStruct: StructType
-    protected abstract var root: DNodeType?
+    abstract var root: DNodeType?
 
     override var yShiftBetweenNodes = 10f
-
-    @Composable
-    override fun displayTree() {
-        root?.let {
-            displayNode(it, designNode)
-        }
-    }
 
     override fun initTree() {
         val binVertexes = treeManager.initTree(name, treeStruct)
@@ -84,10 +75,9 @@ abstract class DrawableTree<
             }
             if (currentNode == null) return
         }
-
     }
 
-    override fun repositisonTree(xBase: Float, yBase: Float) {
+    override fun repositionTree(xBase: Float, yBase: Float) {
         /*xBase: Float = 0f, yBase: Float = 0f*/
         root?.let {
             createCordsState1(it, xBase, yBase)

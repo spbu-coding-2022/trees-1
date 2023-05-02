@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.unit.dp
 import controller.Controller
+import viewPart.nodes.displayTree
 import viewPart.nodes.drawableTree.DrawTree
 
 @Composable
@@ -51,7 +52,7 @@ fun ControlFields(
             tree = controller.tree
             openTreeState.value = false
         }
-        tree?.displayTree()
+        tree?.let { displayTree(it) }
 
         addFieldState.value = false
     }
