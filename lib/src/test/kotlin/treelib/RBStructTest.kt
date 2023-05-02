@@ -116,8 +116,8 @@ class RBStructTest {
     }
 
     @Test
-    fun `fazzer test`() {
-        val fazzer = RBStructFuzzer(
+    fun `fuzzer test`() {
+        val fuzzer = RBStructFuzzer(
                 arrayOf(
                         1,
                         2,
@@ -141,11 +141,11 @@ class RBStructTest {
                         2754
                 ), ::testAssert
         )
-        fazzer.saveNextTestSets("TEST_TEST")
+        fuzzer.saveNextTestSets("TEST_TEST")
 
         assertAll(
                 {
-                    fazzer.fuzzInvariantInsert(15, 10)
+                    fuzzer.fuzzInvariantInsert(15, 10)
                 }
         )
     }

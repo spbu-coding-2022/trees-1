@@ -12,8 +12,8 @@ import kotlin.test.assertEquals
 
 @DisplayName("Test: Binary Search Tree Struct")
 class BINStructTest {
-    val treeW = TreeStructWrapper<Int, BINNode<Int>, BINVertex<Int>, BINStateContainer<Int>, BINStruct<Int>>()
-    var treeStruct = BINStruct<Int>()
+    private val treeW = TreeStructWrapper<Int, BINNode<Int>, BINVertex<Int>, BINStateContainer<Int>, BINStruct<Int>>()
+    private var treeStruct = BINStruct<Int>()
 
     private fun testAssert(msg: String): Nothing = fail(msg)
 
@@ -43,24 +43,24 @@ class BINStructTest {
             treeStruct.insert(i)
         }
 
-        val additional_num = mutableListOf(1, 2, 3, 5, 7, 8, 11)
-        for (i in additional_num) {
+        val additionalNum = mutableListOf(1, 2, 3, 5, 7, 8, 11)
+        for (i in additionalNum) {
             treeStruct.insert(i)
         }
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_2 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_null = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_3 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
-        val node_null1 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
-        val node_4 = treeW.getPrivateNode(treeStruct)?.right?.right?.right?.value
+        val node2 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val nodeNull = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node3 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val nodeNull1 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val node4 = treeW.getPrivateNode(treeStruct)?.right?.right?.right?.value
 
         assertEquals(expected = root, actual = 1)
-        assertEquals(expected = node_null, actual = null)
-        assertEquals(expected = node_4, actual = 4)
-        assertEquals(expected = node_2, actual = 2)
-        assertEquals(expected = node_3, actual = 3)
-        assertEquals(expected = node_null1, actual = null)
+        assertEquals(expected = nodeNull, actual = null)
+        assertEquals(expected = node4, actual = 4)
+        assertEquals(expected = node2, actual = 2)
+        assertEquals(expected = node3, actual = 3)
+        assertEquals(expected = nodeNull1, actual = null)
     }
 
     @Test
@@ -102,19 +102,19 @@ class BINStructTest {
 
         treeStruct.delete(1)
 
-        val additional_num = mutableListOf(1, 2, 11)
-        for (i in additional_num) {
+        val additionalNum = mutableListOf(1, 2, 11)
+        for (i in additionalNum) {
             treeStruct.insert(i)
         }
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_1 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_11 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node1 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node11 = treeW.getPrivateNode(treeStruct)?.right?.value
 
 
         assertEquals(expected = root, actual = 2)
-        assertEquals(expected = node_1, actual = 1)
-        assertEquals(expected = node_11, actual = 11)
+        assertEquals(expected = node1, actual = 1)
+        assertEquals(expected = node11, actual = 11)
     }
 
     @Test
@@ -126,11 +126,11 @@ class BINStructTest {
         treeStruct.delete(6)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.right?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.right?.value
 
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
         assertEquals(expected = 5, actual = root)
     }
 
@@ -143,11 +143,11 @@ class BINStructTest {
         treeStruct.delete(5)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.right?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.right?.value
 
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
         assertEquals(expected = 6, actual = root)
     }
 
@@ -159,12 +159,12 @@ class BINStructTest {
         }
         treeStruct.delete(3)
 
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.right?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.right?.value
         val root = treeW.getPrivateNode(treeStruct)?.value
 
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
         assertEquals(expected = null, actual = root)
     }
 
@@ -176,15 +176,15 @@ class BINStructTest {
         }
         treeStruct.delete(15)
 
-        val node_10 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.right?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val node10 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.right?.right?.value
         val root = treeW.getPrivateNode(treeStruct)?.value
 
 
-        assertEquals(expected = 10, actual = node_10)
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = 10, actual = node10)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
         assertEquals(expected = 3, actual = root)
     }
 
@@ -196,15 +196,15 @@ class BINStructTest {
         }
         treeStruct.delete(3)
 
-        val node_10 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.left?.right?.value
+        val node10 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.left?.right?.value
         val root = treeW.getPrivateNode(treeStruct)?.value
 
 
-        assertEquals(expected = 10, actual = node_10)
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = 10, actual = node10)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
         assertEquals(expected = 15, actual = root)
     }
 
@@ -216,14 +216,14 @@ class BINStructTest {
         }
         treeStruct.delete(2)
 
-        val node_1 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.left?.right?.value
+        val node1 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.left?.right?.value
         val root = treeW.getPrivateNode(treeStruct)?.value
 
-        assertEquals(expected = 1, actual = node_1)
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = 1, actual = node1)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
         assertEquals(expected = 3, actual = root)
     }
 
@@ -235,14 +235,14 @@ class BINStructTest {
         }
         treeStruct.delete(5)
 
-        val node_6 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.right?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val node6 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.right?.right?.value
         val root = treeW.getPrivateNode(treeStruct)?.value
 
-        assertEquals(expected = 6, actual = node_6)
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = 6, actual = node6)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
         assertEquals(expected = 3, actual = root)
     }
 
@@ -254,13 +254,13 @@ class BINStructTest {
         }
         treeStruct.delete(3)
 
-        val node_6 = treeW.getPrivateNode(treeStruct)?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node6 = treeW.getPrivateNode(treeStruct)?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.right?.value
 
-        assertEquals(expected = 6, actual = node_6)
-        assertEquals(expected = null, actual = node_null_left)
-        assertEquals(expected = null, actual = node_null_right)
+        assertEquals(expected = 6, actual = node6)
+        assertEquals(expected = null, actual = nodeNullLeft)
+        assertEquals(expected = null, actual = nodeNullRight)
     }
 
     @Test
@@ -270,22 +270,22 @@ class BINStructTest {
             treeStruct.insert(value)
         }
         treeStruct.delete(7)
-        val node_6 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_3 = treeW.getPrivateNode(treeStruct)?.left?.left?.value
-        val node_null_right = treeW.getPrivateNode(treeStruct)?.left?.right?.value
-        val node_1 = treeW.getPrivateNode(treeStruct)?.left?.left?.left?.value
-        val node_2 = treeW.getPrivateNode(treeStruct)?.left?.left?.left?.right?.value
-        val node_5 = treeW.getPrivateNode(treeStruct)?.left?.left?.right?.value
-        val node_4 = treeW.getPrivateNode(treeStruct)?.left?.left?.right?.left?.value
+        val node6 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node3 = treeW.getPrivateNode(treeStruct)?.left?.left?.value
+        val nodeNullRight = treeW.getPrivateNode(treeStruct)?.left?.right?.value
+        val node1 = treeW.getPrivateNode(treeStruct)?.left?.left?.left?.value
+        val node2 = treeW.getPrivateNode(treeStruct)?.left?.left?.left?.right?.value
+        val node5 = treeW.getPrivateNode(treeStruct)?.left?.left?.right?.value
+        val node4 = treeW.getPrivateNode(treeStruct)?.left?.left?.right?.left?.value
         val root = treeW.getPrivateNode(treeStruct)?.value
 
-        assertEquals(expected = 6, actual = node_6)
-        assertEquals(expected = 3, actual = node_3)
-        assertEquals(expected = null, actual = node_null_right)
-        assertEquals(expected = 1, actual = node_1)
-        assertEquals(expected = 2, actual = node_2)
-        assertEquals(expected = 5, actual = node_5)
-        assertEquals(expected = 4, actual = node_4)
+        assertEquals(expected = 6, actual = node6)
+        assertEquals(expected = 3, actual = node3)
+        assertEquals(expected = null, actual = nodeNullRight)
+        assertEquals(expected = 1, actual = node1)
+        assertEquals(expected = 2, actual = node2)
+        assertEquals(expected = 5, actual = node5)
+        assertEquals(expected = 4, actual = node4)
         assertEquals(expected = 10, actual = root)
     }
 
@@ -298,16 +298,16 @@ class BINStructTest {
         treeStruct.delete(2)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_1 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_null_left1 = treeW.getPrivateNode(treeStruct)?.left?.left?.value
-        val node_null_right1 = treeW.getPrivateNode(treeStruct)?.left?.right?.value
-        val node_null_right_root = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node1 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.left?.value
+        val nodeNullRight1 = treeW.getPrivateNode(treeStruct)?.left?.right?.value
+        val nodeNullRightRoot = treeW.getPrivateNode(treeStruct)?.right?.value
 
         assertEquals(expected = root, actual = 3)
-        assertEquals(expected = node_1, actual = 1)
-        assertEquals(expected = node_null_left1, actual = null)
-        assertEquals(expected = node_null_right1, actual = null)
-        assertEquals(expected = node_null_right_root, actual = null)
+        assertEquals(expected = node1, actual = 1)
+        assertEquals(expected = nodeNullLeft, actual = null)
+        assertEquals(expected = nodeNullRight1, actual = null)
+        assertEquals(expected = nodeNullRightRoot, actual = null)
     }
 
     @Test
@@ -319,22 +319,22 @@ class BINStructTest {
         treeStruct.delete(7)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_5 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_4 = treeW.getPrivateNode(treeStruct)?.left?.left?.value
-        val node_6 = treeW.getPrivateNode(treeStruct)?.left?.right?.value
-        val node_null_left4 = treeW.getPrivateNode(treeStruct)?.left?.left?.left?.value
-        val node_null_right4 = treeW.getPrivateNode(treeStruct)?.left?.left?.right?.value
-        val node_null_left6 = treeW.getPrivateNode(treeStruct)?.left?.right?.left?.value
-        val node_null_right6 = treeW.getPrivateNode(treeStruct)?.left?.right?.left?.value
+        val node5 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node4 = treeW.getPrivateNode(treeStruct)?.left?.left?.value
+        val node6 = treeW.getPrivateNode(treeStruct)?.left?.right?.value
+        val nodeNullLeft4 = treeW.getPrivateNode(treeStruct)?.left?.left?.left?.value
+        val nodeNullRight4 = treeW.getPrivateNode(treeStruct)?.left?.left?.right?.value
+        val nodeNullLeft6 = treeW.getPrivateNode(treeStruct)?.left?.right?.left?.value
+        val nodeNullRight6 = treeW.getPrivateNode(treeStruct)?.left?.right?.left?.value
 
         assertEquals(expected = root, actual = 10)
-        assertEquals(expected = node_5, actual = 5)
-        assertEquals(expected = node_4, actual = 4)
-        assertEquals(expected = node_6, actual = 6)
-        assertEquals(expected = node_null_left4, actual = null)
-        assertEquals(expected = node_null_right4, actual = null)
-        assertEquals(expected = node_null_left6, actual = null)
-        assertEquals(expected = node_null_right6, actual = null)
+        assertEquals(expected = node5, actual = 5)
+        assertEquals(expected = node4, actual = 4)
+        assertEquals(expected = node6, actual = 6)
+        assertEquals(expected = nodeNullLeft4, actual = null)
+        assertEquals(expected = nodeNullRight4, actual = null)
+        assertEquals(expected = nodeNullLeft6, actual = null)
+        assertEquals(expected = nodeNullRight6, actual = null)
     }
 
     @Test
@@ -348,16 +348,16 @@ class BINStructTest {
         treeStruct.delete(7)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_10 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_null_right10 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
-        val node_null_left10 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node10 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val nodeNullRight10 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val nodeNullLeft10 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
 
         assertEquals(expected = root, actual = 8)
-        assertEquals(expected = node_10, actual = 10)
-        assertEquals(expected = node_null_left10, actual = null)
-        assertEquals(expected = node_null_right10, actual = null)
-        assertEquals(expected = node_null_left, actual = null)
+        assertEquals(expected = node10, actual = 10)
+        assertEquals(expected = nodeNullLeft10, actual = null)
+        assertEquals(expected = nodeNullRight10, actual = null)
+        assertEquals(expected = nodeNullLeft, actual = null)
     }
 
     @Test
@@ -370,20 +370,20 @@ class BINStructTest {
         treeStruct.delete(8)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_null_left = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_9 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_7 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
-        val node_10 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
-        val node_12 = treeW.getPrivateNode(treeStruct)?.right?.right?.right?.value
-        val node_null = treeW.getPrivateNode(treeStruct)?.right?.right?.left?.value
+        val nodeNullLeft = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node9 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node7 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val node10 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val node12 = treeW.getPrivateNode(treeStruct)?.right?.right?.right?.value
+        val nodeNull = treeW.getPrivateNode(treeStruct)?.right?.right?.left?.value
 
         assertEquals(expected = root, actual = 6)
-        assertEquals(expected = node_9, actual = 9)
-        assertEquals(expected = node_null, actual = null)
-        assertEquals(expected = node_null_left, actual = null)
-        assertEquals(expected = node_7, actual = 7)
-        assertEquals(expected = node_10, actual = 10)
-        assertEquals(expected = node_12, actual = 12)
+        assertEquals(expected = node9, actual = 9)
+        assertEquals(expected = nodeNull, actual = null)
+        assertEquals(expected = nodeNullLeft, actual = null)
+        assertEquals(expected = node7, actual = 7)
+        assertEquals(expected = node10, actual = 10)
+        assertEquals(expected = node12, actual = 12)
     }
 
     @Test
@@ -396,16 +396,16 @@ class BINStructTest {
         treeStruct.delete(8)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_7 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_10 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_12 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
-        val node_null = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val node7 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node10 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node12 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val nodeNull = treeW.getPrivateNode(treeStruct)?.right?.left?.value
 
         assertEquals(expected = root, actual = 9)
-        assertEquals(expected = node_null, actual = null)
-        assertEquals(expected = node_7, actual = 7)
-        assertEquals(expected = node_10, actual = 10)
-        assertEquals(expected = node_12, actual = 12)
+        assertEquals(expected = nodeNull, actual = null)
+        assertEquals(expected = node7, actual = 7)
+        assertEquals(expected = node10, actual = 10)
+        assertEquals(expected = node12, actual = 12)
     }
 
     @Test
@@ -418,18 +418,18 @@ class BINStructTest {
         treeStruct.delete(8)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_7 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_12 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_13 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
-        val node_14 = treeW.getPrivateNode(treeStruct)?.right?.right?.right?.value
-        val node_null = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val node7 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node12 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node13 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val node14 = treeW.getPrivateNode(treeStruct)?.right?.right?.right?.value
+        val nodeNull = treeW.getPrivateNode(treeStruct)?.right?.left?.value
 
         assertEquals(expected = root, actual = 10)
-        assertEquals(expected = node_null, actual = null)
-        assertEquals(expected = node_7, actual = 7)
-        assertEquals(expected = node_13, actual = 13)
-        assertEquals(expected = node_14, actual = 14)
-        assertEquals(expected = node_12, actual = 12)
+        assertEquals(expected = nodeNull, actual = null)
+        assertEquals(expected = node7, actual = 7)
+        assertEquals(expected = node13, actual = 13)
+        assertEquals(expected = node14, actual = 14)
+        assertEquals(expected = node12, actual = 12)
     }
 
     @Test
@@ -442,20 +442,20 @@ class BINStructTest {
         treeStruct.delete(12)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_13 = treeW.getPrivateNode(treeStruct)?.right?.value
-        val node_15 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
-        val node_10 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
-        val node_11 = treeW.getPrivateNode(treeStruct)?.right?.left?.right?.value
-        val node_9 = treeW.getPrivateNode(treeStruct)?.right?.left?.left?.value
-        val node_null = treeW.getPrivateNode(treeStruct)?.right?.right?.left?.value
+        val node13 = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node15 = treeW.getPrivateNode(treeStruct)?.right?.right?.value
+        val node10 = treeW.getPrivateNode(treeStruct)?.right?.left?.value
+        val node11 = treeW.getPrivateNode(treeStruct)?.right?.left?.right?.value
+        val node9 = treeW.getPrivateNode(treeStruct)?.right?.left?.left?.value
+        val nodeNull = treeW.getPrivateNode(treeStruct)?.right?.right?.left?.value
 
         assertEquals(expected = root, actual = 8)
-        assertEquals(expected = node_10, actual = 10)
-        assertEquals(expected = node_11, actual = 11)
-        assertEquals(expected = node_13, actual = 13)
-        assertEquals(expected = node_9, actual = 9)
-        assertEquals(expected = node_15, actual = 15)
-        assertEquals(expected = node_null, actual = null)
+        assertEquals(expected = node10, actual = 10)
+        assertEquals(expected = node11, actual = 11)
+        assertEquals(expected = node13, actual = 13)
+        assertEquals(expected = node9, actual = 9)
+        assertEquals(expected = node15, actual = 15)
+        assertEquals(expected = nodeNull, actual = null)
     }
 
     @Test
@@ -468,14 +468,14 @@ class BINStructTest {
         treeStruct.delete(8)
 
         val root = treeW.getPrivateNode(treeStruct)?.value
-        val node_7 = treeW.getPrivateNode(treeStruct)?.left?.value
-        val node_6 = treeW.getPrivateNode(treeStruct)?.left?.left?.value
-        val node_null = treeW.getPrivateNode(treeStruct)?.right?.value
+        val node7 = treeW.getPrivateNode(treeStruct)?.left?.value
+        val node6 = treeW.getPrivateNode(treeStruct)?.left?.left?.value
+        val nodeNull = treeW.getPrivateNode(treeStruct)?.right?.value
 
         assertEquals(expected = root, actual = 10)
-        assertEquals(expected = node_null, actual = null)
-        assertEquals(expected = node_7, actual = 7)
-        assertEquals(expected = node_6, actual = 6)
+        assertEquals(expected = nodeNull, actual = null)
+        assertEquals(expected = node7, actual = 7)
+        assertEquals(expected = node6, actual = 6)
     }
 
     @Test

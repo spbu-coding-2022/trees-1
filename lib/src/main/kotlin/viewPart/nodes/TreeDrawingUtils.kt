@@ -18,16 +18,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import treelib.commonObjects.Container
 import viewPart.nodes.drawableAVL.AVLDrawableNode
+import viewPart.nodes.drawableAVL.AVLDrawableTree
+import viewPart.nodes.drawableAVL.AVLNodeDesign
 import viewPart.nodes.drawableBIN.BINDrawableNode
+import viewPart.nodes.drawableBIN.BINDrawableTree
+import viewPart.nodes.drawableBIN.BINNodeDesign
 import viewPart.nodes.drawableRB.RBDrawableNode
+import viewPart.nodes.drawableRB.RBDrawableTree
+import viewPart.nodes.drawableRB.RBNodeDesign
+import viewPart.nodes.drawableTree.DrawTree
 import viewPart.nodes.drawableTree.DrawableNode
 import viewPart.nodes.drawableTree.NodeDesign
 import java.util.*
 import kotlin.math.roundToInt
 
-/*
 @Composable
-fun displayTree(tree: RBDrawableTree) {
+fun displayTree(tree: DrawTree){
+    when(tree){
+        is BINDrawableTree -> displayBIN(tree)
+        is RBDrawableTree -> displayRB(tree)
+        is AVLDrawableTree -> displayAVL(tree)
+        else -> throw NullPointerException("Wrong DrawableTree type")
+    }
+}
+
+@Composable
+fun displayRB(tree: RBDrawableTree) {
     val root = tree.root
     root?.let {
         displayNode(it, RBNodeDesign)
@@ -35,7 +51,7 @@ fun displayTree(tree: RBDrawableTree) {
 }
 
 @Composable
-fun displayTree(tree: AVLDrawableTree) {
+fun displayAVL(tree: AVLDrawableTree) {
     val root = tree.root
     root?.let {
         displayNode(it, AVLNodeDesign)
@@ -43,13 +59,14 @@ fun displayTree(tree: AVLDrawableTree) {
 }
 
 @Composable
-fun displayTree(tree: BINDrawableTree) {
+fun displayBIN(tree: BINDrawableTree) {
     val root = tree.root
     root?.let {
         displayNode(it, BINNodeDesign)
     }
 }
-*/
+
+
 @Composable
 fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> displayNode(node: DNode, design: NodeD) {
 
@@ -70,12 +87,14 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
                 Text(text = "key: ${node.value.key} ", maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(text = "value: ${node.value.value}", maxLines = 2, overflow = TextOverflow.Ellipsis)
                 when (node ) {
+//            Column(modifier = Modifier.zIndex(1f)) {
+//                Text(text = "key: ${node.value.key}")
+//                Text(text = "value: ${node.value.value}")
+//                when (node) {
                     is AVLDrawableNode<*> -> Text(text = "height: ${node.height}")
                     is RBDrawableNode<*> -> Text(text = "color: ${node.color.toString().lowercase(Locale.getDefault())}")
                 }
-
             }
-
         }
     }
 

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import controller.Controller
+import viewPart.nodes.displayTree
 import viewPart.nodes.drawableTree.DrawTree
 
 @Composable
@@ -87,10 +88,10 @@ fun ControlFields(
         }
         if (returnButtonClickState.value) {
             tree?.updateTree()
-            tree?.repositisonTree(800f, 10f)
+            tree?.repositionTree(800f, 10f)
             returnButtonClickState.value = false
         }
-        tree?.displayTree()
+        tree?.let { displayTree(it) }
 
         addFieldState.value = false
     }

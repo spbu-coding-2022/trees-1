@@ -76,7 +76,7 @@ class Controller {
 
         tree?.insert(Container(Pair(key, value))) ?: throw NullPointerException()
         tree?.updateTree() ?: throw NullPointerException()
-        tree?.repositisonTree(800f, 10f) ?: throw NullPointerException()
+        tree?.repositionTree(800f, 10f) ?: throw NullPointerException()
 
         return tree ?: throw NullPointerException()
     }
@@ -95,7 +95,7 @@ class Controller {
 
         tree?.delete(Container(Pair(key, ""))) ?: throw NullPointerException()
         tree?.updateTree() ?: throw NullPointerException()
-        tree?.repositisonTree(800f, 10f) ?: throw NullPointerException()
+        tree?.repositionTree(800f, 10f) ?: throw NullPointerException()
 
         return tree ?: throw NullPointerException()
     }

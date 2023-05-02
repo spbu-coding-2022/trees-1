@@ -195,6 +195,7 @@ fun BottomButtons(dialogState: MutableState<Boolean>, firstButtonState: MutableS
         onClick = {
             firstButtonState.value = !firstButtonState.value
         },
+        contentPadding = PaddingValues(start = 2.dp, end = 2.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
             contentColor = MaterialTheme.colorScheme.background
