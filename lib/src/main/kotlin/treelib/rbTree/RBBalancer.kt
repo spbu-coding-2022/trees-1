@@ -3,7 +3,7 @@ package treelib.rbTree
 import treelib.abstractTree.balanced.BalancerParent
 
 
-class RBBalancer<Pack : Comparable<Pack>>(private var root: RBNode<Pack>?) :
+class RBBalancer<Pack : Comparable<Pack>>(var root: RBNode<Pack>?) :
     BalancerParent<Pack, RBNode<Pack>, RBStateContainer<Pack>>() {
 
     init {

@@ -93,9 +93,11 @@ class RBStruct<Pack : Comparable<Pack>> :
                 if (!stack.isEmpty()) {
                     if (set.contains(stack.peek())) {
                         set.remove(stack.peek())
+                        currentNode.parent = stack.peek()
                         stack.pop().right = currentNode
                     } else {
                         stack.peek().left = currentNode
+                        currentNode.parent = stack.peek()
                     }
                 }
                 stack.push(currentNode)
@@ -114,6 +116,7 @@ class RBStruct<Pack : Comparable<Pack>> :
                 stack.push(currentNode)
             }
         }
+        balancer.root = root
     }
 
     private fun <RBVertexType : RBVertex<Pack>> createRBNode(drawNode: RBVertexType): RBNode<Pack> {
