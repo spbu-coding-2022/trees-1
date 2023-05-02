@@ -39,4 +39,5 @@ interface DrawTree {
     fun delete(item: Container<Int, String>)
     fun find(item: Int)
     fun repositionTree(xBase: Float, yBase: Float)
+    fun addOffset(xOffset: Float, yOffset: Float)
 }

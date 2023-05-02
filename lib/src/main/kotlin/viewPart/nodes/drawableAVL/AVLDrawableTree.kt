@@ -28,14 +28,14 @@ class AVLDrawableTree(
         value = vertex.value,
         xState = mutableStateOf(vertex.x.toFloat()),
         yState = mutableStateOf(vertex.y.toFloat()),
-        height = vertex.height.toInt()
+        height = vertex.height.toInt(),
     )
 
     override fun vertexToNode(vertex: AVLVertex<Container<Int, String>>) = AVLDrawableNode(
         value = vertex.value,
         xState = mutableStateOf(0f),
         yState = mutableStateOf(0f),
-        height = vertex.height.toInt()
+        height = vertex.height.toInt(),
     )
 
     override fun nodeToDrawableVertex(node: AVLDrawableNode<Container<Int, String>>) = DrawableAVLVertex(
