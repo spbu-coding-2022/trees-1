@@ -1,15 +1,28 @@
 package ui
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import controller.Controller
 import viewPart.nodes.drawableTree.DrawTree
 
@@ -25,20 +38,36 @@ fun ControlFields(
     val addFieldState = remember { mutableStateOf(false) }
     val findFieldState = remember { mutableStateOf(false) }
     val deleteFieldState = remember { mutableStateOf(false) }
+    val returnButtonClickState = remember { mutableStateOf(false) }
+    val returnButtonHoverState = remember { mutableStateOf(false) }
+
 
     val value = remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.offset(0.dp, 0.dp).padding(horizontal = 10.dp)) {
-        // add
+    Column(
+        modifier = Modifier.offset(0.dp, 0.dp).padding(horizontal = 10.dp),
+        horizontalAlignment = Alignment.Start,
+        //verticalArrangement = Arrangement.Top
+    ) {
         ControlField("Add", addFieldState, value, activeTree)
         Spacer(modifier = Modifier.height(2.dp))
 
-        // find
         ControlField("Find", findFieldState, value, activeTree)
         Spacer(modifier = Modifier.height(2.dp))
 
-        // delete
         ControlField("Delete", deleteFieldState, value, activeTree)
+        Spacer(modifier = Modifier.height(5.dp))
+
+        ReturnButton(
+            returnButtonHoverState,
+            returnButtonClickState,
+            painterResource("drawable/go-back-arrow.png"),
+            MaterialTheme.colorScheme.onPrimary,
+            MaterialTheme.colorScheme.background,
+            MaterialTheme.colorScheme.primary,
+            50.dp, 50.dp,
+            CircleShape
+        )
     }
 
     var tree by remember { mutableStateOf<DrawTree?>(null) }
@@ -55,6 +84,11 @@ fun ControlFields(
         if (createTreeState.value) {
             tree = controller.tree
             createTreeState.value = false
+        }
+        if (returnButtonClickState.value) {
+            tree?.updateTree()
+            tree?.repositisonTree(800f, 10f)
+            returnButtonClickState.value = false
         }
         tree?.displayTree()
 
@@ -131,5 +165,44 @@ fun ControlField(
         shape = RoundedCornerShape(8.dp)
     )
 
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ReturnButton(
+    hoverButtonState: MutableState<Boolean>,
+    clickButtonState: MutableState<Boolean>,
+    painter: Painter,
+    hoverColor: Color,
+    color: Color,
+    iconColor: Color,
+    height: Dp,
+    width: Dp,
+    shape: Shape,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+
+    Row() {
+        IconButton(
+            onClick = { clickButtonState.value = !clickButtonState.value },
+            modifier = Modifier.height(height).width(width)
+                .onPointerEvent(PointerEventType.Enter) { hoverButtonState.value = true }
+                .onPointerEvent(PointerEventType.Exit) { hoverButtonState.value = false }
+                .clickable(indication = null, interactionSource = interactionSource) {}
+                .clip(shape),
+            colors = IconButtonDefaults.iconButtonColors(
+                contentColor = if (hoverButtonState.value) iconColor else MaterialTheme.colorScheme.background,
+                containerColor = if (hoverButtonState.value) color else hoverColor
+            )
+        ) {
+            Icon(painter, contentDescription = null)
+        }
+
+        if (hoverButtonState.value) {
+            Popup(offset = IntOffset(x = 60, y = 50)) {
+                Text(text = "Back to root")
+            }
+        }
+    }
 }
 

@@ -148,7 +148,7 @@ fun CompleteDialogContent(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom
             ) {
-                BottomButtons(dialogState, dialogState,"Ok", "Cancel") // поменять !!
+                BottomButtons(dialogState, dialogState,"Ok", "Cancel")
             }
 
 
@@ -194,7 +194,6 @@ fun BottomButtons(dialogState: MutableState<Boolean>, firstButtonState: MutableS
         shape = RoundedCornerShape(3.dp),
         onClick = {
             firstButtonState.value = !firstButtonState.value
-            //dialogState.value = false
         },
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
