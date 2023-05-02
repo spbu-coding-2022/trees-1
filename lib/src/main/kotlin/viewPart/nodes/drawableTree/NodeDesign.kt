@@ -13,5 +13,5 @@ interface NodeDesign {
     var lineColor: Color
 
     @Composable
-    fun infoView(information: String, modifier: Modifier)
+    fun infoView(modifier: Modifier)
 }

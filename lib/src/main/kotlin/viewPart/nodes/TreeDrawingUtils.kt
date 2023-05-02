@@ -109,7 +109,7 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
         }
     }
 
-    design.infoView(node.value.toString(), node.modifier)
+    design.infoView(node.modifier)
 
     node.leftChild?.let {
         edgeView(node, it, design)
