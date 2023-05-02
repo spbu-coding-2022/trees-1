@@ -11,12 +11,13 @@ fun validate(fileName: String): Boolean {
     }
     val os = System.getProperty("os.name").lowercase(Locale.getDefault())
     return when {
-        os.contains("win") -> Arrays.stream(INVALID_WINDOWS_SPECIFIC_CHAR)
-            .noneMatch { ch -> fileName.contains(ch.toString()) }
+        os.contains("win") ->
+            Arrays.stream(INVALID_WINDOWS_SPECIFIC_CHAR)
+                .noneMatch { ch -> fileName.contains(ch.toString()) }
 
-        os.contains("unix") || os.contains("linux") || os.contains("mac") -> Arrays.stream(
-            INVALID_UNIX_SPECIFIC_CHAR
-        ).noneMatch { ch -> fileName.contains(ch.toString()) }
+        os.contains("unix") || os.contains("linux") || os.contains("mac") ->
+            Arrays.stream(INVALID_UNIX_SPECIFIC_CHAR)
+                .noneMatch { ch -> fileName.contains(ch.toString()) }
 
         else -> true
     }

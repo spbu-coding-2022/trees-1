@@ -22,14 +22,13 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
 import controller.Controller
-import topAppIconButton
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun saveDialog(
-    buttonState: List<MutableState<Boolean>>,
+fun SaveDialog(
+    hoverButtonState: MutableState<Boolean>,
     clickButtonState: MutableState<Boolean>,
-    fileName: MutableState<String>,
+    selectFileName: MutableState<String>,
     controller: Controller,
     activeTree: MutableState<Boolean>
 ) {
@@ -43,7 +42,7 @@ fun saveDialog(
         Dialog(
             onCloseRequest = { clickButtonState.value = false }, undecorated = true,
             state = rememberDialogState(
-                position = WindowPosition(Alignment.Center), // поменять ??
+                position = WindowPosition(Alignment.Center),
                 size = DpSize(300.dp, 180.dp)
             ),
             resizable = false
@@ -63,7 +62,7 @@ fun saveDialog(
                 Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween) {
 
                     Column(modifier = Modifier.height(50.dp)) {
-                        tittleAndButton("Save tree", clickButtonState)
+                        TittleAndButton("Save tree", clickButtonState)
                         Divider(modifier = Modifier.height(1.dp).fillMaxWidth())
                     }
 
@@ -74,15 +73,15 @@ fun saveDialog(
                     ) {
                         TextField(
                             enabled = activeTree.value,
-                            value = fileName.value,
+                            value = selectFileName.value,
                             singleLine = true,
                             shape = RoundedCornerShape(4.dp),
-                            onValueChange = { fileName.value = it },
+                            onValueChange = { selectFileName.value = it },
                             modifier = Modifier
                                 .onPreviewKeyEvent {
                                     when {
                                         (!it.isShiftPressed && it.key == Key.Enter && it.type == KeyEventType.KeyUp) -> {
-                                            validateInputState = validate(fileName.value)
+                                            validateInputState = validate(selectFileName.value)
                                             if (validateInputState) {
                                                 successDialogState = true
                                             } else {
@@ -114,7 +113,7 @@ fun saveDialog(
                         )
                         Text(
                             text = when {
-                                successDialogState -> "Tree successfully saved to ${fileName.value}"
+                                successDialogState -> "Tree successfully saved to ${selectFileName.value}"
                                 warningDialogState -> "Invalid tree name for saving"
                                 else -> ""
                             },
@@ -137,7 +136,7 @@ fun saveDialog(
                         }
 
                         if (saveButtonState.value && activeTree.value) {
-                            validateInputState = validate(fileName.value)
+                            validateInputState = validate(selectFileName.value)
                             if (validateInputState) {
                                 successDialogState = true
                             } else {
@@ -146,7 +145,7 @@ fun saveDialog(
                         }
 
                         if (successDialogState) {
-                            controller.saveTree(fileName.value)
+                            controller.saveTree(selectFileName.value)
                         }
 
                     }
@@ -157,10 +156,9 @@ fun saveDialog(
         }
     }
 
-    topAppIconButton(
+    TopAppIconButton(
         painterResource("/drawable/save.png"),
-        buttonState,
-        1,
+        hoverButtonState,
         MaterialTheme.colorScheme.onPrimary,
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.background,

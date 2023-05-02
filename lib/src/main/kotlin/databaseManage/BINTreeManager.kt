@@ -22,7 +22,6 @@ class BINTreeManager : TreeManager<
     /*** using json format files ***/
 
     private val dirPath = System.getProperty("user.dir") + "/saved-trees/BIN-trees"
-    //private val dirPath = BIN_DB_DEFAULT_NAME
 
     private val jsonRep = JsonRepository(dirPath)
 
@@ -32,7 +31,7 @@ class BINTreeManager : TreeManager<
     ): List<DrawableBINVertex<Container<Int, String>>> {
         if (this.isTreeExist(name)) {
             val typeToken = object : TypeToken<Array<DrawableBINVertex<Container<Int, String>>>>() {}
-            val preOrder = jsonRep.exportTree(name, typeToken).toList()
+            val preOrder = jsonRep.exportTree("$name.json", typeToken).toList()
 
             tree.restoreStruct(preOrder.toList())
 
@@ -52,7 +51,7 @@ class BINTreeManager : TreeManager<
 
     override fun saveTreeToDB(name: String, tree: BINStruct<Container<Int, String>>) {
         val info = vertexToDrawVertex(tree.preOrder())
-        jsonRep.saveChanges(info.toTypedArray(), name)
+        jsonRep.saveChanges(info.toTypedArray(), "$name.json")
     }
 
     private fun drawVertexToVertex(drawVertex: MutableList<DrawableBINVertex<Container<Int, String>>>): MutableList<BINVertex<Container<Int, String>>> {
@@ -82,7 +81,7 @@ class BINTreeManager : TreeManager<
     }
 
     private fun isTreeExist(treeName: String): Boolean {
-        return File(dirPath, treeName).exists()
+        return File(dirPath, "${treeName}.json").exists()
     }
 
     override fun getVertexesForDrawFromDB(name: String): List<DrawableBINVertex<Container<Int, String>>> {
@@ -94,10 +93,4 @@ class BINTreeManager : TreeManager<
 
     fun cleanDB() = jsonRep.clean()
 
-    /*
-
-    companion object {
-        const val BIN_DB_DEFAULT_NAME = "binDB"
-    }
-     */
 }

@@ -1,5 +1,6 @@
 package ui
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,13 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import controller.Controller
-import topAppIconButton
 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun deleteDialog(
-    buttonState: List<MutableState<Boolean>>,
+fun DeleteDialog(
+    hoverButtonState: MutableState<Boolean>,
     clickButtonsState: MutableState<Boolean>,
     controller: Controller,
     activeTree: MutableState<Boolean>,
@@ -37,7 +37,7 @@ fun deleteDialog(
             onDismissRequest = { clickButtonsState.value = false },
             text = {
                 Text(
-                    text = deleteDialogText(activeTree, controller.tree?.name ?: ""),
+                    text = DeleteDialogText(activeTree, controller.tree?.name ?: ""),
                     color = MaterialTheme.colorScheme.primary
                 )
             },
@@ -60,10 +60,9 @@ fun deleteDialog(
         activeTree.value = false
     }
 
-    topAppIconButton(
+    TopAppIconButton(
         rememberVectorPainter(Icons.Outlined.Delete),
-        buttonState,
-        0,
+        hoverButtonState,
         MaterialTheme.colorScheme.onPrimary,
         MaterialTheme.colorScheme.primary,
         MaterialTheme.colorScheme.background,
@@ -73,7 +72,7 @@ fun deleteDialog(
 }
 
 @Composable
-fun deleteDialogText(activeTree: MutableState<Boolean>, treeName: String): String {
+fun DeleteDialogText(activeTree: MutableState<Boolean>, treeName: String): String {
     return if (activeTree.value) {
         "Are you sure you want to delete $treeName ?"
     } else {

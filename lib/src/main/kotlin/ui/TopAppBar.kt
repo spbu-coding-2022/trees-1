@@ -1,39 +1,35 @@
 package ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
-import arrowIcon
 import controller.Controller
 import lightColors
-import menuItemBackgroundColor
 import myTypography
-import topAppIconButton
 
 @Composable
-fun myTopAppBar(
-    clickButtonsState: List<MutableState<Boolean>>,
+fun MyTopAppBar(
+    clickDeleteButton: MutableState<Boolean>,
+    clickSaveButton: MutableState<Boolean>,
+    clickOpenButton: MutableState<Boolean>,
+    clickCreateButton: MutableState<Boolean>,
+    clickMinimizeButton: MutableState<Boolean>,
+    clickMaximizeButton: MutableState<Boolean>,
+    clickCloseButton: MutableState<Boolean>,
     windowState: WindowState,
     controller: Controller,
     activeTree: MutableState<Boolean>,
@@ -41,15 +37,22 @@ fun myTopAppBar(
     openTreeState: MutableState<Boolean>
 ) {
 
-    val showFiles = controller.showFiles() // показывает <=3 деревьев каждого вида в диалоге open
+    val treesNames = controller.getSavedTreesNames()
 
-    val fileName = remember { mutableStateOf("") } // имя файла в диалоге save
+    val selectFileName = remember { mutableStateOf("") }
 
     MaterialTheme(
         colorScheme = lightColors,
         typography = myTypography
     ) {
-        val buttonState = List(7) { remember { mutableStateOf(false) } }
+
+        val hoverDeleteButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val hoverSaveButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val hoverOpenButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val hoverCreateButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val hoverMinimizeButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val hoverMaximizeButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+        val hoverCloseButton: MutableState<Boolean> = remember { mutableStateOf(false) }
 
         TopAppBar(
             backgroundColor = MaterialTheme.colorScheme.primary,
@@ -63,81 +66,72 @@ fun myTopAppBar(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row {
-
-                    deleteDialog(
-                        buttonState,
-                        clickButtonsState[0],
+                    DeleteDialog(
+                        hoverDeleteButton,
+                        clickDeleteButton,
                         controller,
                         activeTree,
                         deleteTreeState
                     )
 
+                    SaveDialog(hoverSaveButton, clickSaveButton, selectFileName, controller, activeTree)
 
-                    saveDialog(buttonState, clickButtonsState[1], fileName, controller, activeTree)
-
-                    topAppIconButton(
+                    TopAppIconButton(
                         painterResource("/drawable/dir.png"),
-                        buttonState,
-                        2,
+                        hoverOpenButton,
                         MaterialTheme.colorScheme.onPrimary,
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
-                        clickButtonsState[2]
+                        clickOpenButton
                     )
-                    openMenu(clickButtonsState[2], showFiles, activeTree, openTreeState, controller)
+                    OpenMenu(clickOpenButton, treesNames, activeTree, openTreeState, controller)
 
-
-                    topAppIconButton(
+                    TopAppIconButton(
                         rememberVectorPainter(Icons.Outlined.Add),
-                        buttonState,
-                        3,
+                        hoverCreateButton,
                         MaterialTheme.colorScheme.onPrimary,
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
-                        clickButtonsState[3]
+                        clickCreateButton
                     )
-                    createMenu(clickButtonsState[3], controller, activeTree)
-
+                    CreateMenu(clickCreateButton, controller, activeTree)
                 }
 
                 Row(horizontalArrangement = Arrangement.End) {
 
-                    topAppIconButton(
+                    TopAppIconButton(
                         painterResource("/drawable/minimize.png"),
-                        buttonState,
-                        4,
+                        hoverMinimizeButton,
                         MaterialTheme.colorScheme.onPrimary,
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
-                        clickButtonsState[4]
+                        clickMinimizeButton
                     )
-                    if (clickButtonsState[4].value) {
-                        minimizeWindow(windowState)
-                        clickButtonsState[4].value = false
+                    if (clickMinimizeButton.value) {
+                        MinimizeWindow(windowState)
+                        clickMinimizeButton.value = false
                     }
 
-                    topAppIconButton(
+                    TopAppIconButton(
                         painterResource("/drawable/maximize.png"),
-                        buttonState,
-                        5,
+                        hoverMaximizeButton,
                         MaterialTheme.colorScheme.onPrimary,
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
-                        clickButtonsState[5]
+                        clickMaximizeButton
                     )
-                    if (clickButtonsState[5].value) {
-                        maximizeWindow(windowState)
-                        clickButtonsState[5].value = false
+                    if (clickMaximizeButton.value) {
+                        MaximizeWindow(windowState)
+                        clickMaximizeButton.value = false
                     }
 
-                    topAppIconButton(
+                    TopAppIconButton(
                         rememberVectorPainter(Icons.Outlined.Close),
-                        buttonState,
-                        6,
+                        hoverCloseButton,
                         Color(233, 8, 28),
                         MaterialTheme.colorScheme.primary,
                         MaterialTheme.colorScheme.background,
-                        clickButtonsState[6]
+                        clickCloseButton
                     )
 
                 }
@@ -145,164 +139,19 @@ fun myTopAppBar(
             }
 
         }
-
     }
 }
 
 @Composable
-private fun minimizeWindow(state: WindowState) {
+private fun MinimizeWindow(state: WindowState) {
     state.isMinimized = !state.isMinimized
 }
 
 @Composable
-private fun maximizeWindow(state: WindowState) {
+private fun MaximizeWindow(state: WindowState) {
     if (state.placement == WindowPlacement.Maximized) {
         state.placement = WindowPlacement.Floating
     } else {
         state.placement = WindowPlacement.Maximized
     }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun createMenu(expandedNested: MutableState<Boolean>, controller: Controller, activeTree: MutableState<Boolean>) {
-    val trees = listOf("Red black tree", "AVL tree", "Binary tree")
-
-    val treesNames = listOf("rbTree", "avlTree", "binTree.json")
-
-    val backgroundColorState = List(3) { remember { mutableStateOf(false) } }
-
-    DropdownMenu(
-        expanded = expandedNested.value,
-        onDismissRequest = { expandedNested.value = false },
-        offset = DpOffset(150.dp, 0.dp),
-        modifier = Modifier.background(MaterialTheme.colorScheme.background)
-    ) {
-
-        repeat(3) { index ->
-            DropdownMenuItem(text = { Text(trees[index]) },
-                onClick = {
-                    controller.createTree(treesNames[index], index)
-                    activeTree.value = true
-                    expandedNested.value = false
-                },
-                modifier = Modifier.onPointerEvent(PointerEventType.Enter) { backgroundColorState[index].value = true }
-                    .onPointerEvent(PointerEventType.Exit) { backgroundColorState[index].value = false }
-                    .background(color = menuItemBackgroundColor(backgroundColorState[index])))
-        }
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun openMenu(
-    expandedNested: MutableState<Boolean>,
-    showFiles: List<List<String>>,
-    activeTree: MutableState<Boolean>,
-    openTreeState: MutableState<Boolean>,
-    controller: Controller
-) {
-    val trees = listOf("Red black tree", "AVL tree", "Binary tree")
-
-    val expandedTreesNames = List(3) { remember { mutableStateOf(false) } }
-
-    val backgroundColorState = List(3) { remember { mutableStateOf(false) } }
-
-    val selectedTree = remember { mutableStateOf("") } // дерево, которое выбрал юзер (очев)
-
-    val treeID = remember { mutableStateOf(0) }
-
-    DropdownMenu(
-        expanded = expandedNested.value,
-        onDismissRequest = { expandedNested.value = !expandedNested.value },
-        offset = DpOffset(100.dp, 0.dp),
-        modifier = Modifier.width(150.dp).background(MaterialTheme.colorScheme.background)
-    ) {
-        repeat(3) { index ->
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        trees[index],
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.height(50.dp),
-                        maxLines = 1
-                    )
-                },
-                onClick = {
-                    expandedTreesNames[index].value = !expandedTreesNames[index].value
-                    treeID.value = index
-                },
-                trailingIcon = { arrowIcon() },
-                modifier = Modifier.onPointerEvent(PointerEventType.Enter) { backgroundColorState[index].value = true }
-                    .onPointerEvent(PointerEventType.Exit) { backgroundColorState[index].value = false }
-                    .background(color = menuItemBackgroundColor(backgroundColorState[index])),
-                colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary))
-
-            treesNames(
-                expandedTreesNames[index],
-                expandedNested,
-                showFiles[index],
-                treeID,
-                150.dp,
-                selectedTree,
-                activeTree,
-                openTreeState,
-                controller
-            )
-        }
-    }
-
-
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun treesNames(
-    expandedNested: MutableState<Boolean>,
-    expandedOpenNested: MutableState<Boolean>,
-    showFiles: List<String>,
-    treeID: MutableState<Int>,
-    offset: Dp,
-    selectedTree: MutableState<String>,
-    activeTree: MutableState<Boolean>,
-    openTreeState: MutableState<Boolean>,
-    controller: Controller
-) {
-
-    val dirPath = System.getProperty("user.dir") + "/saved-trees"
-    val dirFiles = listOf("$dirPath/RB-trees", "$dirPath/AVL-trees", "$dirPath/BIN-trees")
-
-    val backgroundColorState = List(showFiles.size) { remember { mutableStateOf(false) } }
-
-    AnimatedVisibility(visible = expandedNested.value) {
-        DropdownMenu(
-            expanded = expandedNested.value,
-            onDismissRequest = { expandedNested.value = false },
-            offset = DpOffset(offset, (-50).dp),
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
-        ) {
-            searchItem(dirFiles[treeID.value], expandedNested, selectedTree, expandedOpenNested)
-
-            repeat(showFiles.size) { index ->
-                DropdownMenuItem(onClick = {
-                    selectedTree.value = if (treeID.value == 2) showFiles[index] + ".json" else showFiles[index]
-                },
-                    text = { Text(showFiles[index]) },
-                    modifier = Modifier
-                        .onPointerEvent(PointerEventType.Enter) { backgroundColorState[index].value = true }
-                        .onPointerEvent(PointerEventType.Exit) { backgroundColorState[index].value = false }
-                        .background(color = menuItemBackgroundColor(backgroundColorState[index])),
-                    colors = MenuDefaults.itemColors(textColor = MaterialTheme.colorScheme.primary))
-            }
-        }
-    }
-
-    if (selectedTree.value.isNotEmpty()) {
-        controller.createTree(selectedTree.value, treeID.value)
-        openTreeState.value = true
-        activeTree.value = true
-        expandedNested.value = false
-        selectedTree.value = ""
-    }
-
 }

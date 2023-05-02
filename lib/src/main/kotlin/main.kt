@@ -2,20 +2,12 @@
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.key.*
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -28,31 +20,47 @@ import java.awt.Dimension
 @OptIn(ExperimentalMaterial3Api::class)
 fun main() = application {
 
-    val clickButtonsState = List(7) { remember { mutableStateOf(false) } }
 
-    val windowState = rememberWindowState(placement = WindowPlacement.Maximized)
+    val deleteButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val saveButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val openButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val createButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val minimizeButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val maximizeButton: MutableState<Boolean> = remember { mutableStateOf(false) }
+    val closeButton: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     val controller = Controller()
-
+    val windowState = rememberWindowState(placement = WindowPlacement.Maximized)
+    val deleteTreeState = remember { mutableStateOf(false) }
+    val openTreeState = remember { mutableStateOf(false) }
     val activeTree = remember { mutableStateOf(false) }
 
-    val deleteTreeState = remember { mutableStateOf(false) }
-
-    val openTreeState = remember { mutableStateOf(false) }
-
-    if (!clickButtonsState[6].value) {
+    if (!closeButton.value) {
         Window(
             onCloseRequest = ::exitApplication,
             undecorated = true,
             state = windowState,
-            icon = appIcon()
+            icon = AppIcon()
         ) {
 
             this.window.minimumSize = Dimension(800, 600)
             Scaffold(
                 topBar = {
                     WindowDraggableArea {
-                        myTopAppBar(clickButtonsState, windowState, controller, activeTree, deleteTreeState, openTreeState)
+                        MyTopAppBar(
+                            deleteButton,
+                            saveButton,
+                            openButton,
+                            createButton,
+                            minimizeButton,
+                            maximizeButton,
+                            closeButton,
+                            windowState,
+                            controller,
+                            activeTree,
+                            deleteTreeState,
+                            openTreeState
+                        )
                     }
                 },
                 content = {
@@ -68,7 +76,7 @@ fun main() = application {
                                 .offset(0.dp, 50.dp)
 
                         ) {
-                            controlFields(controller, activeTree, deleteTreeState, openTreeState)
+                            ControlFields(controller, activeTree, deleteTreeState, openTreeState)
                         }
 
                     }
@@ -81,6 +89,7 @@ fun main() = application {
     }
 
 }
+
 
 val lightColors = lightColorScheme(
     background = Color(255, 255, 255),
@@ -100,54 +109,3 @@ val myTypography = Typography(
         fontSize = 96.sp
     )
 )
-
-
-@OptIn(ExperimentalComposeUiApi::class)
-@Composable
-fun topAppIconButton(
-    painter: Painter,
-    buttonsState: List<MutableState<Boolean>>,
-    index: Int,
-    color: Color,
-    disabledColor: Color,
-    iconColor: Color,
-    clickButtonState: MutableState<Boolean>,
-) {
-
-    IconButton(onClick = {
-        clickButtonState.value = !clickButtonState.value
-    }, modifier = Modifier.fillMaxHeight().width(50.dp).clip(RectangleShape)
-        .onPointerEvent(PointerEventType.Enter) { buttonsState[index].value = true }
-        .onPointerEvent(PointerEventType.Exit) { buttonsState[index].value = false },
-        colors = IconButtonDefaults.iconButtonColors(
-            contentColor = if (buttonsState[index].value) MaterialTheme.colorScheme.background else iconColor,
-            containerColor = if (buttonsState[index].value) color else disabledColor
-        )
-    ) {
-        Icon(painter, contentDescription = null)
-    }
-
-}
-
-@Composable
-fun searchIcon() = Icon(
-    imageVector = Icons.Outlined.Search,
-    contentDescription = null
-)
-
-@Composable
-fun arrowIcon() = Icon(
-    imageVector = Icons.Outlined.KeyboardArrowRight,
-    contentDescription = null,
-    modifier = Modifier.size(16.dp)
-)
-
-@Composable
-fun menuItemBackgroundColor(state: MutableState<Boolean>): Color {
-    return if (state.value) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.background
-}
-
-@Composable
-fun appIcon(): Painter {
-    return painterResource("appIcon.png")
-}

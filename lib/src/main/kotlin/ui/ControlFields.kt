@@ -14,7 +14,7 @@ import controller.Controller
 import viewPart.nodes.drawableTree.DrawTree
 
 @Composable
-fun controlFields(
+fun ControlFields(
     controller: Controller,
     activeTree: MutableState<Boolean>,
     deleteTreeState: MutableState<Boolean>,
@@ -29,15 +29,15 @@ fun controlFields(
 
     Column(modifier = Modifier.offset(0.dp, 0.dp).padding(horizontal = 10.dp)) {
         // add
-        controlField("Add", addFieldState, value, activeTree)
+        ControlField("Add", addFieldState, value, activeTree)
         Spacer(modifier = Modifier.height(2.dp))
 
         // find
-        controlField("Find", findFieldState, value, activeTree)
+        ControlField("Find", findFieldState, value, activeTree)
         Spacer(modifier = Modifier.height(2.dp))
 
         // delete
-        controlField("Delete", deleteFieldState, value, activeTree)
+        ControlField("Delete", deleteFieldState, value, activeTree)
     }
 
     var tree by remember { mutableStateOf<DrawTree?>(null) }
@@ -49,6 +49,7 @@ fun controlFields(
         }
         if (openTreeState.value) {
             tree = controller.tree
+            openTreeState.value = false
         }
         tree?.displayTree()
 
@@ -73,24 +74,24 @@ fun controlFields(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun controlField(
+fun ControlField(
     buttonName: String,
     buttonState: MutableState<Boolean>,
     value: MutableState<String>,
     activeTree: MutableState<Boolean>
 ) {
 
-    var text by remember { mutableStateOf("") }
+    var userInput by remember { mutableStateOf("") }
 
-    var containerColor by remember { mutableStateOf(Color(206, 211, 216)) }
+    var fieldBackgroundColor by remember { mutableStateOf(Color(206, 211, 216)) }
 
     OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
+        value = userInput,
+        onValueChange = { userInput = it },
         singleLine = true,
         label = { Text(buttonName) },
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            containerColor = containerColor,
+            containerColor = fieldBackgroundColor,
             focusedBorderColor = MaterialTheme.colorScheme.primary,
             unfocusedBorderColor = MaterialTheme.colorScheme.onTertiary,
             focusedLabelColor = Color(99, 95, 95),
@@ -101,7 +102,7 @@ fun controlField(
             .padding(start = 3.dp)
             .width(150.dp)
             .onFocusChanged {
-                containerColor = if (it.isFocused) {
+                fieldBackgroundColor = if (it.isFocused) {
                     Color(255, 255, 255)
                 } else {
                     Color(206, 211, 216)
@@ -109,9 +110,9 @@ fun controlField(
             }.onPreviewKeyEvent {
                 when {
                     (!it.isShiftPressed && it.key == Key.Enter && it.type == KeyEventType.KeyUp) -> {
-                        value.value = text // change !!!
+                        value.value = userInput // change !!!
                         buttonState.value = true
-                        text = ""
+                        userInput = ""
                         true
                     }
 
@@ -121,9 +122,7 @@ fun controlField(
                 }
 
             },
-        trailingIcon = {
-
-        },
+        trailingIcon = { },
         shape = RoundedCornerShape(8.dp)
     )
 

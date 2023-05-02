@@ -35,20 +35,18 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.rememberDialogState
 import lightColors
-import menuItemBackgroundColor
-import searchIcon
-import topAppIconButton
 import java.awt.Dimension
 import java.io.File
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun searchItem(
+fun SearchItem(
     dirPath: String,
     expandedNested: MutableState<Boolean>,
     selectedTree: MutableState<String>,
     expandedOpenNested: MutableState<Boolean>
 ) {
+
     val dialogState = remember { mutableStateOf(false) }
     val minWidth = remember { mutableStateOf(200) }
     var pressedState by remember { mutableStateOf(false) }
@@ -89,7 +87,7 @@ fun searchItem(
     }
 
     DropdownMenuItem(
-        leadingIcon = { searchIcon() },
+        leadingIcon = { SearchIcon() },
         text = { Text("Search") },
         onClick = {
             dialogState.value = true
@@ -97,7 +95,7 @@ fun searchItem(
         },
         modifier = Modifier.onPointerEvent(PointerEventType.Enter) { backgroundColorState.value = true }
             .onPointerEvent(PointerEventType.Exit) { backgroundColorState.value = false }
-            .background(color = menuItemBackgroundColor(backgroundColorState))
+            .background(color = MenuItemBackgroundColor(backgroundColorState))
     )
 
 }
@@ -133,7 +131,7 @@ fun CompleteDialogContent(
                 modifier = Modifier
                     .height(50.dp)
             ) {
-                tittleAndButton(title, dialogState)
+                TittleAndButton(title, dialogState)
             }
 
 
@@ -160,9 +158,9 @@ fun CompleteDialogContent(
 }
 
 @Composable
-fun tittleAndButton(title: String, dialogState: MutableState<Boolean>) {
+fun TittleAndButton(title: String, dialogState: MutableState<Boolean>) {
 
-    val buttonState = listOf(remember { mutableStateOf(false) })
+    val hoverButtonState = remember { mutableStateOf(false) }
 
     val clickButtonState = remember { mutableStateOf(false) }
 
@@ -170,16 +168,14 @@ fun tittleAndButton(title: String, dialogState: MutableState<Boolean>) {
         modifier = Modifier
             .fillMaxWidth(1f)
             .padding(start = 20.dp, top = 0.dp, end = 0.dp, bottom = 10.dp),
-        //.padding(horizontal = 20.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = title, fontSize = 20.sp, color = MaterialTheme.colorScheme.primary)
 
-        topAppIconButton(
+        TopAppIconButton(
             rememberVectorPainter(Icons.Outlined.Close),
-            buttonState,
-            0,
+            hoverButtonState,
             Color(233, 8, 28),
             MaterialTheme.colorScheme.background,
             MaterialTheme.colorScheme.primary,
@@ -205,7 +201,7 @@ fun BottomButtons(dialogState: MutableState<Boolean>, firstButtonState: MutableS
             contentColor = MaterialTheme.colorScheme.background
         )
     ) {
-        Text(text = firstButtonText, fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+        Text(text = firstButtonText, fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, maxLines = 1)
     }
     Spacer(modifier = Modifier.width(5.dp))
     Button(
@@ -219,7 +215,7 @@ fun BottomButtons(dialogState: MutableState<Boolean>, firstButtonState: MutableS
         onClick = { dialogState.value = false },
         contentPadding = PaddingValues(start = 2.dp, end = 2.dp)
     ) {
-        Text(text = secondButtonText, fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+        Text(text = secondButtonText, fontSize = 12.sp, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold, maxLines = 1)
     }
 }
 
@@ -315,7 +311,7 @@ fun mainBody(
                         modifier = Modifier.fillParentMaxWidth().align(Alignment.CenterStart)
                     ) {
                         Spacer(modifier = Modifier.width(25.dp))
-                        Icon(fileIcon(dirName), contentDescription = null, tint = Color.Gray)
+                        Icon(FileIcon(dirName), contentDescription = null, tint = Color.Gray)
                         Spacer(modifier = Modifier.width(5.dp))
                         Text(
                             text = listFiles[index], fontSize = 13.sp, fontFamily = FontFamily.Monospace,
@@ -332,7 +328,7 @@ fun mainBody(
 }
 
 @Composable
-fun fileIcon(dirName: String): Painter {
+fun FileIcon(dirName: String): Painter {
 
     return when (dirName) {
         "RB-trees" -> painterResource("/drawable/neo4jFormat.png")

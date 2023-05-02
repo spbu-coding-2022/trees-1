@@ -26,7 +26,7 @@ dependencies {
     implementation("com.google.guava:guava:31.1-jre")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
 
-    implementation("com.google.code.gson:gson:2.8.5")
+    implementation("com.google.code.gson:gson:2.10.1")
 
     val neo4jCore = "4.0.5"
     implementation("org.neo4j", "neo4j-ogm-core", neo4jCore)

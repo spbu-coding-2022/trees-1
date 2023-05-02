@@ -27,6 +27,7 @@ class RBDrawableTree(
     override val designNode = RBNodeDesign
 
     override fun deleteTree() {
+        this.deleteTreeFromBD()
         root = null
         treeStruct = RBStruct()
     }

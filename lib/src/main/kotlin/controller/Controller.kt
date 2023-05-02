@@ -21,7 +21,7 @@ class Controller {
 
     var tree: DrawTree? = null
 
-    fun showFiles(): List<List<String>> {
+    fun getSavedTreesNames(): List<List<String>> {
         val avlTrees = avlManager.getSavedTreesNames()
         val rbTrees = rbManager.getSavedTreesNames()
 
