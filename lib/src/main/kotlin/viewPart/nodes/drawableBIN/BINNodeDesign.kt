@@ -16,11 +16,5 @@ object BINNodeDesign: NodeDesign {
     override var shape: Shape = CircleShape
     override var lineStrokeWidth = 10f
     @Composable
-    override fun infoView(information: String, modifier: Modifier) {
-        Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center
-        ) {
-        }
-    }
+    override fun infoView(modifier: Modifier) = Box(modifier = modifier)
 }

@@ -3,14 +3,17 @@ package viewPart.nodes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -31,12 +34,22 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
-fun displayTree(tree: DrawTree){
-    when(tree){
-        is BINDrawableTree -> displayBIN(tree)
-        is RBDrawableTree -> displayRB(tree)
-        is AVLDrawableTree -> displayAVL(tree)
-        else -> throw NullPointerException("Wrong DrawableTree type")
+fun displayTree(tree: DrawTree, state: MutableState<Boolean>){
+    Box(modifier = Modifier.fillMaxSize()
+                .pointerInput(state) {
+                    detectDragGestures { change, dragAmount ->
+                        change.consume()
+                        tree.addOffset(dragAmount.x, dragAmount.y)
+                        state.value = false
+                    }
+                }.zIndex(-1000f)
+    ){
+        when (tree) {
+            is BINDrawableTree -> displayBIN(tree)
+            is RBDrawableTree -> displayRB(tree)
+            is AVLDrawableTree -> displayAVL(tree)
+            else -> throw NullPointerException("Wrong DrawableTree type")
+        }
     }
 }
 
@@ -66,7 +79,10 @@ fun displayBIN(tree: BINDrawableTree) {
 
 
 @Composable
-fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> displayNode(node: DNode, design: NodeD) {
+fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> displayNode(
+    node: DNode,
+    design: NodeD,
+) {
 
     if (node.clickState.value) {
         Box(modifier = Modifier
@@ -74,7 +90,7 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
             .offset {
                 IntOffset(
                     node.xState.value.roundToInt() + 71,
-                    node.yState.value.roundToInt()
+                    node.yState.value.roundToInt(),
                 )
             }
             .background(color = Color(206, 211, 216), shape = AbsoluteRoundedCornerShape(5.dp))
@@ -93,7 +109,7 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
         }
     }
 
-    design.infoView(node.value.toString(), node.modifier)
+    design.infoView(node.modifier)
 
     node.leftChild?.let {
         edgeView(node, it, design)
@@ -107,7 +123,11 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
 }
 
 @Composable
-fun <Pack, DNode : DrawableNode<Pack, DNode>, NodeD : NodeDesign> edgeView(node: DNode, child: DNode, design: NodeD) {
+fun <Pack, DNode : DrawableNode<Pack, DNode>, NodeD : NodeDesign> edgeView(
+    node: DNode,
+    child: DNode,
+    design: NodeD,
+) {
     Canvas(modifier = Modifier.fillMaxSize().zIndex(-1f)) {
         drawLine(
             color = design.lineColor,

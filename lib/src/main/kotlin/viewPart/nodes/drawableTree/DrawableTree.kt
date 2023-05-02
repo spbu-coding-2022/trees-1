@@ -25,6 +25,17 @@ abstract class DrawableTree<
 
     override var yShiftBetweenNodes = 10f
 
+    override fun addOffset(xOffset: Float, yOffset: Float) {
+        root?.let { addSet(it, xOffset, yOffset) }
+    }
+
+    private fun addSet(root: DNodeType, xOffset: Float, yOffset: Float){
+        root.xState.value += xOffset
+        root.yState.value += yOffset
+        root.leftChild?.let { addSet(it, xOffset, yOffset) }
+        root.rightChild?.let { addSet(it, xOffset, yOffset) }
+    }
+
     override fun initTree() {
         val binVertexes = treeManager.initTree(name, treeStruct)
         drawablePreOrder = binVertexes.map { drawableVertexToNode(it) }
@@ -122,8 +133,6 @@ abstract class DrawableTree<
                     }
 
                     else -> {
-                        println(currentParent!!.value)
-                        println(preOrderNode.value)
                         throw InternalError("Can't restore tree from preOrder :(")
                     }
                 }

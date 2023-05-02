@@ -57,7 +57,7 @@ class RBBalancer<Pack : Comparable<Pack>>(var root: RBNode<Pack>?) :
                 }
 
                 var parent =
-                    currentNode.parent ?: throw IllegalStateException() // в данном случае родитель не может быть null
+                    currentNode.parent ?: throw IllegalStateException()
                 when (parent) {
                     parent.parent?.left -> {
                         if (currentNode == parent.right) {
@@ -85,7 +85,7 @@ class RBBalancer<Pack : Comparable<Pack>>(var root: RBNode<Pack>?) :
                         currentNode.left?.color = Markers.RED
                     }
 
-                    else -> throw IllegalStateException() // невозможное условие выполнения
+                    else -> throw IllegalStateException()
                 }
                 if (currentNode.parent == null)
                     root = currentNode

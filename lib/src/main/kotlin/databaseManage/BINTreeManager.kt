@@ -46,7 +46,7 @@ class BINTreeManager : TreeManager<
         preOrder: List<DrawableBINVertex<Container<Int, String>>>,
         inOrder: List<DrawableBINVertex<Container<Int, String>>>
     ) {
-        jsonRep.saveChanges(preOrder.toTypedArray(), name)
+        jsonRep.saveChanges(preOrder.toTypedArray(), "$name.json")
     }
 
     override fun saveTreeToDB(name: String, tree: BINStruct<Container<Int, String>>) {

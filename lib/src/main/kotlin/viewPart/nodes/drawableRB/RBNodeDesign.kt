@@ -19,11 +19,5 @@ object RBNodeDesign: NodeDesign {
     override var lineColor = Color(34, 35, 41)
 
     @Composable
-    override fun infoView(information: String, modifier: Modifier) {
-        Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center
-        ) {
-        }
-    }
+    override fun infoView(modifier: Modifier) = Box(modifier = modifier)
 }
