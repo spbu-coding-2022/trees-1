@@ -38,6 +38,9 @@ fun main() = application {
 
     val dragState = remember { mutableStateOf(false) }
 
+    val xCenter = remember { mutableStateOf(0f) }
+    val yCenter = remember { mutableStateOf(0f) }
+
     if (!closeButton.value) {
         Window(
             onCloseRequest = ::exitApplication,
@@ -51,19 +54,19 @@ fun main() = application {
                 topBar = {
                     WindowDraggableArea {
                         MyTopAppBar(
-                            deleteButton,
-                            saveButton,
-                            openButton,
-                            createButton,
-                            minimizeButton,
-                            maximizeButton,
-                            closeButton,
-                            windowState,
-                            controller,
-                            activeTree,
-                            deleteTreeState,
-                            openTreeState,
-                            createTreeState
+                            clickDeleteButton = deleteButton,
+                            clickSaveButton = saveButton,
+                            clickOpenButton = openButton,
+                            clickCreateButton = createButton,
+                            clickMinimizeButton = minimizeButton,
+                            clickMaximizeButton = maximizeButton,
+                            clickCloseButton = closeButton,
+                            windowState = windowState,
+                            controller = controller,
+                            activeTree = activeTree,
+                            deleteTreeState = deleteTreeState,
+                            openTreeState = openTreeState,
+                            createTreeState = createTreeState
                         )
                     }
                 },
@@ -83,7 +86,15 @@ fun main() = application {
                                 }
 
                         ) {
-                            ControlFields(controller, activeTree, deleteTreeState, openTreeState, createTreeState, dragState)
+                            ControlFields(
+                                controller = controller,
+                                activeTree = activeTree,
+                                deleteTreeState = deleteTreeState,
+                                openTreeState = openTreeState,
+                                createTreeState = createTreeState,
+                                dragState = dragState,
+                                windowState = windowState
+                            )
                         }
 
                     }

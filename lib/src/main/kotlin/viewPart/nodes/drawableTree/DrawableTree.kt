@@ -71,20 +71,20 @@ abstract class DrawableTree<
         if (treeStruct.find(item) != null) treeStruct.delete(item)
     }
 
-    override fun find(item: Int) {
+    override fun find(item: Int): Pair<Float, Float> {
         var currentNode = root
         if (root == null)
-            return
+            return Pair(-1f, -1f)
         while(true) {
             if (item == currentNode?.value?.key) {
                 currentNode.clickState.value = true
-                return
+                return Pair(currentNode.xState.value, currentNode.yState.value)
             }
             currentNode?.let {
                 currentNode = if (item > it.value.key) it.rightChild
                 else it.leftChild
             }
-            if (currentNode == null) return
+            if (currentNode == null) return Pair(-1f, -1f)
         }
     }
 
