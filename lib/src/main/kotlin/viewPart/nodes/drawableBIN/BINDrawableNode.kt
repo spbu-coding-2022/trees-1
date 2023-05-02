@@ -8,10 +8,10 @@ class BINDrawableNode<Pack>(
     override val value: Pack,
     override var leftChild: BINDrawableNode<Pack>? = null,
     override var rightChild: BINDrawableNode<Pack>? = null,
-    override var xState: MutableState<Float>,
-    override var yState: MutableState<Float>,
+    xState: MutableState<Float>,
+    yState: MutableState<Float>,
 
-    ) : DrawableNode<Pack, BINDrawableNode<Pack>>(BINNodeDesign, BINNodeDesign.colorNode) {
+    ) : DrawableNode<Pack, BINDrawableNode<Pack>>(BINNodeDesign, BINNodeDesign.colorNode, xState, yState) {
     override val clickState = mutableStateOf(false)
 
 }

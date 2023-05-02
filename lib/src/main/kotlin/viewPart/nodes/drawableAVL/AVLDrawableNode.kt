@@ -9,8 +9,8 @@ class AVLDrawableNode<Pack>(
     override var leftChild: AVLDrawableNode<Pack>? = null,
     override var rightChild: AVLDrawableNode<Pack>? = null,
     val height: Int,
-    override val xState: MutableState<Float>,
-    override val yState: MutableState<Float>,
-) : DrawableNode<Pack, AVLDrawableNode<Pack>>(AVLNodeDesign, AVLNodeDesign.colorNode) {
+    xState: MutableState<Float>,
+    yState: MutableState<Float>,
+) : DrawableNode<Pack, AVLDrawableNode<Pack>>(AVLNodeDesign, AVLNodeDesign.colorNode, xState, yState) {
     override val clickState = mutableStateOf(false)
 }

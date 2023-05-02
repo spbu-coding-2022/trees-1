@@ -15,12 +15,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 
-abstract class DrawableNode<Pack, NodeType : DrawableNode<Pack, NodeType>>(design : NodeDesign, color : Color) {
+abstract class DrawableNode<Pack, NodeType : DrawableNode<Pack, NodeType>>(
+    design : NodeDesign,
+    color : Color,
+    val xState: MutableState<Float>,
+    val yState: MutableState<Float>,
+) {
     abstract val value: Pack
     abstract var leftChild: NodeType?
     abstract var rightChild: NodeType?
-    abstract val xState: MutableState<Float>
-    abstract val yState: MutableState<Float>
     abstract val clickState: MutableState<Boolean>
     @OptIn(ExperimentalFoundationApi::class)
     var modifier = Modifier
@@ -30,7 +33,7 @@ abstract class DrawableNode<Pack, NodeType : DrawableNode<Pack, NodeType>>(desig
                     y = yState.value.roundToInt()
                 )
             }
-            .pointerInput(Unit) {
+            .pointerInput(xState, yState) {
                 detectDragGestures { _, dragAmount ->
                     xState.value += dragAmount.x
                     yState.value += dragAmount.y
