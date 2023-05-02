@@ -30,10 +30,11 @@ fun main() = application {
     val closeButton: MutableState<Boolean> = remember { mutableStateOf(false) }
 
     val controller = Controller()
+    val activeTree = remember { mutableStateOf(false) }
     val windowState = rememberWindowState(placement = WindowPlacement.Maximized)
     val deleteTreeState = remember { mutableStateOf(false) }
     val openTreeState = remember { mutableStateOf(false) }
-    val activeTree = remember { mutableStateOf(false) }
+    val createTreeState = remember { mutableStateOf(false) }
 
     if (!closeButton.value) {
         Window(
@@ -59,7 +60,8 @@ fun main() = application {
                             controller,
                             activeTree,
                             deleteTreeState,
-                            openTreeState
+                            openTreeState,
+                            createTreeState
                         )
                     }
                 },
@@ -76,7 +78,7 @@ fun main() = application {
                                 .offset(0.dp, 50.dp)
 
                         ) {
-                            ControlFields(controller, activeTree, deleteTreeState, openTreeState)
+                            ControlFields(controller, activeTree, deleteTreeState, openTreeState, createTreeState)
                         }
 
                     }

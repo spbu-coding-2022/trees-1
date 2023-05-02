@@ -20,7 +20,12 @@ import controller.Controller
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun CreateMenu(expandedNested: MutableState<Boolean>, controller: Controller, activeTree: MutableState<Boolean>) {
+fun CreateMenu(
+    expandedNested: MutableState<Boolean>,
+    controller: Controller,
+    activeTree: MutableState<Boolean>,
+    createTreeState: MutableState<Boolean>
+) {
 
     val trees = listOf("Red black tree", "AVL tree", "Binary tree")
     val defaultTreesNames = listOf("rbTree", "avlTree", "binTree")
@@ -38,6 +43,7 @@ fun CreateMenu(expandedNested: MutableState<Boolean>, controller: Controller, ac
             DropdownMenuItem(text = { Text(trees[index]) },
                 onClick = {
                     controller.createTree(defaultTreesNames[index], index)
+                    createTreeState.value = true
                     activeTree.value = true
                     expandedNested.value = false
                 },

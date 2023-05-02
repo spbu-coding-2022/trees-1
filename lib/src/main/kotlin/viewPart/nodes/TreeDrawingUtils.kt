@@ -8,9 +8,11 @@ import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -53,7 +55,7 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
 
     if (node.clickState.value) {
         Box(modifier = Modifier
-            .height(if (node is BINDrawableNode<*>) 60.dp else 90.dp).width(100.dp)
+            .height(if (node is BINDrawableNode<*>) 60.dp else 80.dp).width(100.dp)
             .offset {
                 IntOffset(
                     node.xState.value.roundToInt() + 71,
@@ -62,12 +64,11 @@ fun <DNode : DrawableNode<Container<Int, String>, DNode>, NodeD : NodeDesign> di
             }
             .background(color = Color(206, 211, 216), shape = AbsoluteRoundedCornerShape(5.dp))
             .border(2.dp, MaterialTheme.colorScheme.primary, AbsoluteRoundedCornerShape(5.dp))
-            .padding(horizontal = 4.dp, vertical = 2.dp)
             .zIndex(1f)
         ) {
-            Column(modifier = Modifier.zIndex(1f)) {
-                Text(text = "key: ${node.value.key}")
-                Text(text = "value: ${node.value.value}")
+            Column(modifier = Modifier.fillMaxSize().padding(horizontal = 4.dp, vertical = 2.dp), horizontalAlignment = Alignment.Start, verticalArrangement = Arrangement.Top) {
+                Text(text = "key: ${node.value.key} ", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(text = "value: ${node.value.value}", maxLines = 2, overflow = TextOverflow.Ellipsis)
                 when (node ) {
                     is AVLDrawableNode<*> -> Text(text = "height: ${node.height}")
                     is RBDrawableNode<*> -> Text(text = "color: ${node.color.toString().lowercase(Locale.getDefault())}")

@@ -34,7 +34,8 @@ fun MyTopAppBar(
     controller: Controller,
     activeTree: MutableState<Boolean>,
     deleteTreeState: MutableState<Boolean>,
-    openTreeState: MutableState<Boolean>
+    openTreeState: MutableState<Boolean>,
+    createTreeState: MutableState<Boolean>
 ) {
 
     val treesNames = controller.getSavedTreesNames()
@@ -94,7 +95,7 @@ fun MyTopAppBar(
                         MaterialTheme.colorScheme.background,
                         clickCreateButton
                     )
-                    CreateMenu(clickCreateButton, controller, activeTree)
+                    CreateMenu(clickCreateButton, controller, activeTree, createTreeState)
                 }
 
                 Row(horizontalArrangement = Arrangement.End) {

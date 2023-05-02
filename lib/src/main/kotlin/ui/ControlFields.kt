@@ -18,7 +18,8 @@ fun ControlFields(
     controller: Controller,
     activeTree: MutableState<Boolean>,
     deleteTreeState: MutableState<Boolean>,
-    openTreeState: MutableState<Boolean>
+    openTreeState: MutableState<Boolean>,
+    createTreeState: MutableState<Boolean>
 ) {
 
     val addFieldState = remember { mutableStateOf(false) }
@@ -50,6 +51,10 @@ fun ControlFields(
         if (openTreeState.value) {
             tree = controller.tree
             openTreeState.value = false
+        }
+        if (createTreeState.value) {
+            tree = controller.tree
+            createTreeState.value = false
         }
         tree?.displayTree()
 
