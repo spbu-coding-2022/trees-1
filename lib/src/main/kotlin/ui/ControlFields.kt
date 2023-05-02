@@ -42,13 +42,11 @@ fun ControlFields(
     val returnButtonClickState = remember { mutableStateOf(false) }
     val returnButtonHoverState = remember { mutableStateOf(false) }
 
-
     val value = remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.offset(0.dp, 0.dp).padding(horizontal = 10.dp),
-        horizontalAlignment = Alignment.Start,
-        //verticalArrangement = Arrangement.Top
+        horizontalAlignment = Alignment.Start
     ) {
         ControlField("Add", addFieldState, value, activeTree)
         Spacer(modifier = Modifier.height(2.dp))
