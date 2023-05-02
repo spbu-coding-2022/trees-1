@@ -120,6 +120,30 @@ class RBBalancer<Pack : Comparable<Pack>>(var root: RBNode<Pack>?) :
 
                     }
 
+                    node.left?.color == Markers.RED && node.right?.color == Markers.RED -> {
+                        if (nodeIsLeaf(node.right)) {
+                            node.right?.color = Markers.BLACK
+                        }
+                        else {
+                            node.left?.color = Markers.BLACK
+                        }
+                        getRoot(node)
+                    }
+
+                    node.left?.color == Markers.RED -> {
+                        if (node.right?.right?.color != Markers.BLACK && node.right?.left?.color != Markers.BLACK) {
+                            node.left?.color = Markers.BLACK
+                        }
+                        getRoot(node)
+                    }
+
+                    node.right?.color == Markers.RED -> {
+                        if (node.left?.right?.color != Markers.BLACK && node.left?.left?.color != Markers.BLACK) {
+                            node.right?.color = Markers.BLACK
+                        }
+                        getRoot(node)
+                    }
+
                     else -> throw IllegalStateException()
                 }
             }
