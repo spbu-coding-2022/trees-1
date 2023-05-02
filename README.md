@@ -1,4 +1,18 @@
-# Tree Structure
+# <p align="center"><img alt="logo" src="lib/src/main/resources/readmeIcon.png" width="200"></p>
+
+
+
+<p align="center"><img alt="badge" src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white"/>
+<img alt="badge" src="https://img.shields.io/badge/Kotlin-0095D5?&style=for-the-badge&logo=kotlin&logoColor=white"/>
+<img alt="badge" src="https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white"/>
+<img alt="badge" src="https://img.shields.io/badge/Junit5-25A162?style=for-the-badge&logo=junit5&logoColor=white"/>
+<img alt="badge" src="https://img.shields.io/badge/Neo4j-018bff?style=for-the-badge&logo=neo4j&logoColor=white"/></p>
+
+
+
+## Tree Structure
+
+
 
 This project will help the user to build an RBT, AVL or binary tree. Add, delete, or search for elements in it.
 <!-- You don't have to answer all the questions - just the ones relevant to your project. -->
