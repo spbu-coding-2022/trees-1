@@ -33,7 +33,8 @@ fun ControlFields(
     activeTree: MutableState<Boolean>,
     deleteTreeState: MutableState<Boolean>,
     openTreeState: MutableState<Boolean>,
-    createTreeState: MutableState<Boolean>
+    createTreeState: MutableState<Boolean>,
+    dragState: MutableState<Boolean>,
 ) {
 
     val addFieldState = remember { mutableStateOf(false) }
@@ -89,7 +90,7 @@ fun ControlFields(
             tree?.repositionTree(800f, 10f)
             returnButtonClickState.value = false
         }
-        tree?.let { displayTree(it) }
+        tree?.let { displayTree(it, dragState) }
 
         addFieldState.value = false
     }

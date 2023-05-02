@@ -1,13 +1,13 @@
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.onDrag
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.window.WindowDraggableArea
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.*
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -17,7 +17,7 @@ import controller.Controller
 import ui.*
 import java.awt.Dimension
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 fun main() = application {
 
 
@@ -35,6 +35,8 @@ fun main() = application {
     val deleteTreeState = remember { mutableStateOf(false) }
     val openTreeState = remember { mutableStateOf(false) }
     val createTreeState = remember { mutableStateOf(false) }
+
+    val dragState = remember { mutableStateOf(false) }
 
     if (!closeButton.value) {
         Window(
@@ -76,9 +78,12 @@ fun main() = application {
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.background)
                                 .offset(0.dp, 50.dp)
+                                .onDrag {
+                                    dragState.value = true
+                                }
 
                         ) {
-                            ControlFields(controller, activeTree, deleteTreeState, openTreeState, createTreeState)
+                            ControlFields(controller, activeTree, deleteTreeState, openTreeState, createTreeState, dragState)
                         }
 
                     }

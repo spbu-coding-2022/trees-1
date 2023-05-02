@@ -34,12 +34,13 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 @Composable
-fun displayTree(tree: DrawTree){
+fun displayTree(tree: DrawTree, state: MutableState<Boolean>){
     Box(modifier = Modifier.fillMaxSize()
-                .pointerInput(Unit) {
+                .pointerInput(state) {
                     detectDragGestures { change, dragAmount ->
                         change.consume()
                         tree.addOffset(dragAmount.x, dragAmount.y)
+                        state.value = false
                     }
                 }.zIndex(-1000f)
     ){
