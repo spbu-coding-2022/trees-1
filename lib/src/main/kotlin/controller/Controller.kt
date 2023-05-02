@@ -120,6 +120,7 @@ class Controller {
             throw Exception("Tree not initialized")
 
         tree?.name = fileName
+        getSavedTreesNames()
         tree?.saveTreeToDB() ?: throw Exception()
 
     }
