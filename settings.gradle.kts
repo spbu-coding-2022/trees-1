@@ -9,3 +9,4 @@
 
 rootProject.name = "treelib"
 include("lib")
+include("treeApp")
