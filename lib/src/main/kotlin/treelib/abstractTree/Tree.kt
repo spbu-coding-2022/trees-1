@@ -1,47 +1,52 @@
 package treelib.abstractTree
 
-import treelib.singleObjects.Container
-import treelib.singleObjects.exceptions.NonExistentValueException
+import treelib.commonObjects.Container
+import treelib.commonObjects.exceptions.VauleNotFound
 
 abstract class Tree<
-        Key : Comparable<Key>,
-        Value,
-        NodeType : Node<Container<Key, Value?>, NodeType>,
-        State : StateContainer<Container<Key, Value?>, NodeType>
+        K : Comparable<K>,
+        V,
+        NodeType : Node<Container<K, V?>, NodeType>,
+        State : StateContainer<Container<K, V?>, NodeType>,
+        VertexType : Vertex<Container<K, V?>>
         > {
 
-    protected abstract val treeStruct: TreeStruct<Container<Key, Value?>, NodeType, State>
+    protected abstract val treeStruct: TreeStruct<Container<K, V?>, NodeType, State, VertexType>
 
-    private fun wrapForFind(key: Key) = Container<Key, Value?>(key to null)
+    private fun wrapForFind(key: K) = Container<K, V?>(key to null)
 
-    fun putItem(item: Pair<Key, Value?>) {
+    fun putItem(item: Pair<K, V?>) {
         treeStruct.insert(Container(item))
     }
 
-    fun putItems(vararg items: Pair<Key, Value?>) {
+    fun putItem(vararg items: Pair<K, V?>) {
         for (element in items) putItem(element)
     }
 
-    fun putItems(items: Iterable<Pair<Key, Value?>>) {
+    fun putItem(items: Iterable<Pair<K, V?>>) {
         for (element in items) putItem(element)
     }
 
-    fun getItem(key: Key): Value? = treeStruct.find(wrapForFind(key))?.value
+    fun getItem(key: K): V? = treeStruct.find(wrapForFind(key))?.value
 
-    fun deleteItem(key: Key) {
-        if (getItem(key) == null) throw NonExistentValueException()
+    open operator fun get(key: K): V? = treeStruct.find(wrapForFind(key))?.value
+
+    fun deleteItem(key: K) {
+        if (treeStruct.find(wrapForFind(key)) == null) throw VauleNotFound()
         treeStruct.delete(wrapForFind(key))
     }
 
-    private fun createPoorList(info: List<Container<Key, Value?>>): List<Pair<Key, Value?>> {
-        val returnInfo = mutableListOf<Pair<Key, Value?>>()
-        for (element in info) returnInfo.add(element.pair)
+    private fun createPoorList(info: List<VertexType>): List<Pair<K, V?>> {
+        val returnInfo = mutableListOf<Pair<K, V?>>()
+        for (element in info) {
+            returnInfo.add(element.value.pair)
+        }
         return returnInfo
     }
 
-    fun inOrder(): List<Pair<Key, Value?>> = createPoorList(treeStruct.inOrder())
+    fun inOrder(): List<Pair<K, V?>> = createPoorList(treeStruct.inOrder())
 
-    fun preOrder(): List<Pair<Key, Value?>> = createPoorList(treeStruct.preOrder())
+    fun preOrder(): List<Pair<K, V?>> = createPoorList(treeStruct.preOrder())
 
-    fun postOrder(): List<Pair<Key, Value?>> = createPoorList(treeStruct.postOrder())
+    fun postOrder(): List<Pair<K, V?>> = createPoorList(treeStruct.postOrder())
 }

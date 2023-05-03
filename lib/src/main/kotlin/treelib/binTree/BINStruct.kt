@@ -1,9 +1,10 @@
 package treelib.binTree
 
 import treelib.abstractTree.TreeStruct
+import treelib.commonObjects.exceptions.IncorrectUsage
 
 class BINStruct<Pack : Comparable<Pack>> :
-    TreeStruct<Pack, BINNode<Pack>, BINStateContainer<Pack>>() {
+    TreeStruct<Pack, BINNode<Pack>, BINStateContainer<Pack>, BINVertex<Pack>>() {
 
     override var root: BINNode<Pack>? = null
 
@@ -53,6 +54,10 @@ class BINStruct<Pack : Comparable<Pack>> :
         return node
     }
 
+    override fun toVertex(node: BINNode<Pack>): BINVertex<Pack> {
+        return BINVertex(node.value)
+    }
+
     override fun createNode(item: Pack) = BINNode(item)
 
     override fun delete(item: Pack) {
@@ -61,5 +66,16 @@ class BINStruct<Pack : Comparable<Pack>> :
 
     override fun insert(item: Pack) {
         insertItem(item).contentNode
+    }
+
+    private fun toNode(vertex: BINVertex<Pack>): BINNode<Pack> = BINNode(value = vertex.value)
+
+    fun <BINVertexType : BINVertex<Pack>> restoreStruct(preOrder: List<BINVertexType>) {
+        if (root != null) throw IncorrectUsage("The tree already exists")
+        for (vertex in preOrder) {
+            val currentNode = toNode(vertex)
+            val leaf = getLeafForInsert(currentNode.value)
+            linkNewNode(currentNode, leaf)
+        }
     }
 }

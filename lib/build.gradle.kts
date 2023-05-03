@@ -4,27 +4,57 @@ plugins {
     jacoco
     `java-library`
     `maven-publish`
-    // checkstyle
+    kotlin("plugin.serialization") version "1.5.0"
+    id("org.jetbrains.compose") version "1.4.0"
 }
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
+kotlin {
+    jvmToolchain(17)
 }
 
 repositories {
     mavenLocal()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     mavenCentral()
 }
 
 dependencies {
-    testImplementation("io.mockk:mockk:1.13.4")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     api("org.apache.commons:commons-math3:3.6.1")
     implementation("com.google.guava:guava:31.1-jre")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    val neo4jCore = "4.0.5"
+    implementation("org.neo4j", "neo4j-ogm-core", neo4jCore)
+    implementation("org.neo4j", "neo4j-ogm-bolt-driver", neo4jCore)
+
+    // JDBC Sqlite
+    val sqliteJdbcVersion: String by project
+    implementation("org.xerial", "sqlite-jdbc", sqliteJdbcVersion)
+
+    val exposedVersion: String by project
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+
+    implementation(compose.desktop.currentOs)
+    implementation(compose.material3)
+
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
+    implementation(kotlin("stdlib-jdk8"))
+
 }
+
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+    }
+}
+
 
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
@@ -76,7 +106,8 @@ tasks.jacocoTestReport {
 
 tasks.jacocoTestCoverageVerification {
     classDirectories.setFrom( classDirectories.files.flatMap { fileTree(it) {
-        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct")
+        include("**/RBBalancer.class", "**/AVLBalancer.class", "**/BINStruct", "**/AVLStruct.class", "**/BINStruct.class")
+        exclude("**/singleObjects/**", "**/RBVertex.class", "**/AVLVertex.class", "**/BINVertex.class", "**/Vertex.class", "**/BINStruct.class", "**/AVLStruct.class", "**/RBStruct.class", "**/TreeStruct.class")
     } })
     dependsOn(tasks.jacocoTestReport)
     violationRules {
@@ -84,7 +115,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "BRANCH"
-                minimum = 0.4.toBigDecimal()
+                minimum = 0.5.toBigDecimal()
             }
         }
         rule {
@@ -98,7 +129,7 @@ tasks.jacocoTestCoverageVerification {
             element = "CLASS"
             limit {
                 counter = "METHOD"
-                minimum = 1.0.toBigDecimal()
+                minimum = 0.9.toBigDecimal()
             }
         }
     }

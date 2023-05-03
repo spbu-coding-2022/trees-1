@@ -4,7 +4,10 @@ on: [push, pull_request]
 
 jobs:
   run:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -19,11 +22,17 @@ jobs:
       - name: Run Tests
         run: ./gradlew clean test
 
-      - name: Run Test Coverage
+      - if: matrix.os == 'ubuntu-latest' # Container action is only supported on Linux
+        name: Run Test Coverage
         run: ./gradlew jacocoTestReport
 
-      - name: Jacoco Code Coverage Report
+      - if: matrix.os == 'ubuntu-latest'
+        name: Jacoco Code Coverage Report
         uses: cicirello/jacoco-badge-generator@v2.8.0
         with:
           generate-branches-badge: true
           jacoco-csv-file: lib/build/jacoco/report.csv
+
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: Jacoco Test Coverage Verification
+        run: ./gradlew jacocoTestCoverageVerification
