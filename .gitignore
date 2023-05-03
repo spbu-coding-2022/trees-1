@@ -1,0 +1,9 @@
+/.gradle/
+/.idea/
+/build/
+/lib/build/
+/lib/TEST_TEST/
+/gradle/
+/neo4jDB/
+/saved-trees/
+/sqliteDB/
