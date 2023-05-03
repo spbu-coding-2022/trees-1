@@ -86,7 +86,6 @@ class Controller {
         val key = if (isInt(value.trim())) value.toInt() else value.hashCode()
 
         val offset1 = tree?.find(key) ?: throw NullPointerException()
-        println(windowState.size.width.value / 2)
         if (offset1.first >= 0){
             tree?.addOffset(
                 windowState.size.width.value / 2 - offset1.first,

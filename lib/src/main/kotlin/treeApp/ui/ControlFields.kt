@@ -90,6 +90,7 @@ fun ControlFields(
             tree?.updateTree()
             tree?.repositionTree(800f, 10f)
             returnButtonClickState.value = false
+            dragState.value = false
         }
         tree?.let { displayTree(it, dragState) }
 
