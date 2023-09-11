@@ -5,17 +5,10 @@ plugins {
     `java-library`
     `maven-publish`
     kotlin("plugin.serialization") version "1.5.0"
-    id("org.jetbrains.compose") version "1.4.0"
 }
 
 kotlin {
     jvmToolchain(17)
-}
-
-repositories {
-    mavenLocal()
-    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-    mavenCentral()
 }
 
 dependencies {
@@ -38,23 +31,10 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 
-    implementation(compose.desktop.currentOs)
-    implementation(compose.material3)
-
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:1.8.10")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.2")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.9.2")
-    implementation(kotlin("stdlib-jdk8"))
-
 }
-
-
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-    }
-}
-
 
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
